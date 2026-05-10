@@ -1,0 +1,82 @@
+<!-- home.component.html -->
+<div class="home-container">
+  <!-- Header Section -->
+  <header class="home-header">
+    <div class="logo">
+      <h1>CollabUs</h1>
+    </div>
+    <nav class="nav-menu">
+      <a href="#" class="nav-link active">Inicio</a>
+      <a href="#" class="nav-link">Proyectos</a>
+      <a href="#" class="nav-link">Colaboradores</a>
+    </nav>
+
+    <div class="user-actions">
+      <div  (click)="logout()"> Log out</div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="search-section">
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          (keyup.enter)="onSearch()"
+          placeholder="Nombre o palabra clave"
+          class="search-input"
+        />
+        <button class="btn-search">Buscar</button>
+      </div>
+
+      <div class="collaborators-section">
+        <h3>Colaboradores destacados</h3>
+        <div class="collaborators-list">
+          <app-collaborator-card
+            *ngFor="let collaborator of highlightedCollaborators"
+            [collaborator]="collaborator">
+          </app-collaborator-card>
+        </div>
+        <a href="#" class="view-more">Ver más</a>
+      </div>
+
+      <div class="current-plan">
+        <h3>Plan Actual</h3>
+        <div class="plan-card">
+          <span class="plan-name">Plan {{ currentPlan }}</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Projects Feed -->
+    <main class="projects-feed">
+      <div class="projects-header">
+        <h2>Lista de proyectos</h2>
+      </div>
+
+      <div class="projects-list">
+        <app-project-card
+          *ngFor="let project of allProjects"
+          [project]="project"
+          (viewDetails)="viewProjectDetails($event)"
+          (apply)="applyToProject($event)">
+        </app-project-card>
+      </div>
+    </main>
+
+    <!-- Featured Projects -->
+    <aside class="featured-sidebar">
+      <h3>Proyectos Destacados</h3>
+      <div class="featured-projects">
+        <app-project-card
+          *ngFor="let project of featuredProjects"
+          [project]="project"
+          [isCompact]="true"
+          (viewDetails)="viewProjectDetails($event)">
+        </app-project-card>
+      </div>
+    </aside>
+  </div>
+</div>
