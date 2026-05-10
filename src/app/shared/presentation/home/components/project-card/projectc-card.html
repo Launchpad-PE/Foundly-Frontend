@@ -1,0 +1,35 @@
+<!-- project-card.component.html -->
+<div class="project-card" [class.compact]="isCompact">
+  <div class="project-header">
+    <h3 class="project-title">{{ project.title }}</h3>
+    <div class="project-areas">
+      <span *ngFor="let area of project.areas" class="area-tag">
+        {{ area }}
+      </span>
+    </div>
+  </div>
+
+  <div class="project-roles">
+    <h4>Roles disponibles:</h4>
+    <ul>
+      <li *ngFor="let role of getRolesToShow()">{{ role }}</li>
+    </ul>
+  </div>
+
+  <div class="project-footer" *ngIf="!isCompact">
+    <div class="project-meta">
+      <span class="author">Publicado por: {{ project.author }}</span>
+      <span class="duration">Duración: {{ project.duration }}</span>
+    </div>
+    <div class="project-tags">
+      <span class="tag">#{{ project.modality }}</span>
+      <span class="tag" *ngIf="project.modality === 'Remoto'">#Junior</span>
+      <span class="tag">#Tiempo {{ project.modality === 'Remoto' ? 'Completo' : 'Parcial' }}</span>
+    </div>
+  </div>
+
+  <div class="project-actions">
+    <button class="btn-view" (click)="onViewDetails()">Ver más</button>
+    <button class="btn-apply" *ngIf="!isCompact" (click)="onApply()">Postular</button>
+  </div>
+</div>
