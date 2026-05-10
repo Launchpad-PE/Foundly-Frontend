@@ -7,8 +7,7 @@ const baseTitle = 'Foundly';
 const login = () => import('./iam/presentation/views/login/login').then(m => m.LoginComponent);
 const register = () => import('./iam/presentation/views/register/register').then(m => m.RegisterComponent);
 const recoveryPassword = () => import('./iam/presentation/views/recovery-password/recovery-password').then(m => m.RecoveryPasswordComponent);
-const onboarding = () => import('./iam/presentation/views/onboarding/onboarding').then(m => m.OnboardingComponent);
-
+const onboarding = () => import('./profile-management/presentation/views/onboarding/onboarding').then(m => m.OnboardingComponent);
 
 export const routes: Routes = [
   { path: 'login', loadComponent: login, title: `${baseTitle} - Iniciar Sesión` },
@@ -18,6 +17,7 @@ export const routes: Routes = [
   },
   { path: 'create-account', loadComponent: onboarding, canActivate: [AuthGuard], title: `${baseTitle} - Completar Perfil`
   },
+  { path: 'onboarding', loadComponent: onboarding, canActivate: [AuthGuard], title: `${baseTitle} - Completar Perfil` },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: '**', redirectTo: '/login' },
 ];

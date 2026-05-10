@@ -43,7 +43,8 @@ export class RegisterComponent {
       await this.userStore.login(this.email, this.password);
 
       if (this.userStore.isAuthenticated()) {
-        this.router.navigate(['/create-account']);
+        console.log('✅ Registro exitoso, redirigiendo a onboarding...');
+        this.router.navigate(['/onboarding']);
       }
     } catch (error: any) {
       alert(error.message || 'Error en el registro');

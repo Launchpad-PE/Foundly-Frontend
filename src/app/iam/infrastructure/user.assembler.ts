@@ -58,11 +58,12 @@ export class UserAssembler {
     };
   }
 
+  // ✅ CORREGIDO: Asegurar que los campos requeridos no sean undefined
   static fromRegistrationToApi(registrationData: RegistrationData): UserApiData {
     return {
-      fullName: registrationData.fullName,
-      email: registrationData.email,
-      password: registrationData.password,
+      fullName: registrationData.fullName,  // ✅ string obligatorio
+      email: registrationData.email,        // ✅ string obligatorio
+      password: registrationData.password,  // ✅ string obligatorio
       status: 'active',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),

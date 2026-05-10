@@ -56,12 +56,4 @@ export class UsersApi {
     });
   }
 
-  /**
-   * Complete user onboarding (partial update)
-   */
-  completeOnboarding(id: string, onboardingData: Partial<UserApiData>): Observable<any> {
-    return this.http.patch(`${BASE_URL}${this.endpointPath}/${id}`, onboardingData, {
-      headers: this.getHeaders(),
-    });
-  }
 }

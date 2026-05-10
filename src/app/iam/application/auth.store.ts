@@ -5,7 +5,6 @@ import { UserStore } from './user.store';
 /**
  * AuthStore (Application Service)
  * Equivalent to the Pinia auth-store — thin wrapper around UserStore.
- * Use AuthGuard to protect routes.
  */
 @Injectable({ providedIn: 'root' })
 export class AuthStore {
@@ -13,9 +12,8 @@ export class AuthStore {
   readonly isAuthenticated;
 
   constructor(private userStore: UserStore) {
-
     this.currentUser = this.userStore.currentUser;
-    this.isAuthenticated = this.userStore.isAuthenticated;
+    this.isAuthenticated = this.userStore.isAuthenticated;  // ✅ Es una señal, no función
   }
 
   async login(credentials: { email: string; password: string; userId?: string }) {
@@ -39,10 +37,11 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   canActivate(): boolean {
+    // ✅ isAuthenticated es una señal, se usa con () para obtener el valor
     if (this.userStore.isAuthenticated()) {
       return true;
     }
-    void this.router.navigate(['/login']); // 'void' quita el warning amarillo
+    this.router.navigate(['/login']);
     return false;
   }
 }
