@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { UserStore } from '../../../application/user.store';
 import { ModalForgetPasswordComponent } from '../../components/modal-forget-password/modal-forget-password';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +22,7 @@ export class LoginComponent {
   constructor(public userStore: UserStore, private router: Router) {}
 
   goBack(): void {
-    window.location.href = 'https://launchpad-pe.github.io/Foundly-Landing-Page/';
+    window.location.href = environment.landingPafeRedirection;
   }
 
   openForgotPasswordModal(): void {
