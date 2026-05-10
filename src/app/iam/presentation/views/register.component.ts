@@ -1,0 +1,162 @@
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { UserStore } from '../../application/user.store';
+
+@Component({
+  selector: 'app-register',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  template: `
+    <header class="login-header">
+      <div class="header-content">
+        <div class="logo">
+          <img src="/logo.png" alt="Foundly" class="logo-img" />
+        </div>
+        <div class="right-container">
+          <button class="back-button mobile-only" (click)="goBack()">← Volver</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="register-container">
+      <!-- Panel izquierdo -->
+      <div class="card-left">
+        <div class="logo-section">
+          <img src="/logo.png" alt="Foundly" class="logo-image" />
+        </div>
+        <div class="right-container">
+          <button class="back-button desktop-only" (click)="goBack()">← Volver</button>
+        </div>
+      </div>
+
+      <!-- Panel derecho -->
+      <div class="card-right">
+        <div class="register-content">
+          <div class="register-header">
+            <h1 class="main-title">Crear cuenta</h1>
+          </div>
+
+          <form (ngSubmit)="handleRegister()" class="register-form">
+            <div class="form-group">
+              <label for="fullName">Nombre completo</label>
+              <input type="text" id="fullName" [(ngModel)]="fullName" name="fullName"
+                placeholder="Tu nombre completo" required class="form-input" />
+            </div>
+
+            <div class="form-group">
+              <label for="email">Correo electrónico</label>
+              <input type="email" id="email" [(ngModel)]="email" name="email"
+                placeholder="email@example.com" required class="form-input" />
+            </div>
+
+            <div class="form-group">
+              <label for="password">Contraseña</label>
+              <input type="password" id="password" [(ngModel)]="password" name="password"
+                placeholder="Mínimo 6 caracteres" required class="form-input" />
+            </div>
+
+            <div class="form-group">
+              <label for="confirmPassword">Confirmar contraseña</label>
+              <input type="password" id="confirmPassword" [(ngModel)]="confirmPassword" name="confirmPassword"
+                placeholder="Repite tu contraseña" required class="form-input" />
+            </div>
+
+            <button type="submit" class="register-button" [disabled]="userStore.loading()">
+              {{ userStore.loading() ? 'Creando cuenta...' : 'Guardar' }}
+            </button>
+          </form>
+
+          <div class="footer">
+            <p class="copyright">Todos los derechos reservados Foundly © 2026</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  `,
+  styles: [`
+    .register-container { display: flex; min-height: 100vh; background: #fff; }
+    .card-left {
+      width: 40%; background: #8176DC;
+      display: flex; flex-direction: column; justify-content: center;
+      align-items: center; padding: 2rem;
+      border-right: 1px solid #e9ecef;
+    }
+    .logo-section { display: flex; flex-direction: column; align-items: center; gap: 1rem; margin-bottom: 2rem; }
+    .logo-image { width: 300px; height: 300px; object-fit: contain; }
+    .back-button {
+      background: #fff !important; color: #6C63FF !important;
+      border: 2px solid #6C63FF !important;
+      padding: 0.75rem 1.5rem; border-radius: 6px; cursor: pointer; font-weight: 500;
+    }
+    .back-button:hover { background: #f8f7ff !important; }
+    .card-right { width: 60%; display: flex; align-items: center; justify-content: center; padding: 2rem; }
+    .register-content { width: 100%; max-width: 400px; }
+    .register-header { text-align: center; margin-bottom: 2.5rem; }
+    .main-title { font-size: 2rem; font-weight: 700; color: #6C63FF; margin-bottom: 0.5rem; }
+    .register-form { width: 100%; margin-bottom: 2rem; }
+    .form-group { margin-bottom: 1.5rem; }
+    .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: #374151; font-size: 0.9rem; }
+    .form-input {
+      width: 100%; padding: 0.75rem;
+      border: 1px solid #d1d5db; border-radius: 6px;
+      font-size: 1rem; box-sizing: border-box;
+    }
+    .form-input:focus { outline: none; border-color: #6C63FF; box-shadow: 0 0 0 2px rgba(108,99,255,0.1); }
+    .register-button {
+      width: 100%; background: #FF7A30; border: none; border-radius: 6px;
+      padding: 0.75rem; color: white; font-weight: 600; font-size: 1rem;
+      cursor: pointer; margin-top: 0.5rem;
+    }
+    .register-button:disabled { background: #9ca3af; cursor: not-allowed; }
+    .footer { text-align: center; padding-top: 1rem; border-top: 1px solid #e5e7eb; }
+    .copyright { color: #6b7280; font-size: 0.875rem; margin: 0; }
+    .login-header {
+      background-color: #fff; border-bottom: 1px solid #e2e8f0;
+      padding: 1rem 0; position: sticky; top: 0; z-index: 100;
+    }
+    .header-content { margin: 0 auto; padding: 0 2rem; display: flex; justify-content: space-between; align-items: center; }
+    .logo-img { height: 60px; width: auto; object-fit: contain; }
+    .mobile-only { display: none; }
+    .desktop-only { display: block; }
+    @media (max-width: 768px) {
+      .register-container { flex-direction: column; justify-content: center; min-height: calc(100vh - 80px); }
+      .card-left { display: none; }
+      .card-right { width: 100%; padding: 1.5rem; }
+      .mobile-only { display: block; }
+      .desktop-only { display: none; }
+      .main-title { font-size: 1.5rem; }
+    }
+  `]
+})
+export class RegisterComponent {
+  fullName = '';
+  email = '';
+  password = '';
+  confirmPassword = '';
+
+  constructor(public userStore: UserStore, private router: Router) {}
+
+  goBack(): void {
+    this.router.navigate(['/']);
+  }
+
+  async handleRegister(): Promise<void> {
+    if (this.password !== this.confirmPassword) {
+      alert('Las contraseñas no coinciden');
+      return;
+    }
+
+    try {
+      await this.userStore.register({ fullName: this.fullName, email: this.email, password: this.password });
+      await this.userStore.login(this.email, this.password);
+
+      if (this.userStore.isAuthenticated()) {
+        this.router.navigate(['/create-account']);
+      }
+    } catch (error: any) {
+      alert(error.message || 'Error en el registro');
+    }
+  }
+}
