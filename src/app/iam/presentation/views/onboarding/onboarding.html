@@ -1,0 +1,43 @@
+<div class="onboarding-container">
+  <!-- Header -->
+  <header class="onboarding-header">
+    <div class="header-content">
+      <img src="/logo.png" alt="Foundly Logo" class="logo" />
+    </div>
+  </header>
+
+  <!-- Progress Stepper -->
+  <div class="progress-stepper-wrapper">
+    <div class="progress-stepper-container">
+      <app-progress-stepper [currentStep]="currentStep" [totalSteps]="4" />
+    </div>
+  </div>
+
+  <!-- Step Content -->
+  <div class="onboarding-main">
+    <div class="onboarding-content">
+      <!-- Paso 1: Perfil -->
+      <app-profile-step
+        *ngIf="currentStep === 1"
+        [(modelValue)]="formData.profile"
+        (next)="nextStep()"
+      />
+
+      <!-- Paso 2: Rol -->
+      <app-role-step
+        *ngIf="currentStep === 2"
+        [(modelValue)]="formData.role"
+        (next)="nextStep()"
+        (prev)="prevStep()"
+      />
+
+      <!-- Paso 3: Descripción -->
+      <app-description-step
+        *ngIf="currentStep === 3"
+        [(modelValue)]="formData.description"
+        (complete)="completeOnboarding()"
+        (prev)="prevStep()"
+      />
+    </div>
+  </div>
+</div>

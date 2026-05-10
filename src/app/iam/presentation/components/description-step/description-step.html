@@ -1,0 +1,42 @@
+<div class="step-card">
+  <div class="step-header">
+    <h1 class="main-title">Tu Descripción</h1>
+    <p class="subtitle">Cuéntale a la comunidad un poco sobre ti y tu experiencia.</p>
+  </div>
+
+  <div class="step-content">
+    <div class="form-group">
+      <label for="bio" class="form-label">Biografía</label>
+      <textarea
+        id="bio"
+        [(ngModel)]="bioText"
+        rows="6"
+        placeholder="Cuéntanos sobre tu experiencia, habilidades y lo que te apasiona..."
+        class="bio-textarea"
+        (ngModelChange)="emitUpdate()"
+      ></textarea>
+      <div
+        class="char-counter"
+        [class.warning]="bioText.length > 400"
+        [class.error]="bioText.length >= 500"
+      >
+        {{ bioText.length }} / 500 caracteres
+      </div>
+      <p class="input-hint">Esta información será visible en tu perfil público.</p>
+    </div>
+  </div>
+
+  <div class="card-footer">
+    <button class="back-button" (click)="prev.emit()">Atrás</button>
+    <div class="right-buttons">
+      <button class="skip-button" (click)="complete.emit()">Omitir</button>
+      <button
+        class="continue-button"
+        (click)="complete.emit()"
+        [disabled]="!bioText.trim()"
+      >
+        Completar
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,33 +1,23 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './iam/application/auth.store';
 
+const baseTitle = 'Foundly';
+
+// Lazy loading de vistas
+const login = () => import('./iam/presentation/views/login/login').then(m => m.LoginComponent);
+const register = () => import('./iam/presentation/views/register/register').then(m => m.RegisterComponent);
+const recoveryPassword = () => import('./iam/presentation/views/recovery-password/recovery-password').then(m => m.RecoveryPasswordComponent);
+const onboarding = () => import('./iam/presentation/views/onboarding/onboarding').then(m => m.OnboardingComponent);
+
+
 export const routes: Routes = [
-  {
-    path: 'login',
-    loadComponent: () =>
-      import('./iam/presentation/views/login.component').then((m) => m.LoginComponent),
+  { path: 'login', loadComponent: login, title: `${baseTitle} - Iniciar Sesión` },
+  { path: 'register', loadComponent: register, title: `${baseTitle} - Registrarse`
   },
-  {
-    path: 'register',
-    loadComponent: () =>
-      import('./iam/presentation/views/register.component').then((m) => m.RegisterComponent),
+  { path: 'recovery-password', loadComponent: recoveryPassword, title: `${baseTitle} - Recuperar Contraseña`
   },
-  {
-    path: 'recovery-password',
-    loadComponent: () =>
-      import('./iam/presentation/views/recovery-password.component').then(
-        (m) => m.RecoveryPasswordComponent,
-      ),
+  { path: 'create-account', loadComponent: onboarding, canActivate: [AuthGuard], title: `${baseTitle} - Completar Perfil`
   },
-  {
-    path: 'create-account',
-    loadComponent: () =>
-      import('./iam/presentation/views/onboarding.component').then((m) => m.OnboardingComponent),
-    canActivate: [AuthGuard],
-  },
-  // Add your other routes here:
-  // { path: 'home', ... canActivate: [AuthGuard] },
-  // { path: 'profile', ... canActivate: [AuthGuard] },
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: '**', redirectTo: 'login' },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: '**', redirectTo: '/login' },
 ];

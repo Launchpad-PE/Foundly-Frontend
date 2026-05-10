@@ -1,0 +1,58 @@
+<div class="step-card">
+  <div class="step-header">
+    <h1 class="main-title">Tu Perfil</h1>
+  </div>
+
+  <div class="step-content">
+    <div class="avatar-section">
+      <div class="avatar-upload">
+        <div class="avatar-container">
+          <div
+            class="avatar-placeholder"
+            [style.backgroundImage]="hasImage ? 'url(' + currentImage + ')' : ''"
+            (click)="chooseFile()"
+          >
+            <div *ngIf="!hasImage" class="avatar-empty-state">
+              <svg class="add-photo-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 9C3 7.89543 3.89543 7 5 7H5.92963C6.59834 7 7.2228 6.6658 7.59373 6.1094L8.40627 4.8906C8.7772 4.3342 9.40166 4 10.0704 4H13.9296C14.5983 4 15.2228 4.3342 15.5937 4.8906L16.4063 6.1094C16.7772 6.6658 17.4017 7 18.0704 7H19C20.1046 7 21 7.89543 21 9V18C21 19.1046 20.1046 20 19 20H5C3.89543 20 3 19.1046 3 18V9Z" stroke="white" stroke-width="2"/>
+                <circle cx="12" cy="13" r="3" stroke="white" stroke-width="2"/>
+                <path d="M8 8H8.01" stroke="white" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div *ngIf="hasImage" class="avatar-overlay">
+              <span class="change-text">Cambiar</span>
+            </div>
+          </div>
+        </div>
+        <p class="avatar-hint">
+          {{ hasImage ? 'Clic para cambiar la foto' : 'Clic para agregar una foto' }}
+        </p>
+        <input
+          #fileInput
+          type="file"
+          accept="image/*"
+          (change)="onFileSelect($event)"
+          class="hidden-file-input"
+        />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="username">Nombre de usuario</label>
+      <input
+        type="text"
+        id="username"
+        [(ngModel)]="username"
+        placeholder="Ingresa tu nombre de usuario"
+        class="text-input"
+        (ngModelChange)="emitUpdate()"
+      />
+    </div>
+  </div>
+
+  <div class="card-footer">
+    <button class="continue-button" (click)="next.emit()">
+      Continuar
+    </button>
+  </div>
+</div>

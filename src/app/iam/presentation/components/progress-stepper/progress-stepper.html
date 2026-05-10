@@ -1,0 +1,16 @@
+<div class="progress-stepper">
+  <ng-container *ngFor="let step of stepsArray; let i = index">
+    <div
+      class="step"
+      [class.active]="i + 1 === currentStep"
+      [class.completed]="i + 1 < currentStep"
+      [class.upcoming]="i + 1 > currentStep"
+    >
+      <div class="step-circle">
+        <span *ngIf="i + 1 === currentStep" class="inner-dot"></span>
+        <span *ngIf="i + 1 < currentStep" class="checkmark">✓</span>
+      </div>
+      <div *ngIf="i + 1 < totalSteps" class="step-connector"></div>
+    </div>
+  </ng-container>
+</div>

@@ -1,0 +1,65 @@
+<header class="login-header">
+  <div class="header-content">
+    <div class="logo">
+      <img src="/logo.png" alt="Foundly" class="logo-img" />
+    </div>
+    <div class="right-container">
+      <button class="back-button mobile-only" (click)="goBack()">← Volver</button>
+    </div>
+  </div>
+</header>
+
+<div class="register-container">
+  <!-- Panel izquierdo -->
+  <div class="card-left">
+    <div class="logo-section">
+      <img src="/logo.png" alt="Foundly" class="logo-image" />
+    </div>
+    <div class="right-container">
+      <button class="back-button desktop-only" (click)="goBack()">← Volver</button>
+    </div>
+  </div>
+
+  <!-- Panel derecho -->
+  <div class="card-right">
+    <div class="register-content">
+      <div class="register-header">
+        <h1 class="main-title">Crear cuenta</h1>
+      </div>
+
+      <form (ngSubmit)="handleRegister()" class="register-form">
+        <div class="form-group">
+          <label for="fullName">Nombre completo</label>
+          <input type="text" id="fullName" [(ngModel)]="fullName" name="fullName"
+                 placeholder="Tu nombre completo" required class="form-input" />
+        </div>
+
+        <div class="form-group">
+          <label for="email">Correo electrónico</label>
+          <input type="email" id="email" [(ngModel)]="email" name="email"
+                 placeholder="email@example.com" required class="form-input" />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Contraseña</label>
+          <input type="password" id="password" [(ngModel)]="password" name="password"
+                 placeholder="Mínimo 6 caracteres" required class="form-input" />
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword">Confirmar contraseña</label>
+          <input type="password" id="confirmPassword" [(ngModel)]="confirmPassword" name="confirmPassword"
+                 placeholder="Repite tu contraseña" required class="form-input" />
+        </div>
+
+        <button type="submit" class="register-button" [disabled]="userStore.loading()">
+          {{ userStore.loading() ? 'Creando cuenta...' : 'Guardar' }}
+        </button>
+      </form>
+
+      <div class="footer">
+        <p class="copyright">Todos los derechos reservados Foundly © 2026</p>
+      </div>
+    </div>
+  </div>
+</div>
