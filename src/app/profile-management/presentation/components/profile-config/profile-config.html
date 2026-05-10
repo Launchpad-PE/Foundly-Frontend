@@ -1,0 +1,30 @@
+<div class="step-card">
+  <div class="step-header">
+    <h1 class="main-title">Configura tu Perfil</h1>
+  </div>
+
+  <div class="step-content">
+    <div class="form-group">
+      <label for="username">Nombre de Perfil</label>
+      <input
+        type="text"
+        id="username"
+        [(ngModel)]="username"
+        placeholder="Ingresa tu nombre de usuario"
+        class="text-input"
+        (ngModelChange)="emitUpdate()"
+      />
+      <p class="input-hint">Este nombre será visible para la comunidad.</p>
+    </div>
+  </div>
+
+  <div class="card-footer">
+    <button
+      class="continue-button"
+      (click)="onSubmit()"
+      [disabled]="!username.trim()"
+    >
+      Guardar
+    </button>
+  </div>
+</div>

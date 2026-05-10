@@ -1,0 +1,45 @@
+<div class="step-card">
+  <div class="step-header">
+    <h1 class="main-title">¿Cómo te gustaría Presentarte?</h1>
+    <p class="subtitle">Los colaboradores suelen buscar personas con distintas habilidades y roles. ¿Qué rol te gustaría asumir?</p>
+  </div>
+
+  <div class="step-content">
+    <div class="role-options">
+      <div
+        *ngFor="let role of predefinedRoles"
+        class="role-card"
+        [class.selected]="modelValue.selectedRole === role"
+        (click)="selectRole(role)"
+      >
+        {{ role }}
+      </div>
+    </div>
+
+    <div class="custom-role-section">
+      <label class="custom-role-label">Escribe tu propio rol</label>
+      <input
+        type="text"
+        [(ngModel)]="customRoleValue"
+        placeholder="Ej: Especialista en ciberseguridad"
+        class="custom-role-input"
+        (ngModelChange)="updateCustomRole($event)"
+      />
+    </div>
+
+    <p class="info-message">
+      Tu rol entre los otros datos ingresados los puedes editar en tu perfil.
+    </p>
+  </div>
+
+  <div class="card-footer">
+    <button class="back-button" (click)="prev.emit()">Atrás</button>
+    <button
+      class="continue-button"
+      (click)="onSubmit()"
+      [disabled]="!modelValue.selectedRole && !modelValue.customRole"
+    >
+      Guardar
+    </button>
+  </div>
+</div>
