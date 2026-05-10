@@ -1,6 +1,8 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, inject } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 import { Profile } from '../domain/entities/profile.entity';
 import { Experience } from '../domain/entities/experience.entity';
+import { ProfileApi } from '../infrastructure/profile-api';
 
 export interface OnboardingData {
   username: string;
@@ -8,7 +10,7 @@ export interface OnboardingData {
   bio: string;
   role: string;
   skills: string[];
-  experiences: Experience[];  // ✅ Ahora es array de Experience, no de string
+  experiences: Experience[];
 }
 
 @Injectable({ providedIn: 'root' })
@@ -19,10 +21,8 @@ export class ProfileStore {
   error = signal<string | null>(null);
   onboardingStep = signal(1);
 
-  constructor() {
-    // Load profile from localStorage on init
-    this.loadFromLocalStorage();
-  }
+  // Dependencies
+  private profileApi = inject(ProfileApi);
 
   /**
    * Create a new profile during onboarding
@@ -32,7 +32,7 @@ export class ProfileStore {
     this.error.set(null);
 
     try {
-      // Create profile entity
+      // ✅ Usar el constructor directamente en lugar de Profile.create()
       const profile = new Profile({
         userId: userId,
         username: data.username,
@@ -40,7 +40,7 @@ export class ProfileStore {
         bio: data.bio,
         role: data.role,
         skills: data.skills,
-        experiences: data.experiences,  // ✅ Ahora es array de Experience
+        experiences: data.experiences,
         isComplete: true,
       });
 
@@ -50,45 +50,13 @@ export class ProfileStore {
         throw new Error(validation.errors.join(', '));
       }
 
-      // Simulate API call
-      await this.simulateApiCall();
+      // Send to API
+      const savedProfile = await firstValueFrom(this.profileApi.createProfile(profile));
 
-      // Save to localStorage
-      this.saveToLocalStorage(profile);
-      this.currentProfile.set(profile);
+      this.currentProfile.set(savedProfile);
 
-      console.log('✅ Profile created successfully', profile);
-      return profile;
-    } catch (err: any) {
-      this.error.set(err.message);
-      throw err;
-    } finally {
-      this.loading.set(false);
-    }
-  }
-
-  /**
-   * Update existing profile
-   */
-  async updateProfile(profile: Profile): Promise<Profile> {
-    this.loading.set(true);
-    this.error.set(null);
-
-    try {
-      profile.updatedAt = new Date();
-
-      // TODO: Update in backend API
-      // await this.http.put(`/api/profiles/${profile.id}`, profile.toJSON());
-
-      // Simulate API call
-      await this.simulateApiCall();
-
-      // Save to localStorage
-      this.saveToLocalStorage(profile);
-      this.currentProfile.set(profile);
-
-      console.log('✅ Profile updated successfully', profile);
-      return profile;
+      console.log('✅ Profile created successfully', savedProfile);
+      return savedProfile;
     } catch (err: any) {
       this.error.set(err.message);
       throw err;
@@ -105,23 +73,14 @@ export class ProfileStore {
     this.error.set(null);
 
     try {
-      // TODO: Fetch from backend API
-      // const response = await this.http.get(`/api/profiles/user/${userId}`);
-
-      // Simulate API call
-      await this.simulateApiCall();
-
-      // Try to load from localStorage first (for demo)
-      const stored = localStorage.getItem(`profile_${userId}`);
-      if (stored) {
-        const data = JSON.parse(stored);
-        const profile = new Profile(data);
-        this.currentProfile.set(profile);
-        return profile;
-      }
-
-      return null;
+      const profile = await firstValueFrom(this.profileApi.getProfileByUserId(userId));
+      this.currentProfile.set(profile);
+      return profile;
     } catch (err: any) {
+      if (err.status === 404) {
+        console.log('📋 No profile found for user');
+        return null;
+      }
       this.error.set(err.message);
       return null;
     } finally {
@@ -130,59 +89,74 @@ export class ProfileStore {
   }
 
   /**
-   * Update username
+   * Update profile
+   */
+  async updateProfile(profile: Profile): Promise<Profile> {
+    this.loading.set(true);
+    this.error.set(null);
+
+    try {
+      const updatedProfile = await firstValueFrom(this.profileApi.updateProfile(profile));
+      this.currentProfile.set(updatedProfile);
+      return updatedProfile;
+    } catch (err: any) {
+      this.error.set(err.message);
+      throw err;
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  /**
+   * Update username only
    */
   async updateUsername(username: string): Promise<void> {
     const profile = this.currentProfile();
-    if (!profile) {
+    if (!profile || !profile.id) {
       throw new Error('No profile loaded');
     }
 
-    profile.username = username;
-    profile.updatedAt = new Date();
-    await this.updateProfile(profile);
+    const updated = await firstValueFrom(this.profileApi.patchProfile(profile.id, { username }));
+    this.currentProfile.set(updated);
   }
 
   /**
-   * Update avatar
-   */
-  async updateAvatar(avatarUrl: string | null): Promise<void> {
-    const profile = this.currentProfile();
-    if (!profile) {
-      throw new Error('No profile loaded');
-    }
-
-    profile.avatar = avatarUrl;
-    profile.updatedAt = new Date();
-    await this.updateProfile(profile);
-  }
-
-  /**
-   * Update bio
+   * Update bio only
    */
   async updateBio(bio: string): Promise<void> {
     const profile = this.currentProfile();
-    if (!profile) {
+    if (!profile || !profile.id) {
       throw new Error('No profile loaded');
     }
 
-    profile.bio = bio;
-    profile.updatedAt = new Date();
-    await this.updateProfile(profile);
+    const updated = await firstValueFrom(this.profileApi.patchProfile(profile.id, { bio }));
+    this.currentProfile.set(updated);
   }
 
   /**
-   * Update role
+   * Update role only
    */
   async updateRole(role: string): Promise<void> {
     const profile = this.currentProfile();
-    if (!profile) {
+    if (!profile || !profile.id) {
       throw new Error('No profile loaded');
     }
 
-    profile.role = role;
-    profile.updatedAt = new Date();
-    await this.updateProfile(profile);
+    const updated = await firstValueFrom(this.profileApi.patchProfile(profile.id, { role }));
+    this.currentProfile.set(updated);
+  }
+
+  /**
+   * Update avatar (si la página asigna uno automáticamente)
+   */
+  async updateAvatar(avatarUrl: string | null): Promise<void> {
+    const profile = this.currentProfile();
+    if (!profile || !profile.id) {
+      throw new Error('No profile loaded');
+    }
+
+    const updated = await firstValueFrom(this.profileApi.patchProfile(profile.id, { avatar: avatarUrl }));
+    this.currentProfile.set(updated);
   }
 
   /**
@@ -190,12 +164,12 @@ export class ProfileStore {
    */
   async addSkill(skill: string): Promise<void> {
     const profile = this.currentProfile();
-    if (!profile) {
+    if (!profile || !profile.id) {
       throw new Error('No profile loaded');
     }
 
-    profile.addSkill(skill);
-    await this.updateProfile(profile);
+    const updated = await firstValueFrom(this.profileApi.addSkill(profile.id, skill));
+    this.currentProfile.set(updated);
   }
 
   /**
@@ -203,12 +177,12 @@ export class ProfileStore {
    */
   async removeSkill(skill: string): Promise<void> {
     const profile = this.currentProfile();
-    if (!profile) {
+    if (!profile || !profile.id) {
       throw new Error('No profile loaded');
     }
 
-    profile.removeSkill(skill);
-    await this.updateProfile(profile);
+    const updated = await firstValueFrom(this.profileApi.removeSkill(profile.id, skill));
+    this.currentProfile.set(updated);
   }
 
   /**
@@ -216,12 +190,23 @@ export class ProfileStore {
    */
   async addExperience(experience: Experience): Promise<void> {
     const profile = this.currentProfile();
-    if (!profile) {
+    if (!profile || !profile.id) {
       throw new Error('No profile loaded');
     }
 
-    profile.addExperience(experience);
-    await this.updateProfile(profile);
+    // Convertir Experience a formato para la API
+    const expData = {
+      title: experience.title,
+      company: experience.company,
+      period: experience.period,
+      description: experience.description,
+      current: experience.current,
+      startDate: experience.startDate ? experience.startDate.toISOString() : null,
+      endDate: experience.endDate ? experience.endDate.toISOString() : null,
+    };
+
+    const updated = await firstValueFrom(this.profileApi.addExperience(profile.id, expData));
+    this.currentProfile.set(updated);
   }
 
   /**
@@ -229,12 +214,12 @@ export class ProfileStore {
    */
   async removeExperience(experienceId: string): Promise<void> {
     const profile = this.currentProfile();
-    if (!profile) {
+    if (!profile || !profile.id) {
       throw new Error('No profile loaded');
     }
 
-    profile.removeExperience(experienceId);
-    await this.updateProfile(profile);
+    const updated = await firstValueFrom(this.profileApi.removeExperience(profile.id, experienceId));
+    this.currentProfile.set(updated);
   }
 
   /**
@@ -261,26 +246,6 @@ export class ProfileStore {
   }
 
   /**
-   * Next onboarding step
-   */
-  nextStep(): void {
-    const current = this.onboardingStep();
-    if (current < 3) {
-      this.onboardingStep.set(current + 1);
-    }
-  }
-
-  /**
-   * Previous onboarding step
-   */
-  prevStep(): void {
-    const current = this.onboardingStep();
-    if (current > 1) {
-      this.onboardingStep.set(current - 1);
-    }
-  }
-
-  /**
    * Reset profile store
    */
   reset(): void {
@@ -288,42 +253,5 @@ export class ProfileStore {
     this.loading.set(false);
     this.error.set(null);
     this.onboardingStep.set(1);
-  }
-
-  /**
-   * Clear all errors
-   */
-  clearError(): void {
-    this.error.set(null);
-  }
-
-  // Private helper methods
-  private saveToLocalStorage(profile: Profile): void {
-    localStorage.setItem(`profile_${profile.userId}`, JSON.stringify({
-      id: profile.id,
-      userId: profile.userId,
-      username: profile.username,
-      avatar: profile.avatar,
-      bio: profile.bio,
-      role: profile.role,
-      skills: profile.skills,
-      experiences: profile.experiences,
-      isComplete: profile.isComplete,
-      createdAt: profile.createdAt.toISOString(),
-      updatedAt: profile.updatedAt.toISOString(),
-    }));
-  }
-
-  private loadFromLocalStorage(): void {
-    // This would be called with a specific userId from auth
-    // For now, just a placeholder
-    const userId = localStorage.getItem('currentUserId');
-    if (userId) {
-      this.loadProfile(userId);
-    }
-  }
-
-  private async simulateApiCall(): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, 500));
   }
 }

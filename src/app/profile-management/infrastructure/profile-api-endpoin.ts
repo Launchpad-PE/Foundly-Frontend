@@ -4,6 +4,7 @@ import { environment } from '../../../environments/environment';
 import { Profile } from '../domain/entities/profile.entity';
 import { ProfileResource, ProfileResponse, ProfilesResponse } from './profile-response';
 import { ProfileAssembler } from './profile-assembler';
+import { Observable, map } from 'rxjs';
 
 export class ProfileApiEndpoint extends BaseApiEndpoint<Profile, ProfileResource, ProfileResponse | ProfilesResponse, ProfileAssembler> {
 
@@ -15,53 +16,57 @@ export class ProfileApiEndpoint extends BaseApiEndpoint<Profile, ProfileResource
   }
 
   /**
-   * Get profile by user ID
+   * Get profile by user ID - returns Profile directly
    */
-  getByUserId(userId: string) {
-    return this.http.get<ProfileResponse>(`${this.profilesUrl}/user/${userId}`);
+  getByUserId(userId: string): Observable<Profile> {
+    return this.http.get<ProfileResponse>(`${this.profilesUrl}/user/${userId}`).pipe(
+      map(response => this.assembler.toEntityFromResponse(response))
+    );
   }
 
   /**
-   * Update profile partially
+   * Update profile partially - returns Profile directly
    */
-  patch(id: string, partialData: Partial<ProfileResource>) {
-    return this.http.patch<ProfileResponse>(`${this.profilesUrl}/${id}`, partialData);
+  patch(id: string, partialData: Partial<ProfileResource>): Observable<Profile> {
+    return this.http.patch<ProfileResponse>(`${this.profilesUrl}/${id}`, partialData).pipe(
+      map(response => this.assembler.toEntityFromResponse(response))
+    );
   }
 
   /**
-   * Add skill to profile
+   * Add skill to profile - returns Profile directly
    */
-  addSkill(profileId: string, skill: string) {
-    return this.http.post<ProfileResponse>(`${this.profilesUrl}/${profileId}/skills`, { skill });
+  addSkill(profileId: string, skill: string): Observable<Profile> {
+    return this.http.post<ProfileResponse>(`${this.profilesUrl}/${profileId}/skills`, { skill }).pipe(
+      map(response => this.assembler.toEntityFromResponse(response))
+    );
   }
 
   /**
-   * Remove skill from profile
+   * Remove skill from profile - returns Profile directly
    */
-  removeSkill(profileId: string, skill: string) {
-    return this.http.delete<ProfileResponse>(`${this.profilesUrl}/${profileId}/skills/${encodeURIComponent(skill)}`);
+  removeSkill(profileId: string, skill: string): Observable<Profile> {
+    return this.http.delete<ProfileResponse>(`${this.profilesUrl}/${profileId}/skills/${encodeURIComponent(skill)}`).pipe(
+      map(response => this.assembler.toEntityFromResponse(response))
+    );
   }
 
   /**
-   * Add experience to profile
+   * Add experience to profile - returns Profile directly
    */
-  addExperience(profileId: string, experience: any) {
-    return this.http.post<ProfileResponse>(`${this.profilesUrl}/${profileId}/experiences`, experience);
+  addExperience(profileId: string, experience: any): Observable<Profile> {
+    return this.http.post<ProfileResponse>(`${this.profilesUrl}/${profileId}/experiences`, experience).pipe(
+      map(response => this.assembler.toEntityFromResponse(response))
+    );
   }
 
   /**
-   * Remove experience from profile
+   * Remove experience from profile - returns Profile directly
    */
-  removeExperience(profileId: string, experienceId: string) {
-    return this.http.delete<ProfileResponse>(`${this.profilesUrl}/${profileId}/experiences/${experienceId}`);
+  removeExperience(profileId: string, experienceId: string): Observable<Profile> {
+    return this.http.delete<ProfileResponse>(`${this.profilesUrl}/${profileId}/experiences/${experienceId}`).pipe(
+      map(response => this.assembler.toEntityFromResponse(response))
+    );
   }
 
-  /**
-   * Upload avatar
-   */
-  uploadAvatar(profileId: string, file: File) {
-    const formData = new FormData();
-    formData.append('avatar', file);
-    return this.http.post<{ avatarUrl: string }>(`${this.profilesUrl}/${profileId}/avatar`, formData);
-  }
 }
