@@ -30,12 +30,7 @@ interface Collaborator {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    ProjectCardComponent,
-    CollaboratorCardComponent
-  ],
+  imports: [CommonModule, FormsModule, ProjectCardComponent, CollaboratorCardComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
@@ -45,6 +40,8 @@ export class HomeComponent implements OnInit {
 
   currentPlan: string = 'Gratuito';
   searchTerm: string = '';
+  filterRole: string = '';
+  filterArea: string = '';
 
   highlightedCollaborators: Collaborator[] = [
     { id: '1', name: 'Christian Gonzalez', role: 'Arquitecto de Software', isHighlighted: true },
@@ -54,7 +51,7 @@ export class HomeComponent implements OnInit {
 
   featuredProjects: Project[] = [
     {
-      id: '1',
+      id: 'f1',
       title: 'Plataforma de E-Learning',
       roles: ['Desarrollador UX', 'Desarrollador Frontend', 'Analistas de datos'],
       areas: ['Tecnología', 'Desarrollo Web'],
@@ -65,10 +62,10 @@ export class HomeComponent implements OnInit {
       isHighlighted: true
     },
     {
-      id: '2',
+      id: 'f2',
       title: 'Aplicación de Finanzas Personales',
-      roles: ['UX Designer', 'Modeler UI/UX', 'Product Owner'],
-      areas: ['Finanzas', 'Servicios'],
+      roles: ['UX Designer', 'Backend dev', 'Psicology Clínico', 'Product Owner', 'Analista'],
+      areas: ['Salud', 'Bienestar'],
       duration: '2 meses',
       modality: 'Remoto',
       author: 'María García',
@@ -76,13 +73,23 @@ export class HomeComponent implements OnInit {
       isHighlighted: true
     },
     {
-      id: '3',
-      title: 'Startup de Energías Renovables',
-      roles: ['Ingeniero Industrial', 'Full Stack Dev'],
-      areas: ['Energía', 'Innovación'],
+      id: 'f3',
+      title: 'Aplicación de Finanzas Personales',
+      roles: ['Product Manager', 'Analista de datos'],
+      areas: ['Finanzas', 'Tecnología'],
       duration: '12 meses',
       modality: 'Híbrido',
       author: 'Carlos Ruiz',
+      postedAt: new Date()
+    },
+    {
+      id: 'f4',
+      title: 'Startup de Energías Renovables',
+      roles: ['Ingeniero Industrial', 'Full Stack Dev'],
+      areas: ['Energía', 'Renovación'],
+      duration: '12 meses',
+      modality: 'Híbrido',
+      author: 'Luis Torres',
       postedAt: new Date()
     }
   ];
@@ -98,13 +105,21 @@ export class HomeComponent implements OnInit {
       author: 'Roberto Tello',
       postedAt: new Date(),
       isHighlighted: true
+    },
+    {
+      id: '2',
+      title: 'Plataforma de Gestión de Finanzas',
+      roles: ['Desarrollador Frontend (Vue)', 'Desarrollador Backend (.NET)'],
+      areas: ['Finanzas', 'Tecnología'],
+      duration: '6 meses',
+      modality: 'Híbrido',
+      author: 'Ana Pérez',
+      postedAt: new Date()
     }
   ];
 
   ngOnInit(): void {
-    // Verificar si necesita onboarding
     if (this.userStore.needsOnboarding()) {
-      console.log('📝 Needs onboarding, redirecting...');
       this.router.navigate(['/onboarding']);
     }
   }
@@ -115,7 +130,7 @@ export class HomeComponent implements OnInit {
   }
 
   onSearch(): void {
-    console.log('Searching for:', this.searchTerm);
+    console.log('Searching:', { term: this.searchTerm, role: this.filterRole, area: this.filterArea });
   }
 
   applyToProject(projectId: string): void {

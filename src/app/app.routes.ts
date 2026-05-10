@@ -2,7 +2,7 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './iam/application/auth.store';
 
-const baseTitle = 'Foundly';
+const baseTitle = 'CollabUs';
 
 // Lazy loading de vistas
 const login = () => import('./iam/presentation/views/login/login').then(m => m.LoginComponent);

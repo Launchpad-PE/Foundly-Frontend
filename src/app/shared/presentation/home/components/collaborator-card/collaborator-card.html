@@ -1,10 +1,10 @@
 <!-- collaborator-card.component.html -->
 <div class="collaborator-card">
-  <div class="collaborator-avatar" [style.background]="'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'">
-    {{ collaborator.name.charAt(0) }}
+  <div class="collaborator-avatar" [style.background]="avatarGradient">
+    {{ initials }}
   </div>
   <div class="collaborator-info">
-    <h4 class="collaborator-name">{{ collaborator.name }}</h4>
+    <p class="collaborator-name">{{ collaborator.name }}</p>
     <p class="collaborator-role">{{ collaborator.role }}</p>
   </div>
 </div>

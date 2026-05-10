@@ -1,10 +1,12 @@
 <!-- home.component.html -->
 <div class="home-container">
-  <!-- Header Section -->
+
+  <!-- ── Header ── -->
   <header class="home-header">
     <div class="logo">
       <h1>CollabUs</h1>
     </div>
+
     <nav class="nav-menu">
       <a href="#" class="nav-link active">Inicio</a>
       <a href="#" class="nav-link">Proyectos</a>
@@ -12,50 +14,94 @@
     </nav>
 
     <div class="user-actions">
-      <div  (click)="logout()"> Log out</div>
+      <button class="btn-logout" (click)="logout()">Log out</button>
+      <div class="user-avatar">U</div>
     </div>
   </header>
 
-  <!-- Main Content -->
-  <div class="main-content">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <div class="search-section">
+  <!-- ── Search Bar ── -->
+  <div class="search-bar-wrapper">
+    <div class="search-bar">
+
+      <label class="search-field">
+        <svg class="field-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="9" cy="9" r="6"/><path d="M15 15l3 3"/>
+        </svg>
         <input
           type="text"
           [(ngModel)]="searchTerm"
-          (keyup.enter)="onSearch()"
           placeholder="Nombre o palabra clave"
-          class="search-input"
+          class="field-input"
         />
-        <button class="btn-search">Buscar</button>
-      </div>
+      </label>
 
-      <div class="collaborators-section">
-        <h3>Colaboradores destacados</h3>
+      <div class="search-divider"></div>
+
+      <label class="search-field">
+        <svg class="field-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M10 2a6 6 0 016 6c0 4-6 10-6 10S4 12 4 8a6 6 0 016-6z"/><circle cx="10" cy="8" r="2"/>
+        </svg>
+        <select [(ngModel)]="filterRole" class="field-input field-select">
+          <option value="">Tipo de puesto</option>
+          <option value="desarrollador-ux">Desarrollador UX</option>
+          <option value="desarrollador-frontend">Desarrollador Frontend</option>
+          <option value="desarrollador-backend">Desarrollador Backend</option>
+          <option value="analista">Analista de datos</option>
+          <option value="disenador">Diseñador UI/UX</option>
+          <option value="product-manager">Product Manager</option>
+        </select>
+      </label>
+
+      <div class="search-divider"></div>
+
+      <label class="search-field">
+        <svg class="field-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="14" height="14" rx="3"/><path d="M7 10h6M7 7h4"/>
+        </svg>
+        <select [(ngModel)]="filterArea" class="field-input field-select">
+          <option value="">Área</option>
+          <option value="tecnologia">Tecnología</option>
+          <option value="finanzas">Finanzas</option>
+          <option value="salud">Salud</option>
+          <option value="energia">Energía</option>
+          <option value="educacion">Educación</option>
+        </select>
+      </label>
+
+      <button class="btn-search" (click)="onSearch()">Buscar</button>
+    </div>
+  </div>
+
+  <!-- ── Main 3-column layout ── -->
+  <div class="main-content">
+
+    <!-- Left Sidebar -->
+    <aside class="sidebar">
+
+      <section class="sidebar-card">
+        <h3 class="sidebar-title">Colaboradores destacados</h3>
         <div class="collaborators-list">
           <app-collaborator-card
             *ngFor="let collaborator of highlightedCollaborators"
             [collaborator]="collaborator">
           </app-collaborator-card>
         </div>
-        <a href="#" class="view-more">Ver más</a>
-      </div>
+        <a href="#" class="view-more-btn">Ver más</a>
+      </section>
 
-      <div class="current-plan">
-        <h3>Plan Actual</h3>
-        <div class="plan-card">
-          <span class="plan-name">Plan {{ currentPlan }}</span>
+      <section class="sidebar-card plan-card">
+        <h3 class="sidebar-title">Plan Actual</h3>
+        <div class="plan-circle">
+          <span class="plan-label">Plan</span>
+          <span class="plan-name">{{ currentPlan }}</span>
         </div>
-      </div>
+      </section>
+
     </aside>
 
     <!-- Projects Feed -->
     <main class="projects-feed">
-      <div class="projects-header">
-        <h2>Lista de proyectos</h2>
-      </div>
-
+      <h2 class="feed-title">Lista de proyectos</h2>
       <div class="projects-list">
         <app-project-card
           *ngFor="let project of allProjects"
@@ -66,10 +112,10 @@
       </div>
     </main>
 
-    <!-- Featured Projects -->
-    <aside class="featured-sidebar">
-      <h3>Proyectos Destacados</h3>
-      <div class="featured-projects">
+    <!-- Right Sidebar -->
+    <aside class="featured-sidebar sidebar-card">
+      <h3 class="sidebar-title centered">Proyectos Destacados</h3>
+      <div class="featured-list">
         <app-project-card
           *ngFor="let project of featuredProjects"
           [project]="project"
@@ -78,5 +124,6 @@
         </app-project-card>
       </div>
     </aside>
+
   </div>
 </div>

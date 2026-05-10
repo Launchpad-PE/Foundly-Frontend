@@ -1,42 +1,51 @@
 .collaborator-card {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 0.75rem;
-  background: #f8f9fa;
+  gap: 0.75rem;
+  padding: 0.6rem 0.75rem;
   border-radius: 10px;
-  margin-bottom: 0.75rem;
-  transition: background 0.3s;
+  transition: background 0.2s;
+  cursor: pointer;
 
   &:hover {
-    background: #f0f0f0;
+    background: #f5f6ff;
   }
 }
 
 .collaborator-avatar {
-  width: 50px;
-  height: 50px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
-  font-weight: bold;
-  font-size: 1.2rem;
+  font-weight: 700;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+  letter-spacing: 0.5px;
 }
 
 .collaborator-info {
   flex: 1;
+  min-width: 0;
+}
 
-  .collaborator-name {
-    margin: 0 0 0.25rem 0;
-    font-size: 0.95rem;
-    color: #333;
-  }
+.collaborator-name {
+  margin: 0 0 0.15rem 0;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #2d2d4e;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
-  .collaborator-role {
-    margin: 0;
-    font-size: 0.8rem;
-    color: #666;
-  }
+.collaborator-role {
+  margin: 0;
+  font-size: 0.76rem;
+  color: #9599b8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

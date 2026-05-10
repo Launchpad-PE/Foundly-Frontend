@@ -1,35 +1,49 @@
 <!-- project-card.component.html -->
 <div class="project-card" [class.compact]="isCompact">
-  <div class="project-header">
-    <h3 class="project-title">{{ project.title }}</h3>
-    <div class="project-areas">
-      <span *ngFor="let area of project.areas" class="area-tag">
-        {{ area }}
+
+  <h3 class="project-title">{{ project.title }}</h3>
+
+  <!-- Roles -->
+  <div class="card-section">
+    <span class="section-label">Puesto disponibles:</span>
+    <div class="tags-row">
+      <span *ngFor="let role of getRolesToShow()" class="role-tag">{{ role }}</span>
+      <span *ngIf="isCompact && project.roles.length > 2" class="role-tag more-tag">
+        +{{ project.roles.length - 2 }}
       </span>
     </div>
   </div>
 
-  <div class="project-roles">
-    <h4>Roles disponibles:</h4>
-    <ul>
-      <li *ngFor="let role of getRolesToShow()">{{ role }}</li>
-    </ul>
-  </div>
-
-  <div class="project-footer" *ngIf="!isCompact">
-    <div class="project-meta">
-      <span class="author">Publicado por: {{ project.author }}</span>
-      <span class="duration">Duración: {{ project.duration }}</span>
-    </div>
-    <div class="project-tags">
-      <span class="tag">#{{ project.modality }}</span>
-      <span class="tag" *ngIf="project.modality === 'Remoto'">#Junior</span>
-      <span class="tag">#Tiempo {{ project.modality === 'Remoto' ? 'Completo' : 'Parcial' }}</span>
+  <!-- Areas -->
+  <div class="card-section">
+    <span class="section-label" *ngIf="!isCompact">Área</span>
+    <div class="tags-row">
+      <span *ngFor="let area of project.areas" class="area-tag">{{ area }}</span>
     </div>
   </div>
 
+  <!-- Meta (full card only) -->
+  <div class="project-meta" *ngIf="!isCompact">
+    <span><strong>Publicado por:</strong> {{ project.author }}</span>
+    <span><strong>Duración:</strong> {{ project.duration }}</span>
+  </div>
+
+  <!-- Meta (compact) -->
+  <p class="compact-meta" *ngIf="isCompact">
+    Duración: {{ project.duration }} · {{ project.modality }}
+  </p>
+
+  <!-- Modality tags (full card only) -->
+  <div class="modality-tags" *ngIf="!isCompact">
+    <span class="modality-tag">#{{ project.modality }}</span>
+    <span class="modality-tag" *ngIf="project.modality === 'Remoto'">#Junior</span>
+    <span class="modality-tag">#Tiempo {{ project.modality === 'Remoto' ? 'Remoto' : 'Parcial' }}</span>
+  </div>
+
+  <!-- Actions -->
   <div class="project-actions">
     <button class="btn-view" (click)="onViewDetails()">Ver más</button>
     <button class="btn-apply" *ngIf="!isCompact" (click)="onApply()">Postular</button>
   </div>
+
 </div>
