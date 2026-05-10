@@ -1,11 +1,9 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
-import { UsersApi } from '../infrastructure/user-api-endpoints';
+import { RegisterRequest, UsersApi } from '../infrastructure/user-api-service';
 import { UserAssembler, RegistrationData, OnboardingData as ApiOnboardingData } from '../infrastructure/user.assembler';
-// Profile Store
 import { ProfileStore, OnboardingData as ProfileOnboardingData } from '../../profile-management/application/profile.store';
-// Entities
 import { Experience } from '../../profile-management/domain/entities/experience.entity';
 
 export interface CurrentUser {
@@ -15,10 +13,6 @@ export interface CurrentUser {
   token?: string;
 }
 
-/**
- * UserStore (Application Service)
- * Equivalent to the Pinia user-store — manages auth state using Angular signals.
- */
 @Injectable({ providedIn: 'root' })
 export class UserStore {
   // State signals
@@ -60,13 +54,19 @@ export class UserStore {
       this.setLoading(true);
       this.clearError();
 
-      const apiData = UserAssembler.fromRegistrationToApi(registrationData);
-      const response = await firstValueFrom(this.usersApi.register(apiData));
+      // ✅ Usar RegisterRequest directamente
+      const registerRequest: RegisterRequest = {
+        fullName: registrationData.fullName,
+        email: registrationData.email,
+        password: registrationData.password,
+      };
+
+      const response = await firstValueFrom(this.usersApi.register(registerRequest));
 
       const newUser: CurrentUser = {
-        id: response.id,
-        fullName: apiData.fullName!,
-        email: apiData.email!,
+        id: response.id.toString(),
+        fullName: response.fullName,
+        email: response.email,
       };
 
       localStorage.setItem('currentUser', JSON.stringify(newUser));
@@ -95,14 +95,14 @@ export class UserStore {
         const { id, fullName, token: authToken } = response;
         this.setToken(authToken);
 
-        const user: CurrentUser = { id, fullName, email, token: authToken };
+        const user: CurrentUser = { id: id.toString(), fullName, email, token: authToken };
         localStorage.setItem('currentUser', JSON.stringify(user));
         localStorage.setItem('userId', user.id);
         this.currentUser.set(user);
 
         console.log('✅ Login successful:', fullName);
 
-        // 🔥 Cargar el perfil del usuario después del login
+        // Cargar el perfil del usuario después del login
         await this.loadUserProfile(user.id);
 
         return user;
@@ -122,9 +122,6 @@ export class UserStore {
     }
   }
 
-  /**
-   * 🔥 Completar onboarding - crea el perfil del usuario
-   */
   async completeOnboarding(onboardingData: ApiOnboardingData): Promise<void> {
     try {
       this.setLoading(true);
@@ -135,13 +132,8 @@ export class UserStore {
         throw new Error('No hay usuario autenticado');
       }
 
-      // ✅ Convertir experiencias de string[] a Experience[]
       const experiences: Experience[] = (onboardingData.skills?.experiences || []).map((exp: any) => {
-        // Si ya es una instancia de Experience, usarla directamente
-        if (exp instanceof Experience) {
-          return exp;
-        }
-        // Si es un objeto, crear un Experience
+        if (exp instanceof Experience) return exp;
         if (typeof exp === 'object') {
           return new Experience({
             title: exp.title || '',
@@ -153,28 +145,20 @@ export class UserStore {
             endDate: exp.endDate ? new Date(exp.endDate) : null,
           });
         }
-        // Si es string, crear Experience básico
-        return new Experience({
-          title: exp,
-          company: '',
-          period: '',
-        });
+        return new Experience({ title: exp, company: '', period: '' });
       });
 
-      // Transformar datos del onboarding al formato que espera ProfileStore
       const profileData: ProfileOnboardingData = {
         username: onboardingData.profile?.username || '',
         avatar: onboardingData.profile?.avatar || null,
         bio: onboardingData.description?.bio || '',
         role: onboardingData.role?.selectedRole || onboardingData.role?.customRole || '',
         skills: onboardingData.skills?.abilities || [],
-        experiences: experiences,  // ✅ Ahora es Experience[]
+        experiences: experiences,
       };
 
-      // Crear el perfil usando ProfileStore
       await this.profileStore.createProfile(user.id, profileData);
 
-      // Guardar información adicional en el UserStore si es necesario
       const apiData = UserAssembler.fromOnboardingToApi(onboardingData);
       const updatedUser: CurrentUser = { ...user, ...apiData };
 
@@ -191,9 +175,6 @@ export class UserStore {
     }
   }
 
-  /**
-   * 🔥 Cargar el perfil del usuario después del login
-   */
   private async loadUserProfile(userId: string): Promise<void> {
     try {
       const profile = await this.profileStore.loadProfile(userId);
@@ -207,24 +188,15 @@ export class UserStore {
     }
   }
 
-  /**
-   * 🔥 Verificar si el usuario necesita completar onboarding
-   */
   needsOnboarding(): boolean {
     const profile = this.profileStore.currentProfile();
     return !profile || !profile.isComplete;
   }
 
-  /**
-   * 🔥 Obtener el perfil actual (proxy a ProfileStore)
-   */
   getCurrentProfile() {
     return this.profileStore.currentProfile();
   }
 
-  /**
-   * 🔥 Obtener el progreso del perfil
-   */
   getProfileCompletion(): number {
     return this.profileStore.getProfileCompletion();
   }
