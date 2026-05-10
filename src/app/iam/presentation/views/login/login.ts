@@ -18,6 +18,7 @@ export class LoginComponent {
   password = '';
   loginError = signal('');
   showForgotPasswordModal = false;
+  isLoading = false;
 
   constructor(public userStore: UserStore, private router: Router) {}
 
@@ -35,17 +36,29 @@ export class LoginComponent {
 
   async handleLogin(): Promise<void> {
     this.loginError.set('');
+    this.isLoading = true;
 
     if (!this.email || !this.password) {
       this.loginError.set('Por favor completa todos los campos');
+      this.isLoading = false;
       return;
     }
 
     try {
       await this.userStore.login(this.email, this.password);
-      this.router.navigate(['/home']);
+
+      // Después del login, verificar si necesita onboarding
+      if (this.userStore.needsOnboarding()) {
+        console.log('📝 Needs onboarding, redirecting...');
+        await this.router.navigate(['/onboarding']);
+      } else {
+        console.log('🏠 Redirecting to home...');
+        await this.router.navigate(['/home']);
+      }
     } catch (error: any) {
       this.loginError.set(error.message || 'Error al iniciar sesión');
+    } finally {
+      this.isLoading = false;
     }
   }
 

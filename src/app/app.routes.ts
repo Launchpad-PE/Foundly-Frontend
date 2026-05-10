@@ -1,3 +1,4 @@
+// app.routes.ts
 import { Routes } from '@angular/router';
 import { AuthGuard } from './iam/application/auth.store';
 
@@ -8,16 +9,49 @@ const login = () => import('./iam/presentation/views/login/login').then(m => m.L
 const register = () => import('./iam/presentation/views/register/register').then(m => m.RegisterComponent);
 const recoveryPassword = () => import('./iam/presentation/views/recovery-password/recovery-password').then(m => m.RecoveryPasswordComponent);
 const onboarding = () => import('./profile-management/presentation/views/onboarding/onboarding').then(m => m.OnboardingComponent);
+const home = () => import('./shared/presentation/home/views/home.component').then(m => m.HomeComponent);
 
 export const routes: Routes = [
-  { path: 'login', loadComponent: login, title: `${baseTitle} - Iniciar Sesión` },
-  { path: 'register', loadComponent: register, title: `${baseTitle} - Registrarse`
+  {
+    path: 'login',
+    loadComponent: login,
+    title: `${baseTitle} - Iniciar Sesión`
   },
-  { path: 'recovery-password', loadComponent: recoveryPassword, title: `${baseTitle} - Recuperar Contraseña`
+  {
+    path: 'register',
+    loadComponent: register,
+    title: `${baseTitle} - Registrarse`
   },
-  { path: 'create-account', loadComponent: onboarding, canActivate: [AuthGuard], title: `${baseTitle} - Completar Perfil`
+  {
+    path: 'recovery-password',
+    loadComponent: recoveryPassword,
+    title: `${baseTitle} - Recuperar Contraseña`
   },
-  { path: 'onboarding', loadComponent: onboarding, canActivate: [AuthGuard], title: `${baseTitle} - Completar Perfil` },
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
-  { path: '**', redirectTo: '/login' },
+  {
+    path: 'create-account',
+    loadComponent: onboarding,
+    canActivate: [AuthGuard],
+    title: `${baseTitle} - Completar Perfil`
+  },
+  {
+    path: 'onboarding',
+    loadComponent: onboarding,
+    canActivate: [AuthGuard],
+    title: `${baseTitle} - Completar Perfil`
+  },
+  {
+    path: 'home',
+    loadComponent: home,
+    canActivate: [AuthGuard],
+    title: `${baseTitle} - Inicio`
+  },
+  {
+    path: '',
+    redirectTo: '/login',
+    pathMatch: 'full'
+  },
+  {
+    path: '**',
+    redirectTo: '/login'
+  },
 ];

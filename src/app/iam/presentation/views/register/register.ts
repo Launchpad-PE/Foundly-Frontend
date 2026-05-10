@@ -1,3 +1,4 @@
+// iam/presentation/views/register/register.ts
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -16,6 +17,8 @@ export class RegisterComponent {
   email = '';
   password = '';
   confirmPassword = '';
+  isLoading = false;
+  errorMessage = '';
 
   constructor(public userStore: UserStore, private router: Router) {}
 
@@ -24,30 +27,46 @@ export class RegisterComponent {
   }
 
   async handleRegister(): Promise<void> {
+    this.errorMessage = '';
+
+    if (!this.fullName || !this.email || !this.password) {
+      this.errorMessage = 'Por favor completa todos los campos';
+      return;
+    }
+
     if (this.password !== this.confirmPassword) {
-      alert('Las contraseñas no coinciden');
+      this.errorMessage = 'Las contraseñas no coinciden';
       return;
     }
 
     if (this.password.length < 6) {
-      alert('La contraseña debe tener al menos 6 caracteres');
+      this.errorMessage = 'La contraseña debe tener al menos 6 caracteres';
       return;
     }
 
+    this.isLoading = true;
+
     try {
+      // Registrar usuario
       await this.userStore.register({
         fullName: this.fullName,
         email: this.email,
         password: this.password
       });
+
+      // Login automático después del registro
       await this.userStore.login(this.email, this.password);
 
+      // Verificar si está autenticado y redirigir a onboarding
       if (this.userStore.isAuthenticated()) {
         console.log('✅ Registro exitoso, redirigiendo a onboarding...');
-        this.router.navigate(['/onboarding']);
+        await this.router.navigate(['/onboarding']);
       }
     } catch (error: any) {
-      alert(error.message || 'Error en el registro');
+      console.error('Registration error:', error);
+      this.errorMessage = error.message || 'Error en el registro';
+    } finally {
+      this.isLoading = false;
     }
   }
 }

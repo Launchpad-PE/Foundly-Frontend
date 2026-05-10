@@ -1,5 +1,6 @@
+// iam/application/auth.store.ts
 import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
+import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { UserStore } from './user.store';
 
 /**
@@ -13,7 +14,7 @@ export class AuthStore {
 
   constructor(private userStore: UserStore) {
     this.currentUser = this.userStore.currentUser;
-    this.isAuthenticated = this.userStore.isAuthenticated;  // ✅ Es una señal, no función
+    this.isAuthenticated = this.userStore.isAuthenticated;
   }
 
   async login(credentials: { email: string; password: string; userId?: string }) {
@@ -36,12 +37,26 @@ export class AuthGuard implements CanActivate {
     private router: Router,
   ) {}
 
-  canActivate(): boolean {
-    // ✅ isAuthenticated es una señal, se usa con () para obtener el valor
-    if (this.userStore.isAuthenticated()) {
-      return true;
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+    // Verificar si está autenticado
+    const isAuthenticated = this.userStore.isAuthenticated();
+
+    console.log('🔍 AuthGuard Debug:', {
+      isAuthenticated,
+      currentPath: state.url,
+      hasUser: !!this.userStore.currentUser()
+    });
+
+    // Si NO está autenticado, siempre redirigir al login
+    if (!isAuthenticated) {
+      console.log('❌ Not authenticated, redirecting to login');
+      this.router.navigate(['/login']);
+      return false;
     }
-    this.router.navigate(['/login']);
-    return false;
+
+    // Si está autenticado, permitir el acceso a la ruta solicitada
+    // El componente se encargará de verificar si necesita onboarding internamente
+    console.log('✅ Authenticated, allowing access to:', state.url);
+    return true;
   }
 }

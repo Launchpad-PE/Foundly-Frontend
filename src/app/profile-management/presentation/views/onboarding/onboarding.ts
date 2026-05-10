@@ -1,3 +1,4 @@
+// profile-management/presentation/views/onboarding/onboarding.ts
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -26,15 +27,30 @@ export class OnboardingComponent implements OnInit {
   private router = inject(Router);
 
   currentStep = 1;
+  isLoading = false;
 
   profileData: ProfileConfigData = { username: '', avatar: null };
   skillsData: SkillsFormData = { abilities: [], experiences: [] };
   roleData: RoleFormData = { selectedRole: '', customRole: '' };
 
   ngOnInit(): void {
+    console.log('🔍 Onboarding init - Checking auth status');
+
+    // Verificar autenticación
     if (!this.userStore.isAuthenticated()) {
+      console.log('❌ Not authenticated in onboarding, redirecting to login');
       this.router.navigate(['/login']);
+      return;
     }
+
+    // Si ya completó onboarding, redirigir a home
+    if (!this.userStore.needsOnboarding()) {
+      console.log('✅ Onboarding already completed, redirecting to home');
+      this.router.navigate(['/home']);
+      return;
+    }
+
+    console.log('📝 Starting onboarding process for user:', this.userStore.currentUser()?.email);
   }
 
   nextStep(): void {
@@ -53,8 +69,24 @@ export class OnboardingComponent implements OnInit {
 
   async completeOnboarding(): Promise<void> {
     const user = this.userStore.currentUser();
+
     if (!user?.id) {
-      alert('No hay usuario autenticado');
+      this.showError('No hay usuario autenticado');
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    // Validar datos requeridos
+    if (!this.profileData.username) {
+      this.showError('Por favor ingresa un nombre de usuario');
+      this.currentStep = 1;
+      return;
+    }
+
+    const selectedRole = this.roleData.selectedRole || this.roleData.customRole;
+    if (!selectedRole) {
+      this.showError('Por favor selecciona un rol');
+      this.currentStep = 3;
       return;
     }
 
@@ -67,20 +99,34 @@ export class OnboardingComponent implements OnInit {
       })
     );
 
+    this.isLoading = true;
+
     try {
+      console.log('📝 Creating profile for user:', user.id);
+
+      // Crear perfil
       await this.profileStore.createProfile(user.id, {
         username: this.profileData.username,
         avatar: null,
         bio: '',
-        role: this.roleData.selectedRole || this.roleData.customRole,
+        role: selectedRole,
         skills: this.skillsData.abilities,
         experiences: experiences,
       });
 
-      console.log('✅ Onboarding completado');
-      this.router.navigate(['/home']);
+      console.log('✅ Onboarding completed successfully');
+
+      // Redirigir al home
+      await this.router.navigate(['/home']);
     } catch (error: any) {
-      alert(error.message || 'Error al completar el onboarding');
+      console.error('Error completing onboarding:', error);
+      this.showError(error.message || 'Error al completar el onboarding');
+    } finally {
+      this.isLoading = false;
     }
+  }
+
+  private showError(message: string): void {
+    alert(message);
   }
 }
