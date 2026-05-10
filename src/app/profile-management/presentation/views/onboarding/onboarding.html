@@ -1,0 +1,34 @@
+<div class="onboarding-container">
+  <header class="onboarding-header">
+    <div class="header-content">
+      <img src="/logo.png" alt="Foundly" class="logo" />
+    </div>
+  </header>
+
+  <div class="onboarding-main">
+    <div class="onboarding-content">
+      <!-- Paso 1: Configurar Perfil -->
+      <app-profile-config
+        *ngIf="currentStep === 1"
+        [(modelValue)]="profileData"
+        (next)="nextStep()"
+      />
+
+      <!-- Paso 2: Habilidades y Experiencias -->
+      <app-skills-form
+        *ngIf="currentStep === 2"
+        [(modelValue)]="skillsData"
+        (next)="nextStep()"
+        (prev)="prevStep()"
+      />
+
+      <!-- Paso 3: Rol -->
+      <app-role-form
+        *ngIf="currentStep === 3"
+        [(modelValue)]="roleData"
+        (next)="nextStep()"
+        (prev)="prevStep()"
+      />
+    </div>
+  </div>
+</div>
