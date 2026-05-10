@@ -2,7 +2,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ProjectCardComponent } from '../components/project-card/projectc-card';
 import { CollaboratorCardComponent } from '../components/collaborator-card/collaborator-card';
 import { UserStore } from '../../../../iam/application/user.store';
@@ -30,7 +30,8 @@ interface Collaborator {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule, ProjectCardComponent, CollaboratorCardComponent],
+  imports: [CommonModule, FormsModule, ProjectCardComponent, CollaboratorCardComponent,
+    RouterModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })

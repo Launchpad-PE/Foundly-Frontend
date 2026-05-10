@@ -10,6 +10,7 @@ const register = () => import('./iam/presentation/views/register/register').then
 const recoveryPassword = () => import('./iam/presentation/views/recovery-password/recovery-password').then(m => m.RecoveryPasswordComponent);
 const onboarding = () => import('./profile-management/presentation/views/onboarding/onboarding').then(m => m.OnboardingComponent);
 const home = () => import('./shared/presentation/home/views/home.component').then(m => m.HomeComponent);
+const projects = () => import('./shared/presentation/projects/views/project-view').then(m => m.ProjectsComponent);
 
 export const routes: Routes = [
   {
@@ -44,6 +45,12 @@ export const routes: Routes = [
     loadComponent: home,
     canActivate: [AuthGuard],
     title: `${baseTitle} - Inicio`
+  },
+  {
+    path: 'projects',  // Ruta para proyectos
+    loadComponent: projects,
+    canActivate: [AuthGuard],
+    title: `${baseTitle} - Proyectos`
   },
   {
     path: '',
