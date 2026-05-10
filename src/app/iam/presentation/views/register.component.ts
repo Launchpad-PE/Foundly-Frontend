@@ -78,7 +78,7 @@ import { UserStore } from '../../application/user.store';
   styles: [`
     .register-container { display: flex; min-height: 100vh; background: #fff; }
     .card-left {
-      width: 40%; background: #CBFCFF;
+      width: 40%; background: #8176DC;
       display: flex; flex-direction: column; justify-content: center;
       align-items: center; padding: 2rem;
       border-right: 1px solid #e9ecef;
