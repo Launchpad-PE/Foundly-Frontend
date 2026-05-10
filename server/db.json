@@ -1,0 +1,35 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "fullName": "Juan Pérez",
+      "email": "juan@example.com",
+      "password": "123456",
+      "createdAt": "2024-01-15T10:00:00Z",
+      "updatedAt": "2024-01-15T10:00:00Z"
+    },
+    {
+      "id": 2,
+      "fullName": "María García",
+      "email": "maria@example.com",
+      "password": "123456",
+      "createdAt": "2024-01-20T10:00:00Z",
+      "updatedAt": "2024-01-20T10:00:00Z"
+    }
+  ],
+  "profiles": [
+    {
+      "id": 1,
+      "userId": 1,
+      "username": "juanperez",
+      "avatar": null,
+      "bio": "Desarrollador full stack apasionado por la tecnología",
+      "role": "Full Stack Developer",
+      "skills": ["JavaScript", "Angular", "Node.js", "TypeScript"],
+      "experiences": [],
+      "isComplete": true,
+      "createdAt": "2024-01-15T10:30:00Z",
+      "updatedAt": "2024-01-15T10:30:00Z"
+    }
+  ]
+}

@@ -4,7 +4,8 @@ import { environment } from '../../../environments/environment';
 import { Profile } from '../domain/entities/profile.entity';
 import { ProfileResource, ProfileResponse, ProfilesResponse } from './profile-response';
 import { ProfileAssembler } from './profile-assembler';
-import { Observable, map } from 'rxjs';
+import { Observable } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
 export class ProfileApiEndpoint extends BaseApiEndpoint<Profile, ProfileResource, ProfileResponse | ProfilesResponse, ProfileAssembler> {
 
@@ -16,57 +17,113 @@ export class ProfileApiEndpoint extends BaseApiEndpoint<Profile, ProfileResource
   }
 
   /**
-   * Get profile by user ID - returns Profile directly
+   * Get profile by ID
    */
-  getByUserId(userId: string): Observable<Profile> {
-    return this.http.get<ProfileResponse>(`${this.profilesUrl}/user/${userId}`).pipe(
-      map(response => this.assembler.toEntityFromResponse(response))
+  getProfileById(id: string): Observable<ProfileResponse> {
+    return this.http.get<ProfileResource>(`${this.profilesUrl}/${id}`).pipe(
+      map(profile => ({ profile }) as ProfileResponse)
     );
   }
 
   /**
-   * Update profile partially - returns Profile directly
+   * Get profile by user ID (json-server usa query params)
    */
-  patch(id: string, partialData: Partial<ProfileResource>): Observable<Profile> {
-    return this.http.patch<ProfileResponse>(`${this.profilesUrl}/${id}`, partialData).pipe(
-      map(response => this.assembler.toEntityFromResponse(response))
+  getByUserId(userId: string): Observable<ProfileResponse> {
+    return this.http.get<ProfileResource[]>(`${this.profilesUrl}?userId=${userId}`).pipe(
+      map(profiles => {
+        if (profiles && profiles.length > 0) {
+          return { profile: profiles[0] } as ProfileResponse;
+        }
+        throw new Error('Profile not found');
+      })
     );
   }
 
   /**
-   * Add skill to profile - returns Profile directly
+   * Create profile
    */
-  addSkill(profileId: string, skill: string): Observable<Profile> {
-    return this.http.post<ProfileResponse>(`${this.profilesUrl}/${profileId}/skills`, { skill }).pipe(
-      map(response => this.assembler.toEntityFromResponse(response))
+  createProfile(profile: Profile): Observable<ProfileResponse> {
+    const resource = this.assembler.toResourceFromEntity(profile);
+    return this.http.post<ProfileResource>(this.profilesUrl, resource).pipe(
+      map(created => ({ profile: created }) as ProfileResponse)
     );
   }
 
   /**
-   * Remove skill from profile - returns Profile directly
+   * Update profile
    */
-  removeSkill(profileId: string, skill: string): Observable<Profile> {
-    return this.http.delete<ProfileResponse>(`${this.profilesUrl}/${profileId}/skills/${encodeURIComponent(skill)}`).pipe(
-      map(response => this.assembler.toEntityFromResponse(response))
+  updateProfile(id: string, profile: Profile): Observable<ProfileResponse> {
+    const resource = this.assembler.toResourceFromEntity(profile);
+    return this.http.put<ProfileResource>(`${this.profilesUrl}/${id}`, resource).pipe(
+      map(updated => ({ profile: updated }) as ProfileResponse)
     );
   }
 
   /**
-   * Add experience to profile - returns Profile directly
+   * Patch profile (partial update)
    */
-  addExperience(profileId: string, experience: any): Observable<Profile> {
-    return this.http.post<ProfileResponse>(`${this.profilesUrl}/${profileId}/experiences`, experience).pipe(
-      map(response => this.assembler.toEntityFromResponse(response))
+  patchProfile(id: string, partialData: Partial<ProfileResource>): Observable<ProfileResponse> {
+    return this.http.patch<ProfileResource>(`${this.profilesUrl}/${id}`, partialData).pipe(
+      map(updated => ({ profile: updated }) as ProfileResponse)
     );
   }
 
   /**
-   * Remove experience from profile - returns Profile directly
+   * Delete profile
    */
-  removeExperience(profileId: string, experienceId: string): Observable<Profile> {
-    return this.http.delete<ProfileResponse>(`${this.profilesUrl}/${profileId}/experiences/${experienceId}`).pipe(
-      map(response => this.assembler.toEntityFromResponse(response))
+  deleteProfile(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.profilesUrl}/${id}`);
+  }
+
+  /**
+   * Add skill to profile - ✅ CORREGIDO con switchMap
+   */
+  addSkill(profileId: string, skill: string): Observable<ProfileResponse> {
+    return this.http.get<ProfileResource>(`${this.profilesUrl}/${profileId}`).pipe(
+      switchMap(profile => {
+        const skills = [...(profile.skills || []), skill];
+        return this.http.patch<ProfileResource>(`${this.profilesUrl}/${profileId}`, { skills });
+      }),
+      map(response => ({ profile: response }) as ProfileResponse)
     );
   }
 
+  /**
+   * Remove skill from profile - ✅ CORREGIDO con switchMap
+   */
+  removeSkill(profileId: string, skill: string): Observable<ProfileResponse> {
+    return this.http.get<ProfileResource>(`${this.profilesUrl}/${profileId}`).pipe(
+      switchMap(profile => {
+        const skills = (profile.skills || []).filter(s => s !== skill);
+        return this.http.patch<ProfileResource>(`${this.profilesUrl}/${profileId}`, { skills });
+      }),
+      map(response => ({ profile: response }) as ProfileResponse)
+    );
+  }
+
+  /**
+   * Add experience to profile - ✅ CORREGIDO con switchMap
+   */
+  addExperience(profileId: string, experience: any): Observable<ProfileResponse> {
+    return this.http.get<ProfileResource>(`${this.profilesUrl}/${profileId}`).pipe(
+      switchMap(profile => {
+        const experiences = [...(profile.experiences || []), experience];
+        return this.http.patch<ProfileResource>(`${this.profilesUrl}/${profileId}`, { experiences });
+      }),
+      map(response => ({ profile: response }) as ProfileResponse)
+    );
+  }
+
+  /**
+   * Remove experience from profile - ✅ CORREGIDO con switchMap
+   */
+  removeExperience(profileId: string, experienceId: string): Observable<ProfileResponse> {
+    return this.http.get<ProfileResource>(`${this.profilesUrl}/${profileId}`).pipe(
+      switchMap(profile => {
+        const experiences = (profile.experiences || []).filter(e => e.id !== experienceId);
+        return this.http.patch<ProfileResource>(`${this.profilesUrl}/${profileId}`, { experiences });
+      }),
+      map(response => ({ profile: response }) as ProfileResponse)
+    );
+  }
 }
