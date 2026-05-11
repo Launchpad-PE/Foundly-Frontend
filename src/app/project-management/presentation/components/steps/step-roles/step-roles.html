@@ -1,0 +1,94 @@
+<!-- step-roles.html -->
+<div class="step-container">
+  <h2>Definir Roles</h2>
+
+  <!-- Roles List -->
+  <div class="roles-list">
+    @for (role of formData.roles; track $index; let i = $index) {
+      <div class="role-card">
+        <div class="role-header">
+          <h3>{{ role.name }}</h3>
+          <button type="button" class="btn-remove-role" (click)="removeRole(i)">×</button>
+        </div>
+        <div class="role-card-info">
+          <h4>{{ role.cardInfo.title }}</h4>
+          <ul class="role-items">
+            @for (item of role.cardInfo.items; track $index; let j = $index) {
+              <li>
+                {{ item }}
+                <button type="button" class="remove-item" (click)="removeRoleItemFromList(i, j)">×</button>
+              </li>
+            }
+          </ul>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Add Role Button -->
+  @if (!showRoleForm) {
+    <button class="btn-add-role" (click)="showRoleForm = true">
+      + Añadir Rol
+    </button>
+  }
+
+  <!-- Add Role Form -->
+  @if (showRoleForm) {
+    <div class="role-form">
+      <h3>Nuevo Rol</h3>
+
+      <div class="form-group">
+        <label>Nombre del Rol *</label>
+        <input
+          type="text"
+          [(ngModel)]="newRole.name"
+          placeholder="Ej: Desarrollador Frontend"
+          class="form-control"
+        />
+      </div>
+
+      <div class="form-group">
+        <label>Título de la Tarjeta *</label>
+        <input
+          type="text"
+          [(ngModel)]="newRole.cardTitle"
+          placeholder="Ej: Responsabilidades del Rol"
+          class="form-control"
+        />
+      </div>
+
+      <div class="form-group">
+        <label>Items del Rol</label>
+        <div class="items-list">
+          @for (item of newRole.items; track $index; let i = $index) {
+            <div class="item-tag">
+              {{ item }}
+              <button type="button" class="remove-item" (click)="newRole.items.splice(i, 1)">×</button>
+            </div>
+          }
+        </div>
+        <div class="add-item-group">
+          <input
+            type="text"
+            [(ngModel)]="newRole.newItem"
+            (keyup.enter)="addRoleItem(newRole)"
+            placeholder="Ej: Experiencia en Angular"
+            class="item-input"
+          />
+          <button type="button" class="btn-add-item" (click)="addRoleItem(newRole)">+ Añadir</button>
+        </div>
+      </div>
+
+      <div class="role-form-actions">
+        <button type="button" class="btn-cancel" (click)="cancelAddRole()">Cancelar</button>
+        <button type="button" class="btn-save" (click)="saveRole()">Guardar Rol</button>
+      </div>
+    </div>
+  }
+
+  @if (formData.roles.length === 0 && !showRoleForm) {
+    <div class="empty-roles">
+      <p>No hay roles definidos. Haz clic en "Añadir Rol" para comenzar.</p>
+    </div>
+  }
+</div>

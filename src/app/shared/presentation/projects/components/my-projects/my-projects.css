@@ -1,6 +1,4 @@
-/* shared/presentation/components/project-card/project-card.component.css */
-
-/* Card Container */
+/* shared/presentation/views/projects/components/project-card/project-card.component.css */
 .project-card {
   background: white;
   border-radius: 1rem;
@@ -12,11 +10,12 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  position: relative;
 }
 
 .project-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
   border-color: #c7d2fe;
 }
 
@@ -30,7 +29,25 @@
   transform: translateY(-2px);
 }
 
-/* Header Section */
+/* Status Badge */
+.status-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.status-badge.draft {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* Header */
 .project-header {
   display: flex;
   justify-content: space-between;
@@ -66,12 +83,6 @@
   border-radius: 9999px;
   font-size: 0.75rem;
   font-weight: 500;
-  white-space: nowrap;
-}
-
-.compact .area-tag {
-  font-size: 0.7rem;
-  padding: 0.2rem 0.6rem;
 }
 
 /* Roles Section */
@@ -89,14 +100,9 @@
   letter-spacing: 0.5px;
 }
 
-.compact .project-roles h4 {
-  font-size: 0.75rem;
-  margin-bottom: 0.25rem;
-}
-
 .project-roles ul {
   margin: 0;
-  padding-left: 1.25rem;
+  padding-left: 0;
   list-style: none;
 }
 
@@ -104,8 +110,8 @@
   font-size: 0.875rem;
   color: #374151;
   margin-bottom: 0.25rem;
-  position: relative;
   padding-left: 1rem;
+  position: relative;
 }
 
 .project-roles li::before {
@@ -116,12 +122,16 @@
   left: 0;
 }
 
-.compact .project-roles li {
-  font-size: 0.75rem;
-  margin-bottom: 0.125rem;
+.more-roles {
+  color: #6b7280;
+  font-style: italic;
 }
 
-/* Footer Section */
+.more-roles::before {
+  color: #6b7280;
+}
+
+/* Footer */
 .project-footer {
   border-top: 1px solid #f3f4f6;
   padding-top: 0.75rem;
@@ -144,14 +154,8 @@
   gap: 0.25rem;
 }
 
-.author::before {
-  content: "👤";
-  font-size: 0.7rem;
-}
-
-.duration::before {
-  content: "⏱️";
-  font-size: 0.7rem;
+.icon {
+  font-size: 0.8rem;
 }
 
 .project-tags {
@@ -161,13 +165,13 @@
 }
 
 .tag {
-  background: #f9fafb;
-  color: #4b5563;
   padding: 0.25rem 0.5rem;
   border-radius: 0.375rem;
   font-size: 0.7rem;
   font-weight: 500;
   border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  color: #4b5563;
 }
 
 .tag:first-child {
@@ -176,7 +180,19 @@
   border-color: #c7d2fe;
 }
 
-/* Actions Buttons */
+.badge-remote {
+  background: #dcfce7;
+  color: #166534;
+  border-color: #bbf7d0;
+}
+
+.badge-presential {
+  background: #fef3c7;
+  color: #92400e;
+  border-color: #fde68a;
+}
+
+/* Actions */
 .project-actions {
   display: flex;
   gap: 0.75rem;
@@ -190,7 +206,7 @@
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.2s;
   text-align: center;
   border: none;
 }
@@ -209,7 +225,6 @@
 .btn-apply {
   background: #4f46e5;
   color: white;
-  border: 1px solid #4f46e5;
 }
 
 .btn-apply:hover {
@@ -218,17 +233,7 @@
   box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.3);
 }
 
-.btn-view:active, .btn-apply:active {
-  transform: translateY(0);
-}
-
-/* Compact mode buttons */
-.compact .btn-view, .compact .btn-apply {
-  padding: 0.375rem 0.75rem;
-  font-size: 0.75rem;
-}
-
-/* Responsive Design */
+/* Responsive */
 @media (max-width: 768px) {
   .project-card {
     padding: 1rem;
@@ -250,84 +255,5 @@
 
   .btn-view, .btn-apply {
     width: 100%;
-  }
-}
-
-/* Dark mode support (opcional) */
-@media (prefers-color-scheme: dark) {
-  .project-card {
-    background: #1f2937;
-    border-color: #374151;
-  }
-
-  .project-title {
-    color: #f9fafb;
-  }
-
-  .area-tag {
-    background: #374151;
-    color: #818cf8;
-  }
-
-  .project-roles h4 {
-    color: #9ca3af;
-  }
-
-  .project-roles li {
-    color: #d1d5db;
-  }
-
-  .tag {
-    background: #111827;
-    color: #d1d5db;
-    border-color: #374151;
-  }
-
-  .btn-view {
-    background: #374151;
-    color: #818cf8;
-    border-color: #4f46e5;
-  }
-
-  .btn-view:hover {
-    background: #4b5563;
-  }
-}
-
-/* Animation for new cards */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.project-card {
-  animation: fadeInUp 0.3s ease-out;
-}
-
-/* Loading skeleton (opcional) */
-.skeleton {
-  background: linear-gradient(
-    90deg,
-    #f3f4f6 25%,
-    #e5e7eb 50%,
-    #f3f4f6 75%
-  );
-  background-size: 200% 100%;
-  animation: loading 1.5s infinite;
-  border-radius: 0.5rem;
-}
-
-@keyframes loading {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
   }
 }

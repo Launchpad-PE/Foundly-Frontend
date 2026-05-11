@@ -1,0 +1,39 @@
+<div class="step-container">
+  <h2>Impacto Ambiental</h2>
+
+  <div class="info-box">
+    <span class="info-icon">🌱</span>
+    <p>Activa si tu proyecto tiene impacto ambiental medible</p>
+  </div>
+
+  <div class="form-group">
+    <label class="checkbox-label">
+      <input
+        type="checkbox"
+        [(ngModel)]="formData.hasEnvironmentalImpact"
+        class="checkbox-input"
+      />
+      <span>Mi proyecto tiene impacto ambiental medible</span>
+    </label>
+  </div>
+
+  <div *ngIf="formData.hasEnvironmentalImpact" class="metrics-section">
+    <h3>Selecciona las métricas ambientales que aplican:</h3>
+    <div class="metrics-grid">
+      <div
+        *ngFor="let metric of environmentalMetrics"
+        class="metric-card"
+        [class.selected]="isSelected(metric.value)"
+        (click)="toggleEnvironmentalMetric(metric.value)"
+      >
+        <div class="metric-icon">{{ metric.icon }}</div>
+        <div class="metric-label">{{ metric.label }}</div>
+        <div class="metric-check" *ngIf="isSelected(metric.value)">✓</div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!formData.hasEnvironmentalImpact" class="info-message">
+    <p>No te preocupes, puedes continuar sin seleccionar métricas ambientales.</p>
+  </div>
+</div>

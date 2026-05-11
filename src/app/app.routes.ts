@@ -11,6 +11,8 @@ const recoveryPassword = () => import('./iam/presentation/views/recovery-passwor
 const onboarding = () => import('./profile-management/presentation/views/onboarding/onboarding').then(m => m.OnboardingComponent);
 const home = () => import('./shared/presentation/home/views/home.component').then(m => m.HomeComponent);
 const projects = () => import('./shared/presentation/projects/views/project-view').then(m => m.ProjectsComponent);
+const createProject = () => import('./project-management/presentation/views/create-project/create-project')
+  .then(m => m.CreateProject);
 
 export const routes: Routes = [
   {
@@ -51,6 +53,12 @@ export const routes: Routes = [
     loadComponent: projects,
     canActivate: [AuthGuard],
     title: `${baseTitle} - Proyectos`
+  },
+  {
+    path: 'projects/create',
+    loadComponent: createProject,
+    canActivate: [AuthGuard],
+    title: `${baseTitle} - Crear Proyecto`
   },
   {
     path: '',

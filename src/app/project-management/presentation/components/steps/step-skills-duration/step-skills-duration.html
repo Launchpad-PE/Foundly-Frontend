@@ -1,0 +1,83 @@
+<div class="step-container">
+  <h2>Habilidades y Duración</h2>
+
+  <!-- Nivel Académico -->
+  <div class="form-group">
+    <label for="academicLevel">Nivel Académico (opcional)</label>
+    <select
+      id="academicLevel"
+      [(ngModel)]="formData.academicLevel"
+      class="form-control"
+    >
+      <option [ngValue]="null">Selecciona un nivel (opcional)</option>
+      <option *ngFor="let level of academicLevels" [value]="level">{{ level }}</option>
+    </select>
+  </div>
+
+  <!-- Beneficios -->
+  <div class="form-group">
+    <label>Beneficios</label>
+    <div class="tags-input">
+      <div class="tags-list">
+        <span *ngFor="let benefit of formData.benefits" class="tag">
+          {{ benefit }}
+          <button type="button" class="tag-remove" (click)="removeBenefit(benefit)">×</button>
+        </span>
+      </div>
+      <div class="tag-input-group">
+        <input
+          type="text"
+          [(ngModel)]="newBenefit"
+          (keyup.enter)="addBenefit()"
+          placeholder="Ej: Certificación, Experiencia laboral..."
+          class="tag-input"
+        />
+        <button type="button" class="btn-add-tag" (click)="addBenefit()">Añadir</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Habilidades Requeridas -->
+  <div class="form-group">
+    <label>Habilidades Requeridas</label>
+    <div class="tags-input">
+      <div class="tags-list">
+        <span *ngFor="let skill of formData.requiredSkills" class="tag skill-tag">
+          #{{ skill }}
+          <button type="button" class="tag-remove" (click)="removeSkill(skill)">×</button>
+        </span>
+      </div>
+      <div class="tag-input-group">
+        <input
+          type="text"
+          [(ngModel)]="newSkill"
+          (keyup.enter)="addSkill()"
+          placeholder="Ej: JavaScript, UX Design, Project Management..."
+          class="tag-input"
+        />
+        <button type="button" class="btn-add-tag" (click)="addSkill()">Añadir</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Duración -->
+  <div class="form-group">
+    <label>Duración del Proyecto</label>
+    <div class="duration-group">
+      <input
+        type="number"
+        [(ngModel)]="formData.durationAmount"
+        (ngModelChange)="onDurationChange()"
+        min="1"
+        class="duration-amount"
+      />
+      <select
+        [(ngModel)]="formData.durationType"
+        (ngModelChange)="onDurationChange()"
+        class="duration-type"
+      >
+        <option *ngFor="let type of durationTypes" [value]="type.value">{{ type.label }}</option>
+      </select>
+    </div>
+  </div>
+</div>

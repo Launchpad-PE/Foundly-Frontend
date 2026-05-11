@@ -71,5 +71,59 @@
       "createdAt": "2026-05-10T15:15:45.056Z",
       "updatedAt": "2026-05-10T15:15:45.056Z"
     }
+  ],
+  "projects": [
+    {
+      "id": "7909",
+      "name": "dasdsadasd",
+      "area": "Tecnología",
+      "tags": [
+        "sadasdasd"
+      ],
+      "summary": "asdasdasdasd",
+      "environmentalImpact": [
+        "Calidad del aire",
+        "Humedad ambiental",
+        "Temperatura",
+        "Participación ciudadana"
+      ],
+      "academicLevel": "Postgrado",
+      "benefits": [
+        "sadasdasdasd"
+      ],
+      "requiredSkills": [
+        "sadasdadsasd"
+      ],
+      "duration": {
+        "amount": 1,
+        "type": "meses"
+      },
+      "roles": [
+        {
+          "id": "e3a5eb72-6d56-444c-810d-b7a32673ca18",
+          "name": "saddasasd",
+          "cardInfo": {
+            "title": "asdasdasd",
+            "items": [
+              "sadasdads"
+            ]
+          }
+        },
+        {
+          "id": "0e561793-ae46-4e3a-b24c-380d224c5052",
+          "name": "asdadsasd",
+          "cardInfo": {
+            "title": "asdadsads",
+            "items": [
+              "asdadsdas"
+            ]
+          }
+        }
+      ],
+      "status": "borrador",
+      "createdAt": "2026-05-10T23:52:32.117Z",
+      "updatedAt": "2026-05-10T23:52:32.117Z",
+      "authorId": "3"
+    }
   ]
 }

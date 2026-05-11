@@ -73,12 +73,12 @@
 
     <!-- Projects Grid -->
     <div *ngIf="!loading() && getCurrentProjects().length > 0" class="projects-grid">
-      <app-project-card
+      <app-my-projects
         *ngFor="let project of getCurrentProjects()"
         [project]="getProjectForCard(project)"
         (viewDetails)="viewProjectDetails($event)"
         (apply)="applyToProject($event)">
-      </app-project-card>
+      </app-my-projects>
     </div>
   </div>
 
