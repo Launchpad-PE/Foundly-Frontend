@@ -114,7 +114,7 @@ export class HomeComponent implements OnInit {
   }
 
   viewProjectDetails(projectId: string): void {
-    this.router.navigate(['/projects', projectId]);
+    this.router.navigate(['/projects/info', projectId]);
   }
 
   viewProfile(collaboratorId: string): void {

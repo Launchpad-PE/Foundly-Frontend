@@ -16,7 +16,8 @@ const createProject = () => import('./project-management/presentation/views/crea
   .then(m => m.CreateProject);
 const projectDetail = () => import('./project-management/presentation/views/project-detail/project-detail')
   .then(m => m.ProjectDetailComponent);
-
+const projectInfo = () => import('./project-management/presentation/views/project-info/project-info')
+  .then(m => m.ProjectInfo);
 export const routes: Routes = [
   {
     path: 'login',
@@ -72,6 +73,12 @@ export const routes: Routes = [
   {
     path: 'projects/:id',
     loadComponent: projectDetail,
+    canActivate: [AuthGuard],
+    title: `${baseTitle} - Detalle del Proyecto`
+  },
+  {
+    path: 'projects/info/:id',
+    loadComponent: projectInfo,
     canActivate: [AuthGuard],
     title: `${baseTitle} - Detalle del Proyecto`
   },
