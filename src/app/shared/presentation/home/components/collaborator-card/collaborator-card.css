@@ -42,10 +42,42 @@
 }
 
 .collaborator-role {
-  margin: 0;
+  margin: 0 0 0.5rem 0;
   font-size: 0.76rem;
   color: #9599b8;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.collaborator-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.skill-badge {
+  background: #e0e7ff;
+  color: #4f46e5;
+  padding: 0.2rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+.btn-view-profile {
+  background: #4f46e5;
+  color: white;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &:hover {
+    background: #3730a3;
+  }
 }
