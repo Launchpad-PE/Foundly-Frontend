@@ -7,10 +7,7 @@
       <h3 class="collaborator-name">{{ displayName }}</h3>
       <span class="collaborator-role">{{ collaborator.role }}</span>
     </div>
-    <div class="collaborator-skills" *ngIf="collaborator.skills && collaborator.skills.length > 0">
-      <span class="skill-badge" *ngFor="let skill of collaborator.skills.slice(0, 3)">{{ skill }}</span>
-      <span class="skill-badge" *ngIf="collaborator.skills.length > 3">+{{ collaborator.skills.length - 3 }}</span>
-    </div>
+
     <div class="collaborator-actions">
       <button class="btn-view-profile" (click)="onViewProfile()">
         Ver perfil completo

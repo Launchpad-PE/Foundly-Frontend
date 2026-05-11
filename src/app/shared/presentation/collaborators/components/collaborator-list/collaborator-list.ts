@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Profile } from '../../../../../profile-management/domain/entities/profile.entity';
-import { NgForOf, NgIf } from '@angular/common';
 
 const AVATAR_GRADIENTS = [
   'linear-gradient(135deg, #667eea, #764ba2)',
@@ -13,10 +12,7 @@ const AVATAR_GRADIENTS = [
 
 @Component({
   selector: 'app-collaborator-list',
-  imports: [
-    NgForOf,
-    NgIf
-  ],
+  imports: [],
   templateUrl: './collaborator-list.html',
   styleUrl: './collaborator-list.css',
 })
