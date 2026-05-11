@@ -1,0 +1,24 @@
+<!-- shared/presentation/views/projects/components/project-card/project-card.component.html -->
+<div class="project-card" [class.compact]="isCompact">
+  <!-- Status Badge (opcional) -->
+  @if (project.status && project.status !== 'publicado') {
+    <div class="status-badge" [class.draft]="project.status === 'borrador'">
+      {{ project.status === 'borrador' ? 'Borrador' : project.status }}
+    </div>
+  }
+
+  <div class="project-header">
+    <h3 class="project-title">{{ project.title }}</h3>
+    <div class="project-areas">
+      @for (area of project.areas; track area) {
+        <span class="area-tag">{{ area }}</span>
+      }
+    </div>
+  </div>
+
+  <div class="project-actions">
+    <button class="btn-view" (click)="onViewDetails()">
+      Ver más
+    </button>
+  </div>
+</div>

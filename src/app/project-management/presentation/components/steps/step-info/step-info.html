@@ -1,0 +1,70 @@
+<div class="step-container">
+  <h2>Información Básica del Proyecto</h2>
+
+  <!-- Nombre del Proyecto -->
+  <div class="form-group">
+    <label for="projectName">Nombre del Proyecto *</label>
+    <input
+      type="text"
+      id="projectName"
+      [(ngModel)]="formData.name"
+      (ngModelChange)="onInputChange()"
+      placeholder="Ej: Plataforma de E-Learning"
+      class="form-control"
+      required
+    />
+  </div>
+
+  <!-- Área -->
+  <div class="form-group">
+    <label for="area">Área *</label>
+    <select
+      id="area"
+      [(ngModel)]="formData.area"
+      (ngModelChange)="onInputChange()"
+      class="form-control"
+      required
+    >
+      <option value="">Selecciona un área</option>
+      <option *ngFor="let area of availableAreas" [value]="area">{{ area }}</option>
+    </select>
+  </div>
+
+  <!-- Etiquetas/Tags -->
+  <div class="form-group">
+    <label>Etiquetas</label>
+    <div class="tags-input">
+      <div class="tags-list">
+        <span *ngFor="let tag of formData.tags" class="tag">
+          #{{ tag }}
+          <button type="button" class="tag-remove" (click)="removeTag(tag)">×</button>
+        </span>
+      </div>
+      <div class="tag-input-group">
+        <input
+          type="text"
+          [(ngModel)]="newTag"
+          (keyup.enter)="addTag()"
+          placeholder="Escribe una etiqueta y presiona Enter"
+          class="tag-input"
+        />
+        <button type="button" class="btn-add-tag" (click)="addTag()">Añadir</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resumen -->
+  <div class="form-group">
+    <label for="summary">Resumen *</label>
+    <textarea
+      id="summary"
+      [(ngModel)]="formData.summary"
+      (ngModelChange)="onInputChange()"
+      rows="4"
+      placeholder="Describe brevemente de qué trata tu proyecto..."
+      class="form-control"
+      required
+    ></textarea>
+    <small class="char-count">{{ formData.summary.length }}/500</small>
+  </div>
+</div>
