@@ -9,6 +9,7 @@ export interface Project {
   author: string;
   duration: string;
   modality: string;
+  isOwn?: boolean;
 }
 
 @Component({
@@ -21,6 +22,8 @@ export interface Project {
 export class ProjectCardComponent {
   @Input() project!: Project;
   @Input() isCompact: boolean = false;
+  @Input() isParticipating: boolean = false;
+  @Input() isOwn: boolean = false;
   @Output() viewDetails = new EventEmitter<string>();
   @Output() apply = new EventEmitter<string>();
 

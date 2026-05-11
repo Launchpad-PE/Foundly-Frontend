@@ -1,6 +1,9 @@
 <!-- project-card.component.html -->
 <div class="project-card" [class.compact]="isCompact">
 
+  <span class="own-badge" *ngIf="isOwn && !isCompact">Tu proyecto</span>
+  <span class="participating-badge" *ngIf="isParticipating && !isOwn">✓ Participando</span>
+
   <h3 class="project-title">{{ project.title }}</h3>
 
   <!-- Roles -->
@@ -43,7 +46,7 @@
   <!-- Actions -->
   <div class="project-actions">
     <button class="btn-view" (click)="onViewDetails()">Ver más</button>
-    <button class="btn-apply" *ngIf="!isCompact" (click)="onApply()">Postular</button>
+    <button class="btn-apply" *ngIf="!isCompact && !isOwn" (click)="onApply()">Postular</button>
   </div>
 
 </div>

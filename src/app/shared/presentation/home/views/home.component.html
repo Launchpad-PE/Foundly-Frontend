@@ -102,20 +102,28 @@
     <!-- Projects Feed -->
     <main class="projects-feed">
       <h2 class="feed-title">Lista de proyectos</h2>
-      <div class="projects-list">
+      <div class="projects-list" *ngIf="homeProjects.length > 0; else emptyFeed">
         <app-project-card
-          *ngFor="let project of allProjects"
+          *ngFor="let project of homeProjects"
           [project]="project"
+          [isParticipating]="isParticipatingIn(project.id)"
           (viewDetails)="viewProjectDetails($event)"
           (apply)="applyToProject($event)">
         </app-project-card>
       </div>
+      <ng-template #emptyFeed>
+        <div class="empty-state">
+          <div class="empty-icon">📋</div>
+          <p class="empty-title">No hay proyectos disponibles</p>
+          <p class="empty-sub">Aún no hay proyectos publicados en los que puedas participar.</p>
+        </div>
+      </ng-template>
     </main>
 
     <!-- Right Sidebar -->
     <aside class="featured-sidebar sidebar-card">
       <h3 class="sidebar-title centered">Proyectos Destacados</h3>
-      <div class="featured-list">
+      <div class="featured-list" *ngIf="featuredProjects.length > 0; else emptyFeatured">
         <app-project-card
           *ngFor="let project of featuredProjects"
           [project]="project"
@@ -123,6 +131,9 @@
           (viewDetails)="viewProjectDetails($event)">
         </app-project-card>
       </div>
+      <ng-template #emptyFeatured>
+        <p class="no-featured">Sin proyectos destacados por el momento.</p>
+      </ng-template>
     </aside>
 
   </div>

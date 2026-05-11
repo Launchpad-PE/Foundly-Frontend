@@ -191,6 +191,25 @@ export class ProjectStore {
   }
 
   /**
+   * Load all projects regardless of status (for home discovery)
+   */
+  async loadAllProjects(): Promise<Project[]> {
+    this.setLoading(true);
+    this.clearError();
+
+    try {
+      const projects = await firstValueFrom(this.projectApi.getAllProjects());
+      this.allProjects.set(projects);
+      return projects;
+    } catch (err: any) {
+      this.setError(err.message);
+      return [];
+    } finally {
+      this.setLoading(false);
+    }
+  }
+
+  /**
    * Load projects by area
    */
   async loadProjectsByArea(area: string): Promise<Project[]> {

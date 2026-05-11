@@ -124,6 +124,86 @@
       "createdAt": "2026-05-10T23:52:32.117Z",
       "updatedAt": "2026-05-10T23:52:32.117Z",
       "authorId": "3"
+    },
+    {
+      "id": "5",
+      "name": "Misterrrr",
+      "area": "Tecnología",
+      "tags": [
+        "OSJDC"
+      ],
+      "summary": "SADCWFEFCWFCe wevvervrvrrvrrvrvrvr",
+      "environmentalImpact": [
+        "Calidad del aire",
+        "Humedad ambiental",
+        "Temperatura",
+        "Participación ciudadana"
+      ],
+      "academicLevel": "Pregrado",
+      "benefits": [
+        "oñoooooo"
+      ],
+      "requiredSkills": [
+        "oñoooooooooo"
+      ],
+      "duration": {
+        "amount": 1,
+        "type": "años"
+      },
+      "roles": [
+        {
+          "id": "5707b5b4-1d6e-428f-8d75-0acb87aae949",
+          "name": "ffffffffffffffev",
+          "cardInfo": {
+            "title": "rearbab",
+            "items": [
+              "baerbbbbbbbbberb"
+            ]
+          }
+        }
+      ],
+      "status": "borrador",
+      "createdAt": "2026-05-11T00:45:08.114Z",
+      "updatedAt": "2026-05-11T00:45:08.114Z",
+      "authorId": "1"
+    },
+    {
+      "id": "NaN",
+      "name": "trbrt",
+      "area": "Social",
+      "tags": [
+        "advwe"
+      ],
+      "summary": "wvewevwergwregwrgergw",
+      "environmentalImpact": [
+        "Calidad del aire",
+        "Participación ciudadana"
+      ],
+      "academicLevel": "Postgrado",
+      "benefits": [
+        "wgwegwr"
+      ],
+      "requiredSkills": [
+        "wgrwegwewr"
+      ],
+      "duration": {
+        "amount": 1,
+        "type": "semestres"
+      },
+      "roles": [
+        {
+          "id": "66c3e2eb-8bcd-4fe2-953c-1235ed14aeb7",
+          "name": "wgewrawg",
+          "cardInfo": {
+            "title": "waevewg",
+            "items": []
+          }
+        }
+      ],
+      "status": "borrador",
+      "createdAt": "2026-05-11T01:39:59.793Z",
+      "updatedAt": "2026-05-11T01:39:59.793Z",
+      "authorId": "1"
     }
   ]
 }

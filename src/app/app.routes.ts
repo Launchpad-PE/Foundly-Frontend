@@ -13,6 +13,8 @@ const home = () => import('./shared/presentation/home/views/home.component').the
 const projects = () => import('./shared/presentation/projects/views/project-view').then(m => m.ProjectsComponent);
 const createProject = () => import('./project-management/presentation/views/create-project/create-project')
   .then(m => m.CreateProject);
+const projectDetail = () => import('./project-management/presentation/views/project-detail/project-detail')
+  .then(m => m.ProjectDetailComponent);
 
 export const routes: Routes = [
   {
@@ -59,6 +61,12 @@ export const routes: Routes = [
     loadComponent: createProject,
     canActivate: [AuthGuard],
     title: `${baseTitle} - Crear Proyecto`
+  },
+  {
+    path: 'projects/:id',
+    loadComponent: projectDetail,
+    canActivate: [AuthGuard],
+    title: `${baseTitle} - Detalle del Proyecto`
   },
   {
     path: '',

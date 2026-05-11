@@ -55,6 +55,34 @@
   }
 }
 
+/* ── Participating badge ── */
+.own-badge {
+  display: inline-flex;
+  align-items: center;
+  background: #eeefff;
+  color: #667eea;
+  padding: 0.18rem 0.7rem;
+  border-radius: 20px;
+  font-size: 0.71rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  margin-bottom: 0.6rem;
+  border: 1.5px solid #c8ccf8;
+}
+
+.participating-badge {
+  display: inline-flex;
+  align-items: center;
+  background: #e6f8f0;
+  color: #1f8a57;
+  padding: 0.18rem 0.7rem;
+  border-radius: 20px;
+  font-size: 0.71rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  margin-bottom: 0.6rem;
+}
+
 /* ── Title ── */
 .project-title {
   margin: 0 0 1rem 0;
