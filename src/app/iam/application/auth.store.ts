@@ -35,27 +35,42 @@ export class AuthGuard implements CanActivate {
   constructor(
     private userStore: UserStore,
     private router: Router,
-  ) {}
+  ) {
+    // Ensure UserStore has time to initialize
+    this.userStore;
+  }
+
+  private isUserAuthenticated(): boolean {
+    // Primary check: UserStore state
+    const storeIsAuthenticated = this.userStore.isAuthenticated();
+
+    // Secondary check: localStorage persistence (for page refreshes/navigation)
+    const token = localStorage.getItem('authToken');
+    const user = localStorage.getItem('currentUser');
+
+    // If store says authenticated OR storage has both token and user, user is authenticated
+    return storeIsAuthenticated || (!!token && !!user);
+  }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    // Verificar si está autenticado
-    const isAuthenticated = this.userStore.isAuthenticated();
+    const isAuthenticated = this.isUserAuthenticated();
+    const token = localStorage.getItem('authToken');
+    const user = localStorage.getItem('currentUser');
 
-    console.log('🔍 AuthGuard Debug:', {
+    console.log('🔍 AuthGuard checking:', {
       isAuthenticated,
-      currentPath: state.url,
-      hasUser: !!this.userStore.currentUser()
+      hasToken: !!token,
+      hasUser: !!user,
+      path: state.url,
+      storeUser: !!this.userStore.currentUser()
     });
 
-    // Si NO está autenticado, siempre redirigir al login
     if (!isAuthenticated) {
       console.log('❌ Not authenticated, redirecting to login');
       this.router.navigate(['/login']);
       return false;
     }
 
-    // Si está autenticado, permitir el acceso a la ruta solicitada
-    // El componente se encargará de verificar si necesita onboarding internamente
     console.log('✅ Authenticated, allowing access to:', state.url);
     return true;
   }

@@ -10,6 +10,7 @@ const register = () => import('./iam/presentation/views/register/register').then
 const recoveryPassword = () => import('./iam/presentation/views/recovery-password/recovery-password').then(m => m.RecoveryPasswordComponent);
 const onboarding = () => import('./profile-management/presentation/views/onboarding/onboarding').then(m => m.OnboardingComponent);
 const home = () => import('./shared/presentation/home/views/home.component').then(m => m.HomeComponent);
+const collaborators = () => import('./shared/presentation/collaborators/views/collaborators.component').then(m => m.CollaboratorsComponent);
 const projects = () => import('./shared/presentation/projects/views/project-view').then(m => m.ProjectsComponent);
 const createProject = () => import('./project-management/presentation/views/create-project/create-project')
   .then(m => m.CreateProject);
@@ -49,6 +50,12 @@ export const routes: Routes = [
     loadComponent: home,
     canActivate: [AuthGuard],
     title: `${baseTitle} - Inicio`
+  },
+  {
+    path: 'collaborators',
+    loadComponent: collaborators,
+    canActivate: [AuthGuard],
+    title: `${baseTitle} - Colaboradores`
   },
   {
     path: 'projects',  // Ruta para proyectos
