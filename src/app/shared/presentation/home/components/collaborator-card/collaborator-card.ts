@@ -1,9 +1,11 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 export interface Collaborator {
   id: string;
   name: string;
   role: string;
+  skills?: string[];
   avatar?: string;
 }
 
@@ -20,10 +22,12 @@ const AVATAR_GRADIENTS = [
   selector: 'app-collaborator-card',
   standalone: true,
   templateUrl: './collaborator-card.html',
-  styleUrls: ['./collaborator-card.css']
+  styleUrls: ['./collaborator-card.css'],
+  imports: [CommonModule]
 })
 export class CollaboratorCardComponent {
   @Input() collaborator!: Collaborator;
+  @Output() viewProfile = new EventEmitter<string>();
 
   get avatarGradient(): string {
     const index = parseInt(this.collaborator.id, 10) % AVATAR_GRADIENTS.length;
@@ -36,5 +40,9 @@ export class CollaboratorCardComponent {
       .slice(0, 2)
       .map(n => n[0])
       .join('');
+  }
+
+  onViewProfile(): void {
+    this.viewProfile.emit(this.collaborator.id);
   }
 }

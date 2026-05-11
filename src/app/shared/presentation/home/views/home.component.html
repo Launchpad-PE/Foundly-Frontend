@@ -4,13 +4,13 @@
   <!-- ── Header ── -->
   <header class="home-header">
     <div class="logo">
-      <h1>CollabUs</h1>
+      <h1>Foundly</h1>
     </div>
 
     <nav class="nav-menu">
       <a href="#" class="nav-link active">Inicio</a>
-      <a href="#" class="nav-link">Proyectos</a>
-      <a href="#" class="nav-link">Colaboradores</a>
+      <a href="#" class="nav-link active">Proyectos</a>
+      <a routerLink="/collaborators" class="nav-link active">Colaboradores</a>
     </nav>
 
     <div class="user-actions">
@@ -83,10 +83,11 @@
         <div class="collaborators-list">
           <app-collaborator-card
             *ngFor="let collaborator of highlightedCollaborators"
-            [collaborator]="collaborator">
+            [collaborator]="collaborator"
+            (viewProfile)="viewProfile($event)">
           </app-collaborator-card>
         </div>
-        <a href="#" class="view-more-btn">Ver más</a>
+        <a routerLink="/collaborators" class="view-more-btn">Ver más</a>
       </section>
 
       <section class="sidebar-card plan-card">

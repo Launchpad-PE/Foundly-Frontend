@@ -2,7 +2,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ProjectCardComponent } from '../components/project-card/projectc-card';
 import { CollaboratorCardComponent } from '../components/collaborator-card/collaborator-card';
 import { UserStore } from '../../../../iam/application/user.store';
@@ -25,12 +25,13 @@ interface Collaborator {
   role: string;
   avatar?: string;
   isHighlighted?: boolean;
+  skills?: string[]; // Added skills field
 }
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule, ProjectCardComponent, CollaboratorCardComponent],
+  imports: [CommonModule, FormsModule, ProjectCardComponent, CollaboratorCardComponent, RouterLink],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
@@ -44,9 +45,9 @@ export class HomeComponent implements OnInit {
   filterArea: string = '';
 
   highlightedCollaborators: Collaborator[] = [
-    { id: '1', name: 'Christian Gonzalez', role: 'Arquitecto de Software', isHighlighted: true },
-    { id: '2', name: 'Diana Briceño', role: 'Desarrollador Full Stack', isHighlighted: true },
-    { id: '3', name: 'Mario Baca', role: 'Desarrollador de Videojuegos', isHighlighted: true }
+    { id: '1', name: 'Christian Gonzalez', role: 'Arquitecto de Software', skills: ['JavaScript', 'Angular'] },
+    { id: '2', name: 'Diana Briceño', role: 'Desarrollador Full Stack', skills: ['React', 'Python'] },
+    { id: '3', name: 'Mario Baca', role: 'Desarrollador de Videojuegos', skills: ['Unity', 'C#'] }
   ];
 
   featuredProjects: Project[] = [
@@ -139,5 +140,11 @@ export class HomeComponent implements OnInit {
 
   viewProjectDetails(projectId: string): void {
     console.log('View project details:', projectId);
+  }
+
+  viewProfile(collaboratorId: string): void {
+    console.log('View collaborator profile:', collaboratorId);
+    // Navigate to collaborator profile or collaborators page
+    this.router.navigate(['/collaborators']);
   }
 }
