@@ -1,42 +1,31 @@
-<!-- home.component.html -->
+<!-- home.component.html - Sin loading state -->
 <div class="home-container">
 
-  <!-- ── Header ── -->
   <header class="home-header">
     <div class="logo">
       <h1>Foundly</h1>
     </div>
-
     <nav class="nav-menu">
       <a routerLink="/home" routerLinkActive="active" class="nav-link">Inicio</a>
       <a routerLink="/projects" routerLinkActive="active" class="nav-link">Proyectos</a>
       <a routerLink="/collaborators" class="nav-link">Colaboradores</a>
     </nav>
-
     <div class="user-actions">
       <button class="btn-logout" (click)="logout()">Log out</button>
       <div class="user-avatar">U</div>
     </div>
   </header>
 
-  <!-- ── Search Bar ── -->
+  <!-- Search Bar -->
   <div class="search-bar-wrapper">
     <div class="search-bar">
-
       <label class="search-field">
         <svg class="field-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="9" cy="9" r="6"/><path d="M15 15l3 3"/>
         </svg>
-        <input
-          type="text"
-          [(ngModel)]="searchTerm"
-          placeholder="Nombre o palabra clave"
-          class="field-input"
-        />
+        <input type="text" [(ngModel)]="searchTerm" placeholder="Nombre o palabra clave" class="field-input"/>
       </label>
-
       <div class="search-divider"></div>
-
       <label class="search-field">
         <svg class="field-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M10 2a6 6 0 016 6c0 4-6 10-6 10S4 12 4 8a6 6 0 016-6z"/><circle cx="10" cy="8" r="2"/>
@@ -51,9 +40,7 @@
           <option value="product-manager">Product Manager</option>
         </select>
       </label>
-
       <div class="search-divider"></div>
-
       <label class="search-field">
         <svg class="field-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
           <rect x="3" y="3" width="14" height="14" rx="3"/><path d="M7 10h6M7 7h4"/>
@@ -67,17 +54,15 @@
           <option value="educacion">Educación</option>
         </select>
       </label>
-
       <button class="btn-search" (click)="onSearch()">Buscar</button>
     </div>
   </div>
 
-  <!-- ── Main 3-column layout ── -->
+  <!-- Main 3-column layout -->
   <div class="main-content">
 
     <!-- Left Sidebar -->
     <aside class="sidebar">
-
       <section class="sidebar-card">
         <h3 class="sidebar-title">Colaboradores destacados</h3>
         <div class="collaborators-list">
@@ -86,6 +71,9 @@
             [collaborator]="collaborator"
             (viewProfile)="viewProfile($event)">
           </app-collaborator-card>
+          <div *ngIf="highlightedCollaborators.length === 0" class="empty-message">
+            No hay colaboradores registrados
+          </div>
         </div>
         <a routerLink="/collaborators" class="view-more-btn">Ver más</a>
       </section>
@@ -97,7 +85,6 @@
           <span class="plan-name">{{ currentPlan }}</span>
         </div>
       </section>
-
     </aside>
 
     <!-- Projects Feed -->

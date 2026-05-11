@@ -87,4 +87,14 @@ export class ProfileApi extends BaseApi {
       map(response => this.assembler.toEntityFromResponse(response))
     );
   }
+
+  /**
+   * ✅ NUEVO: Get all profiles
+   */
+  getAllProfiles(): Observable<Profile[]> {
+    return this.profileEndpoint.getAllProfiles().pipe(
+      map(response => this.assembler.toEntitiesFromResponse(response))
+    );
+  }
+
 }

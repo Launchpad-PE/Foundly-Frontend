@@ -1,32 +1,17 @@
-// shared/presentation/home/views/home.component.ts
-import { Component, OnInit, inject } from '@angular/core';
+// home.component.ts
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { ProjectCardComponent } from '../components/project-card/projectc-card';
+import { firstValueFrom } from 'rxjs';
+import { ProjectCardComponent, Project as ProjectCardData } from '../components/project-card/projectc-card';
 import { CollaboratorCardComponent } from '../components/collaborator-card/collaborator-card';
 import { UserStore } from '../../../../iam/application/user.store';
-
-interface Project {
-  id: string;
-  title: string;
-  roles: string[];
-  areas: string[];
-  duration: string;
-  modality: string;
-  author: string;
-  postedAt: Date;
-  isHighlighted?: boolean;
-}
-
-interface Collaborator {
-  id: string;
-  name: string;
-  role: string;
-  avatar?: string;
-  isHighlighted?: boolean;
-  skills?: string[]; // Added skills field
-}
+import { ProfileApi } from '../../../../profile-management/infrastructure/profile-api';
+import { Profile } from '../../../../profile-management/domain/entities/profile.entity';
+import { ProjectStore } from '../../../../project-management/application/project-store';
+import { Project as DomainProject } from '../../../../project-management/domain/entities/project.entity';
+import { ProjectStatus } from '../../../../project-management/domain/enum/project-status.enum';
 
 @Component({
   selector: 'app-home',
@@ -45,101 +30,68 @@ interface Collaborator {
 export class HomeComponent implements OnInit {
   private userStore = inject(UserStore);
   private router = inject(Router);
+  private profileApi = inject(ProfileApi);
+  private projectStore = inject(ProjectStore);
+  private cdr = inject(ChangeDetectorRef); // ✅ Agregar esto
 
   currentPlan: string = 'Gratuito';
   searchTerm: string = '';
   filterRole: string = '';
   filterArea: string = '';
 
-  highlightedCollaborators: Collaborator[] = [
-    {
-      id: '1',
-      name: 'Christian Gonzalez',
-      role: 'Arquitecto de Software',
-      skills: ['JavaScript', 'Angular'],
-    },
-    {
-      id: '2',
-      name: 'Diana Briceño',
-      role: 'Desarrollador Full Stack',
-      skills: ['React', 'Python'],
-    },
-    { id: '3', name: 'Mario Baca', role: 'Desarrollador de Videojuegos', skills: ['Unity', 'C#'] },
-  ];
+  // Datos desde la API
+  highlightedCollaborators: Profile[] = [];
+  featuredProjects: ProjectCardData[] = [];
+  allProjects: ProjectCardData[] = [];
 
-  featuredProjects: Project[] = [
-    {
-      id: 'f1',
-      title: 'Plataforma de E-Learning',
-      roles: ['Desarrollador UX', 'Desarrollador Frontend', 'Analistas de datos'],
-      areas: ['Tecnología', 'Desarrollo Web'],
-      duration: '3 meses',
-      modality: 'Remoto',
-      author: 'Roberto Tello',
-      postedAt: new Date(),
-      isHighlighted: true,
-    },
-    {
-      id: 'f2',
-      title: 'Aplicación de Finanzas Personales',
-      roles: ['UX Designer', 'Backend dev', 'Psicology Clínico', 'Product Owner', 'Analista'],
-      areas: ['Salud', 'Bienestar'],
-      duration: '2 meses',
-      modality: 'Remoto',
-      author: 'María García',
-      postedAt: new Date(),
-      isHighlighted: true,
-    },
-    {
-      id: 'f3',
-      title: 'Aplicación de Finanzas Personales',
-      roles: ['Product Manager', 'Analista de datos'],
-      areas: ['Finanzas', 'Tecnología'],
-      duration: '12 meses',
-      modality: 'Híbrido',
-      author: 'Carlos Ruiz',
-      postedAt: new Date(),
-    },
-    {
-      id: 'f4',
-      title: 'Startup de Energías Renovables',
-      roles: ['Ingeniero Industrial', 'Full Stack Dev'],
-      areas: ['Energía', 'Renovación'],
-      duration: '12 meses',
-      modality: 'Híbrido',
-      author: 'Luis Torres',
-      postedAt: new Date(),
-    },
-  ];
-
-  allProjects: Project[] = [
-    {
-      id: '1',
-      title: 'Plataforma de E-Learning',
-      roles: ['Desarrollador UX', 'Desarrollador Frontend', 'Analistas de datos'],
-      areas: ['Tecnología', 'Desarrollo Web'],
-      duration: '3 meses',
-      modality: 'Remoto',
-      author: 'Roberto Tello',
-      postedAt: new Date(),
-      isHighlighted: true,
-    },
-    {
-      id: '2',
-      title: 'Plataforma de Gestión de Finanzas',
-      roles: ['Desarrollador Frontend (Vue)', 'Desarrollador Backend (.NET)'],
-      areas: ['Finanzas', 'Tecnología'],
-      duration: '6 meses',
-      modality: 'Híbrido',
-      author: 'Ana Pérez',
-      postedAt: new Date(),
-    },
-  ];
-
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     if (this.userStore.needsOnboarding()) {
       this.router.navigate(['/onboarding']);
+      return;
     }
+
+    await this.loadHomeData();
+  }
+
+  // home.component.ts
+  async loadHomeData(): Promise<void> {
+    try {
+      const profiles = await firstValueFrom(this.profileApi.getAllProfiles());
+      const domainProjects = await this.projectStore.loadAllProjects();
+
+      this.highlightedCollaborators = profiles;
+      this.allProjects = domainProjects.map((p: DomainProject) => this.mapToProjectCardData(p));
+      this.featuredProjects = this.allProjects.slice(0, 3);
+
+      // ✅ Forzar detección de cambios
+      this.cdr.detectChanges();
+
+      console.log('Datos asignados:', {
+        collaborators: this.highlightedCollaborators.length,
+        allProjects: this.allProjects.length
+      });
+
+    } catch (err: any) {
+      console.error('Error cargando datos:', err);
+    }
+  }
+
+  private mapToProjectCardData(domainProject: DomainProject): ProjectCardData {
+    const roleNames = domainProject.roles.map(role => role.name.getValue());
+    const areas = [domainProject.area.getValue()];
+    const duration = `${domainProject.duration.getAmount()} ${domainProject.duration.getType()}`;
+    const modality = 'Remoto';
+    const author = `Usuario ${domainProject.authorId}`;
+
+    return {
+      id: domainProject.id.toString(),
+      title: domainProject.name.getValue(),
+      roles: roleNames,
+      areas: areas,
+      author: author,
+      duration: duration,
+      modality: modality
+    };
   }
 
   logout(): void {
@@ -148,10 +100,12 @@ export class HomeComponent implements OnInit {
   }
 
   onSearch(): void {
-    console.log('Searching:', {
-      term: this.searchTerm,
-      role: this.filterRole,
-      area: this.filterArea,
+    this.router.navigate(['/projects'], {
+      queryParams: {
+        search: this.searchTerm,
+        role: this.filterRole,
+        area: this.filterArea
+      }
     });
   }
 
@@ -160,17 +114,14 @@ export class HomeComponent implements OnInit {
   }
 
   viewProjectDetails(projectId: string): void {
-    console.log('View project details:', projectId);
+    this.router.navigate(['/projects', projectId]);
   }
 
   viewProfile(collaboratorId: string): void {
-    console.log('View collaborator profile:', collaboratorId);
-    // Navigate to collaborator profile or collaborators page
-    this.router.navigate(['/collaborators']);
+    this.router.navigate(['/profile', collaboratorId]);
   }
 
   isParticipatingIn(projectId: string): boolean {
-    // TODO: Implement logic to check if user is already participating in this project
     return false;
   }
 }

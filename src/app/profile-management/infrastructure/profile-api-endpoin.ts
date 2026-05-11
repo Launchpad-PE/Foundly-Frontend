@@ -126,4 +126,15 @@ export class ProfileApiEndpoint extends BaseApiEndpoint<Profile, ProfileResource
       map(response => ({ profile: response }) as ProfileResponse)
     );
   }
+
+  /**
+   * ✅ NUEVO: Get all profiles
+   */
+  getAllProfiles(): Observable<ProfilesResponse> {
+    return this.http.get<ProfileResource[]>(this.profilesUrl).pipe(
+      map(profiles => ({ profiles }) as ProfilesResponse)
+    );
+  }
+
+
 }

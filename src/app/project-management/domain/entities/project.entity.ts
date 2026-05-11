@@ -47,7 +47,7 @@ export class Project  {
     updatedAt: Date,
     authorId: UserId
   ) {
-    this.id = parseInt(projectId.toString(), 10).toString();
+    this.id = projectId.toString();
     this.name = name;
     this.area = area;
     this.tags = tags;

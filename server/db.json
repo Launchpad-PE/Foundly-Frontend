@@ -204,9 +204,60 @@
       "createdAt": "2026-05-11T01:39:59.793Z",
       "updatedAt": "2026-05-11T01:39:59.793Z",
       "authorId": "1"
+    },
+    {
+      "id": "187dbdf6-2f3c-4772-8097-38837def4f3d",
+      "name": "AAAAAAAAAAAAAAA",
+      "area": "Tecnología",
+      "tags": [
+        "AAAAAAAAAAAAAAAAAA"
+      ],
+      "summary": "SAD ASD ASD ASD ASD ASDA SASD ASD ASD ASDASD ASDASDASD",
+      "environmentalImpact": [
+        "Calidad del aire",
+        "Humedad ambiental",
+        "Temperatura",
+        "Participación ciudadana"
+      ],
+      "academicLevel": "Pregrado",
+      "benefits": [
+        "SADASDDASDASDAS"
+      ],
+      "requiredSkills": [
+        "SADSDADSADASDASDAS"
+      ],
+      "duration": {
+        "amount": 1,
+        "type": "meses"
+      },
+      "roles": [
+        {
+          "id": "6c525fb6-e6f0-4e8e-94e8-a596a549da39",
+          "name": "SAASDASDASDASD",
+          "cardInfo": {
+            "title": "ASDASDASDASD",
+            "items": [
+              "ASDADSADSASD",
+              "SADDASADSDAS"
+            ]
+          }
+        },
+        {
+          "id": "a0951870-ee01-40aa-aea9-64f8a5470e43",
+          "name": "ASDDASASDASD",
+          "cardInfo": {
+            "title": "ASDASDADSADS",
+            "items": [
+              "ASDDASADSADWS",
+              "ASSDAADSDAS"
+            ]
+          }
+        }
+      ],
+      "status": "borrador",
+      "createdAt": "2026-05-11T14:55:48.005Z",
+      "updatedAt": "2026-05-11T14:55:48.005Z",
+      "authorId": "3"
     }
-  ],
-  "projects": [
-
   ]
 }

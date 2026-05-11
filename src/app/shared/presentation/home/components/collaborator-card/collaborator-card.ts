@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Profile } from '../../../../../profile-management/domain/entities/profile.entity';
 
 export interface Collaborator {
   id: string;
@@ -26,23 +27,36 @@ const AVATAR_GRADIENTS = [
   imports: [CommonModule]
 })
 export class CollaboratorCardComponent {
-  @Input() collaborator!: Collaborator;
+  @Input() collaborator!: Profile;
   @Output() viewProfile = new EventEmitter<string>();
 
   get avatarGradient(): string {
-    const index = parseInt(this.collaborator.id, 10) % AVATAR_GRADIENTS.length;
+    // ✅ Solución: usar optional chaining y fallback
+    const id = this.collaborator?.id || '';
+    const index = id.length % AVATAR_GRADIENTS.length;
     return AVATAR_GRADIENTS[index];
   }
 
   get initials(): string {
-    return this.collaborator.name
+    // ✅ Solución: verificar que username existe
+    const username = this.collaborator?.username || '';
+    return username
       .split(' ')
       .slice(0, 2)
-      .map(n => n[0])
-      .join('');
+      .map(n => n[0] || '')
+      .join('')
+      .toUpperCase() || '?';
+  }
+
+  get displayName(): string {
+    // ✅ Solución: fallback si no hay username
+    return this.collaborator?.username || 'Usuario';
   }
 
   onViewProfile(): void {
-    this.viewProfile.emit(this.collaborator.id);
+    // ✅ Solución: verificar que id existe antes de emitir
+    if (this.collaborator?.id) {
+      this.viewProfile.emit(this.collaborator.id);
+    }
   }
 }

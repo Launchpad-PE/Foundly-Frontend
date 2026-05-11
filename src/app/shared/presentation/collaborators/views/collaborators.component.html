@@ -1,7 +1,6 @@
-<!-- collaborators.component.html -->
+<!-- collaborators.component.html - eliminar la sección de loading -->
 <div class="collaborators-container">
 
-  <!-- Header -->
   <header class="collaborators-header">
     <h1 class="page-title">Colaboradores</h1>
     <div class="user-actions">
@@ -20,12 +19,7 @@
         <svg class="filter-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="9" cy="9" r="6"/><path d="M15 15l3 3"/>
         </svg>
-        <input
-          type="text"
-          [(ngModel)]="searchTerm"
-          placeholder="Buscar por nombre"
-          class="filter-input"
-        />
+        <input type="text" [(ngModel)]="searchTerm" placeholder="Buscar por nombre" class="filter-input"/>
       </label>
 
       <label class="filter-label">
@@ -47,12 +41,7 @@
         <svg class="filter-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
           <rect x="3" y="3" width="14" height="14" rx="3"/><path d="M7 10h6M7 7h4"/>
         </svg>
-        <input
-          type="text"
-          [(ngModel)]="filterSkill"
-          placeholder="Buscar por habilidad"
-          class="filter-input"
-        />
+        <input type="text" [(ngModel)]="filterSkill" placeholder="Buscar por habilidad" class="filter-input"/>
       </label>
     </div>
   </div>
@@ -60,11 +49,11 @@
   <!-- Collaborators Grid -->
   <main class="collaborators-grid">
     <div class="grid-container" *ngIf="filteredCollaborators.length > 0; else noResults">
-      <app-collaborator-card
+      <app-collaborator-list
         *ngFor="let collaborator of filteredCollaborators"
         [collaborator]="collaborator"
         (viewProfile)="viewProfile($event)">
-      </app-collaborator-card>
+      </app-collaborator-list>
     </div>
     <ng-template #noResults>
       <div class="no-results">
