@@ -74,138 +74,6 @@
   ],
   "projects": [
     {
-      "id": "7909",
-      "name": "dasdsadasd",
-      "area": "Tecnología",
-      "tags": [
-        "sadasdasd"
-      ],
-      "summary": "asdasdasdasd",
-      "environmentalImpact": [
-        "Calidad del aire",
-        "Humedad ambiental",
-        "Temperatura",
-        "Participación ciudadana"
-      ],
-      "academicLevel": "Postgrado",
-      "benefits": [
-        "sadasdasdasd"
-      ],
-      "requiredSkills": [
-        "sadasdadsasd"
-      ],
-      "duration": {
-        "amount": 1,
-        "type": "meses"
-      },
-      "roles": [
-        {
-          "id": "e3a5eb72-6d56-444c-810d-b7a32673ca18",
-          "name": "saddasasd",
-          "cardInfo": {
-            "title": "asdasdasd",
-            "items": [
-              "sadasdads"
-            ]
-          }
-        },
-        {
-          "id": "0e561793-ae46-4e3a-b24c-380d224c5052",
-          "name": "asdadsasd",
-          "cardInfo": {
-            "title": "asdadsads",
-            "items": [
-              "asdadsdas"
-            ]
-          }
-        }
-      ],
-      "status": "borrador",
-      "createdAt": "2026-05-10T23:52:32.117Z",
-      "updatedAt": "2026-05-10T23:52:32.117Z",
-      "authorId": "3"
-    },
-    {
-      "id": "5",
-      "name": "Misterrrr",
-      "area": "Tecnología",
-      "tags": [
-        "OSJDC"
-      ],
-      "summary": "SADCWFEFCWFCe wevvervrvrrvrrvrvrvr",
-      "environmentalImpact": [
-        "Calidad del aire",
-        "Humedad ambiental",
-        "Temperatura",
-        "Participación ciudadana"
-      ],
-      "academicLevel": "Pregrado",
-      "benefits": [
-        "oñoooooo"
-      ],
-      "requiredSkills": [
-        "oñoooooooooo"
-      ],
-      "duration": {
-        "amount": 1,
-        "type": "años"
-      },
-      "roles": [
-        {
-          "id": "5707b5b4-1d6e-428f-8d75-0acb87aae949",
-          "name": "ffffffffffffffev",
-          "cardInfo": {
-            "title": "rearbab",
-            "items": [
-              "baerbbbbbbbbberb"
-            ]
-          }
-        }
-      ],
-      "status": "borrador",
-      "createdAt": "2026-05-11T00:45:08.114Z",
-      "updatedAt": "2026-05-11T00:45:08.114Z",
-      "authorId": "1"
-    },
-    {
-      "id": "NaN",
-      "name": "trbrt",
-      "area": "Social",
-      "tags": [
-        "advwe"
-      ],
-      "summary": "wvewevwergwregwrgergw",
-      "environmentalImpact": [
-        "Calidad del aire",
-        "Participación ciudadana"
-      ],
-      "academicLevel": "Postgrado",
-      "benefits": [
-        "wgwegwr"
-      ],
-      "requiredSkills": [
-        "wgrwegwewr"
-      ],
-      "duration": {
-        "amount": 1,
-        "type": "semestres"
-      },
-      "roles": [
-        {
-          "id": "66c3e2eb-8bcd-4fe2-953c-1235ed14aeb7",
-          "name": "wgewrawg",
-          "cardInfo": {
-            "title": "waevewg",
-            "items": []
-          }
-        }
-      ],
-      "status": "borrador",
-      "createdAt": "2026-05-11T01:39:59.793Z",
-      "updatedAt": "2026-05-11T01:39:59.793Z",
-      "authorId": "1"
-    },
-    {
       "id": "187dbdf6-2f3c-4772-8097-38837def4f3d",
       "name": "AAAAAAAAAAAAAAA",
       "area": "Tecnología",
@@ -258,6 +126,54 @@
       "createdAt": "2026-05-11T14:55:48.005Z",
       "updatedAt": "2026-05-11T14:55:48.005Z",
       "authorId": "3"
+    },
+    {
+      "id": "04d5496e-e878-4056-95e1-e9e924067e4b",
+      "name": "ASDASD",
+      "area": "Tecnología",
+      "tags": [
+        "SADASDASDADS"
+      ],
+      "summary": "ASDASDASDASDASDASDAS DASDASDASD",
+      "environmentalImpact": [
+        "Calidad del aire",
+        "Humedad ambiental"
+      ],
+      "academicLevel": null,
+      "benefits": [
+        "ASDASDDSAASD"
+      ],
+      "requiredSkills": [
+        "ASDDASASDDAS"
+      ],
+      "duration": {
+        "amount": 1,
+        "type": "meses"
+      },
+      "roles": [
+        {
+          "id": "b31ef12b-dcc8-4f72-9415-bfe33bccb492",
+          "name": "SAADSASD",
+          "cardInfo": {
+            "title": "ASDSDAASDDAS",
+            "items": [
+              "ASDADSDASASD"
+            ]
+          }
+        },
+        {
+          "id": "25f76369-2ac5-4d0b-a687-c6a6e7f9d32f",
+          "name": "SADASDASD",
+          "cardInfo": {
+            "title": "ASDASASDADS",
+            "items": []
+          }
+        }
+      ],
+      "status": "borrador",
+      "createdAt": "2026-05-11T14:59:48.340Z",
+      "updatedAt": "2026-05-11T14:59:48.340Z",
+      "authorId": "1"
     }
   ]
 }
