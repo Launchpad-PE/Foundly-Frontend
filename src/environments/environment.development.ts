@@ -5,5 +5,5 @@ export const environment = {
   platformUserEndpointPath: '/user',
   platformProjectEndpointPath: "/projects",
   logoProviderApiBaseUrl: 'https://img.logo.dev.com',
-  landingPafeRedirection: "https://launchpad-pe.github.io/Foundly-Landing-Page/"
+  landingPageRedirection: "https://launchpad-pe.github.io/Foundly-Landing-Page/"
 };
