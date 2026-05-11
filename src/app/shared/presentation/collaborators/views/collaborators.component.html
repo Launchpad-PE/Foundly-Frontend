@@ -1,0 +1,72 @@
+<!-- collaborators.component.html -->
+<div class="collaborators-container">
+
+  <!-- Header -->
+  <header class="collaborators-header">
+    <h1 class="page-title">Colaboradores</h1>
+    <div class="user-actions">
+      <button class="btn-logout" (click)="logout()">Log out</button>
+      <div class="user-avatar">U</div>
+    </div>
+  </header>
+
+  <!-- Filters -->
+  <div class="filters-bar">
+    <div class="filter-group">
+      <label class="filter-label">
+        <svg class="filter-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="9" cy="9" r="6"/><path d="M15 15l3 3"/>
+        </svg>
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          placeholder="Buscar por nombre"
+          class="filter-input"
+        />
+      </label>
+
+      <label class="filter-label">
+        <svg class="filter-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M10 2a6 6 0 016 6c0 4-6 10-6 10S4 12 4 8a6 6 0 016-6z"/><circle cx="10" cy="8" r="2"/>
+        </svg>
+        <select [(ngModel)]="filterRole" class="filter-input filter-select">
+          <option value="">Todos los roles</option>
+          <option value="arquitecto">Arquitecto de Software</option>
+          <option value="full stack">Desarrollador Full Stack</option>
+          <option value="videojuegos">Desarrollador de Videojuegos</option>
+          <option value="ux">UX Designer</option>
+          <option value="product">Product Manager</option>
+          <option value="data">Data Analyst</option>
+        </select>
+      </label>
+
+      <label class="filter-label">
+        <svg class="filter-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="14" height="14" rx="3"/><path d="M7 10h6M7 7h4"/>
+        </svg>
+        <input
+          type="text"
+          [(ngModel)]="filterSkill"
+          placeholder="Buscar por habilidad"
+          class="filter-input"
+        />
+      </label>
+    </div>
+  </div>
+
+  <!-- Collaborators Grid -->
+  <main class="collaborators-grid">
+    <div class="grid-container" *ngIf="filteredCollaborators.length > 0; else noResults">
+      <app-collaborator-card
+        *ngFor="let collaborator of filteredCollaborators"
+        [collaborator]="collaborator"
+        (viewProfile)="viewProfile($event)">
+      </app-collaborator-card>
+    </div>
+    <ng-template #noResults>
+      <div class="no-results">
+        <p>No se encontraron colaboradores que coincidan con los filtros.</p>
+      </div>
+    </ng-template>
+  </main>
+</div>
