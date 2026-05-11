@@ -152,4 +152,36 @@
   .collaborators-grid {
     padding: 1rem;
   }
+
+  .nav-menu {
+    display: none;
+  }
+
+
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #555;
+  font-weight: 500;
+  font-size: 0.9rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 8px;
+  transition: background 0.2s, color 0.2s;
+
+  &:hover {
+    background: #f0f2ff;
+    color: #667eea;
+  }
+
+  &.active {
+    color: #667eea;
+    font-weight: 600;
+  }
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
 }
