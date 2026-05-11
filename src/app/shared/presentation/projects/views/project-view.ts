@@ -5,13 +5,13 @@ import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { UserStore } from '../../../../iam/application/user.store';
 import { Project } from '../../../../project-management/domain/entities/project.entity';
-import { ProjectCardComponent } from '../../home/components/project-card/projectc-card';
+import {MyProjects} from '../components/my-projects/my-projects';
 import { ProjectStore } from '../../../../project-management/application/project-store';
 
 @Component({
   selector: 'app-projects',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, ProjectCardComponent],
+  imports: [MyProjects, CommonModule, RouterModule, FormsModule],
   templateUrl: './project-view.html',
   styleUrls: ['./project-view.css']
 })
@@ -112,4 +112,5 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       modality: project.duration.getType() === 'semanas' ? 'Remoto' : 'Presencial'
     }
   }
+
 }

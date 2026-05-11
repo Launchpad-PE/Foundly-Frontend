@@ -3,8 +3,8 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-project-card',
-  templateUrl: '.project-card.html',
-  styleUrls: ['.project-card.css']
+  templateUrl: '.my-projects.html',
+  styleUrls: ['.my-projects.css']
 })
 export class ProjectCardComponent {
   @Input() project: any;
