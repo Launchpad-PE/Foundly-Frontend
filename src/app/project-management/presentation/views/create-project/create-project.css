@@ -1,0 +1,187 @@
+/* project-management/presentation/views/create-project/create-project.component.css */
+.create-project-container {
+  min-height: 100vh;
+  background: #f5f7fa;
+}
+
+/* Header */
+.create-project-header {
+  background: white;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo {
+  cursor: pointer;
+}
+
+.logo h1 {
+  margin: 0;
+  color: #4F46E5;
+  font-size: 1.5rem;
+}
+
+.header-title h2 {
+  margin: 0;
+  color: #1f2937;
+  font-size: 1.25rem;
+}
+
+.btn-cancel {
+  padding: 0.5rem 1rem;
+  background: white;
+  color: #6b7280;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-cancel:hover {
+  background: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+/* Progress Steps */
+.steps-progress {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.step-number {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #e5e7eb;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  transition: all 0.3s;
+}
+
+.step.active .step-number {
+  background: #4F46E5;
+  color: white;
+  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.2);
+}
+
+.step.completed .step-number {
+  background: #10b981;
+  color: white;
+}
+
+.step-label {
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.step.active .step-label {
+  color: #4F46E5;
+}
+
+.step-line {
+  width: 80px;
+  height: 2px;
+  background: #e5e7eb;
+  margin: 0 0.5rem;
+  transition: all 0.3s;
+}
+
+.step-line.active {
+  background: #10b981;
+}
+
+/* Step Content */
+.step-content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Navigation Buttons */
+.navigation-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  border-top: 1px solid #e5e7eb;
+  background: white;
+  position: sticky;
+  bottom: 0;
+}
+
+.btn-prev, .btn-next, .btn-submit {
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.btn-prev {
+  background: white;
+  color: #6b7280;
+  border: 1px solid #e5e7eb;
+}
+
+.btn-prev:hover {
+  background: #f3f4f6;
+}
+
+.btn-next, .btn-submit {
+  background: #4F46E5;
+  color: white;
+  margin-left: auto;
+}
+
+.btn-next:hover, .btn-submit:hover {
+  background: #4338CA;
+  transform: translateY(-1px);
+}
+
+.btn-submit:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .step-label {
+    display: none;
+  }
+
+  .step-line {
+    width: 40px;
+  }
+
+  .step-content {
+    padding: 1rem;
+  }
+
+  .navigation-buttons {
+    padding: 1rem;
+  }
+}

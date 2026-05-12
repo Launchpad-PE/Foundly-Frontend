@@ -1,0 +1,23 @@
+export class ProjectId {
+  constructor(private readonly value: string) {
+    if (!value || value.trim().length === 0) {
+      throw new Error('Project ID cannot be empty');
+    }
+  }
+
+  static generate(): ProjectId {
+    return new ProjectId(crypto.randomUUID());
+  }
+
+  static fromString(value: string): ProjectId {
+    return new ProjectId(value);
+  }
+
+  toString(): string {
+    return this.value;
+  }
+
+  equals(other: ProjectId): boolean {
+    return this.value === other.value;
+  }
+}

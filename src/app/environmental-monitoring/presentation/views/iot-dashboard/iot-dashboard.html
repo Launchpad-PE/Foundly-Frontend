@@ -1,0 +1,77 @@
+<div class="iot-container">
+
+  <!-- ════ RESUMEN DE MONITOREO ════ -->
+  <section class="iot-card monitor-section">
+    <div class="section-header">
+      <span class="section-tag">RESUMEN DE MONITOREO</span>
+    </div>
+    <div class="metrics-grid">
+      <div class="metric-card" [ngClass]="'metric-' + card.statusClass" *ngFor="let card of cards">
+        <div class="metric-top-row">
+          <span class="metric-emoji">{{ card.icon }}</span>
+          <span class="status-badge" [ngClass]="card.statusClass">{{ card.status }}</span>
+        </div>
+        <span class="metric-name">{{ card.metric }}</span>
+        <div class="metric-value-row">
+          <span class="value">{{ card.value }}</span>
+          <span class="unit">{{ card.unit }}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ BOTTOM ROW ════ -->
+  <div class="bottom-row">
+
+    <!-- Tendencia -->
+    <section class="iot-card trend-section">
+      <div class="section-header">
+        <span class="section-tag">TENDENCIA ÚLTIMAS 7 DÍAS</span>
+      </div>
+
+      <div class="charts-list">
+        <div class="chart-item" *ngFor="let card of trendCards">
+          <span class="chart-label" [style.color]="card.color">
+            {{ getTrendLabel(card.metric) }}
+          </span>
+          <div class="chart-area">
+            <div class="bar-chart">
+              <div
+                class="bar"
+                *ngFor="let val of card.trend; let i = index"
+                [style.height.%]="getBarHeightPct(val, card.trend)"
+                [style.background]="card.color"
+                [style.opacity]="getBarOpacity(val, card.trend)"
+                [title]="DAYS[i] + ': ' + val">
+              </div>
+            </div>
+            <div class="day-labels">
+              <span *ngFor="let day of DAYS">{{ day }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Alertas -->
+    <section class="iot-card alerts-section">
+      <div class="section-header">
+        <span class="section-tag">ALERTAS RECIENTES</span>
+      </div>
+
+      <div class="alerts-list">
+        <div class="alert-row" [ngClass]="'alert-' + alert.level" *ngFor="let alert of alerts">
+          <div class="alert-left-bar"></div>
+          <div class="alert-body">
+            <div class="alert-top">
+              <span class="alert-dot" [ngClass]="alert.level"></span>
+              <span class="alert-msg">{{ alert.message }}</span>
+            </div>
+            <span class="alert-time">{{ alert.time }}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>

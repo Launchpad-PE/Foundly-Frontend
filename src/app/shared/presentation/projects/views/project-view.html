@@ -1,0 +1,93 @@
+<div class="projects-container">
+  <!-- Header -->
+  <header class="projects-header">
+    <div class="logo" (click)="goToHome()">
+      <h1>Foundly</h1>
+    </div>
+    <nav class="nav-menu">
+      <a (click)="goToHome()" class="nav-link">Inicio</a>
+      <a class="nav-link active">Proyectos</a>
+      <a routerLink="/collaborators" class="nav-link">Colaboradores</a>
+    </nav>
+    <div class="user-actions">
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Tabs -->
+    <div class="tabs-container">
+      <button
+        class="tab-btn"
+        [class.active]="activeTab === 'my-projects'"
+        (click)="setActiveTab('my-projects')">
+        Mis Proyectos
+      </button>
+      <button
+        class="tab-btn"
+        [class.active]="activeTab === 'participated'"
+        (click)="setActiveTab('participated')">
+        Participados
+      </button>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="search-section">
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        (keyup.enter)="onSearch()"
+        placeholder="Buscar por nombre, palabra clave o habilidad..."
+        class="search-input"
+      />
+      <button class="btn-search" (click)="onSearch()">
+        <span class="search-icon">🔍</span>
+        Buscar
+      </button>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading()" class="loading-state">
+      <div class="spinner"></div>
+      <p>Cargando proyectos...</p>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading() && getCurrentProjects().length === 0" class="empty-state">
+      <div class="empty-icon">📁</div>
+      <h3 *ngIf="activeTab === 'my-projects'">No tienes proyectos creados</h3>
+      <h3 *ngIf="activeTab === 'participated'">No has participado en proyectos</h3>
+      <p *ngIf="activeTab === 'my-projects'">
+        Crea tu primer proyecto y comienza a colaborar
+      </p>
+      <p *ngIf="activeTab === 'participated'">
+        Explora proyectos y postula para comenzar a colaborar
+      </p>
+      <button *ngIf="activeTab === 'my-projects'" class="btn-primary" (click)="createNewProject()">
+        + Crear Proyecto
+      </button>
+      <button *ngIf="activeTab === 'participated'" class="btn-primary" (click)="goToHome()">
+        Explorar Proyectos
+      </button>
+    </div>
+
+    <!-- Projects Grid -->
+    <div *ngIf="!loading() && getCurrentProjects().length > 0" class="projects-grid">
+      <app-my-projects
+        *ngFor="let project of getCurrentProjects()"
+        [project]="getProjectForCard(project)"
+        (viewDetails)="viewProjectDetails($event)"
+        (apply)="applyToProject($event)">
+      </app-my-projects>
+    </div>
+  </div>
+
+  <!-- Floating Action Button (solo para mis proyectos) -->
+  <button
+    *ngIf="activeTab === 'my-projects'"
+    class="fab"
+    (click)="createNewProject()"
+    title="Crear nuevo proyecto">
+    <span class="fab-icon">+</span>
+  </button>
+</div>

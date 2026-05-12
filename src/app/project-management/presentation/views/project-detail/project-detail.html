@@ -1,0 +1,193 @@
+<div class="detail-wrapper">
+
+  <!-- ── Header ── -->
+  <header class="detail-header">
+    <div class="header-brand">
+      <button class="btn-back" (click)="goBack()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 12H5M12 5l-7 7 7 7"/>
+        </svg>
+      </button>
+      <h1 class="project-title" *ngIf="project()">{{ projectName }}</h1>
+      <span class="project-title loading-name" *ngIf="loading()">Cargando...</span>
+    </div>
+
+    <nav class="tab-nav" *ngIf="project()">
+      <button class="tab-btn" [class.active]="activeTab() === 'inicio'"      (click)="setTab('inicio')">Inicio</button>
+      <button class="tab-btn" [class.active]="activeTab() === 'tareas'"      (click)="setTab('tareas')">Tareas</button>
+      <button class="tab-btn" [class.active]="activeTab() === 'iot'"         (click)="setTab('iot')" *ngIf="hasIot">IOT</button>
+      <button class="tab-btn" [class.active]="activeTab() === 'hitos'"       (click)="setTab('hitos')">Hitos</button>
+      <button class="tab-btn" [class.active]="activeTab() === 'postulantes'" (click)="setTab('postulantes')">Postulantes</button>
+    </nav>
+  </header>
+
+  <!-- ── Loading ── -->
+  <div class="state-center" *ngIf="loading()">
+    <span class="spinner"></span>
+    <p class="state-msg">Cargando proyecto...</p>
+  </div>
+
+  <!-- ── Not found ── -->
+  <div class="state-center" *ngIf="!loading() && !project()">
+    <div class="not-found-icon">🔍</div>
+    <p class="state-msg">Proyecto no encontrado.</p>
+    <button class="btn-outline" (click)="goBack()">← Volver</button>
+  </div>
+
+  <!-- ── Tab content ── -->
+  <div class="tab-content" *ngIf="!loading() && project()">
+
+    <!-- ════════════════ INICIO ════════════════ -->
+    <div *ngIf="activeTab() === 'inicio'" class="inicio-grid">
+
+      <!-- ── Progreso del Proyecto ── -->
+      <div class="card progress-card">
+        <div class="card-header-strip progress-strip">
+          <div class="card-header-content">
+            <span class="card-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+              </svg>
+            </span>
+            <h3 class="card-heading">Progresó del Proyecto</h3>
+          </div>
+          <span class="pct-chip">0% completado</span>
+        </div>
+
+        <div class="card-body">
+          <div class="progress-track-wrap">
+            <div class="progress-track">
+              <div class="progress-fill" style="width: 0%"></div>
+            </div>
+            <span class="progress-track-label">Progreso general</span>
+          </div>
+
+          <div class="circles-row">
+            <div class="circle-item">
+              <div class="ring ring--tasks">
+                <div class="ring-inner">
+                  <span class="ring-pct">0%</span>
+                  <span class="ring-sub">de tareas</span>
+                </div>
+              </div>
+              <span class="circle-desc">Tareas Completadas</span>
+            </div>
+
+            <div class="ring-divider"></div>
+
+            <div class="circle-item">
+              <div class="ring ring--milestones">
+                <div class="ring-inner">
+                  <span class="ring-pct">0%</span>
+                  <span class="ring-sub">de hitos</span>
+                </div>
+              </div>
+              <span class="circle-desc">Hitos Completados</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Próximos Hitos ── -->
+      <div class="card hitos-card">
+        <div class="card-header-strip hitos-strip">
+          <div class="card-header-content">
+            <span class="card-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
+              </svg>
+            </span>
+            <h3 class="card-heading">Próximos Hitos</h3>
+          </div>
+        </div>
+        <div class="card-body flex-col">
+          <div class="empty-state">
+            <div class="empty-illustration hitos-empty">
+              <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#c8ccf5" stroke-width="1.5" stroke-linecap="round">
+                <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/>
+              </svg>
+            </div>
+            <p class="empty-title">Sin hitos programados</p>
+            <p class="empty-hint">Los hitos de tu proyecto aparecerán aquí.</p>
+          </div>
+          <button class="btn-action btn-hitos">Ver Todos los Hitos</button>
+        </div>
+      </div>
+
+      <!-- ── Colaboradores ── -->
+      <div class="card colaboradores-card">
+        <div class="card-header-strip colab-strip">
+          <div class="card-header-content">
+            <span class="card-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </span>
+            <h3 class="card-heading">Colaboradores de tu proyecto</h3>
+          </div>
+          <span class="count-chip">0</span>
+        </div>
+        <div class="card-body">
+          <div class="empty-state">
+            <div class="empty-illustration colab-empty">
+              <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#c8ccf5" stroke-width="1.5" stroke-linecap="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </div>
+            <p class="empty-title">Sin colaboradores aún</p>
+            <p class="empty-hint">Cuando alguien postule y sea aceptado, aparecerá aquí.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Tareas Urgentes ── -->
+      <div class="card tareas-card">
+        <div class="card-header-strip tareas-strip">
+          <div class="card-header-content">
+            <span class="card-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+              </svg>
+            </span>
+            <h3 class="card-heading">Tareas Urgentes</h3>
+          </div>
+          <span class="count-chip count-chip--urgent">0</span>
+        </div>
+        <div class="card-body flex-col">
+          <div class="empty-state">
+            <div class="empty-illustration tareas-empty">
+              <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#c8ccf5" stroke-width="1.5" stroke-linecap="round">
+                <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+              </svg>
+            </div>
+            <p class="empty-title">Todo al día</p>
+            <p class="empty-hint">No hay tareas urgentes pendientes.</p>
+          </div>
+          <button class="btn-action btn-tareas">Ver Todas las Tareas</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ════════════════ IOT ════════════════ -->
+    <div class="iot-tab-wrapper" *ngIf="activeTab() === 'iot'">
+      <app-iot-dashboard [metrics]="iotMetrics"></app-iot-dashboard>
+    </div>
+
+    <!-- ════════════════ PLACEHOLDER ════════════════ -->
+    <div *ngIf="activeTab() === 'tareas' || activeTab() === 'hitos' || activeTab() === 'postulantes'"
+         class="coming-soon">
+      <div class="coming-visual">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#d0d4f0" stroke-width="1.2" stroke-linecap="round">
+          <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+        </svg>
+      </div>
+      <p class="coming-title">Próximamente</p>
+      <p class="coming-sub">Esta sección estará disponible en la siguiente versión.</p>
+    </div>
+
+  </div>
+</div>

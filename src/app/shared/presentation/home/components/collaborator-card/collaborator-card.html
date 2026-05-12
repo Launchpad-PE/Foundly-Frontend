@@ -1,0 +1,15 @@
+<!-- collaborator-card.html -->
+<div class="collaborator-card">
+  <div class="collaborator-avatar" [style.background]="avatarGradient">
+    {{ initials }}
+  </div>
+  <div class="collaborator-info">
+    <p class="collaborator-name">{{ displayName }}</p>
+    <p class="collaborator-role">{{ collaborator.role }}</p>
+    <div class="collaborator-skills" *ngIf="collaborator.skills && collaborator.skills.length > 0">
+      <span class="skill-badge" *ngFor="let skill of collaborator.skills.slice(0, 3)">{{ skill }}</span>
+      <span class="skill-badge" *ngIf="collaborator.skills.length > 3">+{{ collaborator.skills.length - 3 }}</span>
+    </div>
+    <button class="btn-view-profile" (click)="onViewProfile()">Ver perfil</button>
+  </div>
+</div>

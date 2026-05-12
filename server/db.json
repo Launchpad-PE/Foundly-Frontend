@@ -1,0 +1,179 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "fullName": "Juan Pérez",
+      "email": "juan@example.com",
+      "password": "123456",
+      "createdAt": "2024-01-15T10:00:00Z",
+      "updatedAt": "2024-01-15T10:00:00Z"
+    },
+    {
+      "id": 2,
+      "fullName": "María García",
+      "email": "maria@example.com",
+      "password": "123456",
+      "createdAt": "2024-01-20T10:00:00Z",
+      "updatedAt": "2024-01-20T10:00:00Z"
+    },
+    {
+      "fullName": "chester b",
+      "email": "chester@gmail.com",
+      "password": "123456",
+      "id": 3
+    }
+  ],
+  "profiles": [
+    {
+      "id": 1,
+      "userId": 1,
+      "username": "juanperez",
+      "avatar": null,
+      "bio": "Desarrollador full stack apasionado por la tecnología",
+      "role": "Full Stack Developer",
+      "skills": [
+        "JavaScript",
+        "Angular",
+        "Node.js",
+        "TypeScript"
+      ],
+      "experiences": [],
+      "isComplete": true,
+      "createdAt": "2024-01-15T10:30:00Z",
+      "updatedAt": "2024-01-15T10:30:00Z"
+    },
+    {
+      "id": 2,
+      "userId": "3",
+      "username": "chesterb",
+      "avatar": null,
+      "bio": "",
+      "role": "Mobile Developer",
+      "skills": [
+        "asdas",
+        "sadasdasd"
+      ],
+      "experiences": [
+        {
+          "id": null,
+          "title": "asdasdas",
+          "company": "asdasdasd",
+          "period": "asdasdasdadsasd",
+          "description": null,
+          "current": false,
+          "startDate": null,
+          "endDate": null,
+          "createdAt": "2026-05-10T15:15:45.056Z",
+          "updatedAt": "2026-05-10T15:15:45.056Z"
+        }
+      ],
+      "isComplete": true,
+      "createdAt": "2026-05-10T15:15:45.056Z",
+      "updatedAt": "2026-05-10T15:15:45.056Z"
+    }
+  ],
+  "projects": [
+    {
+      "id": "187dbdf6-2f3c-4772-8097-38837def4f3d",
+      "name": "AAAAAAAAAAAAAAA",
+      "area": "Tecnología",
+      "tags": [
+        "AAAAAAAAAAAAAAAAAA"
+      ],
+      "summary": "SAD ASD ASD ASD ASD ASDA SASD ASD ASD ASDASD ASDASDASD",
+      "environmentalImpact": [
+        "Calidad del aire",
+        "Humedad ambiental",
+        "Temperatura",
+        "Participación ciudadana"
+      ],
+      "academicLevel": "Pregrado",
+      "benefits": [
+        "SADASDDASDASDAS"
+      ],
+      "requiredSkills": [
+        "SADSDADSADASDASDAS"
+      ],
+      "duration": {
+        "amount": 1,
+        "type": "meses"
+      },
+      "roles": [
+        {
+          "id": "6c525fb6-e6f0-4e8e-94e8-a596a549da39",
+          "name": "SAASDASDASDASD",
+          "cardInfo": {
+            "title": "ASDASDASDASD",
+            "items": [
+              "ASDADSADSASD",
+              "SADDASADSDAS"
+            ]
+          }
+        },
+        {
+          "id": "a0951870-ee01-40aa-aea9-64f8a5470e43",
+          "name": "ASDDASASDASD",
+          "cardInfo": {
+            "title": "ASDASDADSADS",
+            "items": [
+              "ASDDASADSADWS",
+              "ASSDAADSDAS"
+            ]
+          }
+        }
+      ],
+      "status": "borrador",
+      "createdAt": "2026-05-11T14:55:48.005Z",
+      "updatedAt": "2026-05-11T14:55:48.005Z",
+      "authorId": "3"
+    },
+    {
+      "id": "04d5496e-e878-4056-95e1-e9e924067e4b",
+      "name": "ASDASD",
+      "area": "Tecnología",
+      "tags": [
+        "SADASDASDADS"
+      ],
+      "summary": "ASDASDASDASDASDASDAS DASDASDASD",
+      "environmentalImpact": [
+        "Calidad del aire",
+        "Humedad ambiental"
+      ],
+      "academicLevel": null,
+      "benefits": [
+        "ASDASDDSAASD"
+      ],
+      "requiredSkills": [
+        "ASDDASASDDAS"
+      ],
+      "duration": {
+        "amount": 1,
+        "type": "meses"
+      },
+      "roles": [
+        {
+          "id": "b31ef12b-dcc8-4f72-9415-bfe33bccb492",
+          "name": "SAADSASD",
+          "cardInfo": {
+            "title": "ASDSDAASDDAS",
+            "items": [
+              "ASDADSDASASD"
+            ]
+          }
+        },
+        {
+          "id": "25f76369-2ac5-4d0b-a687-c6a6e7f9d32f",
+          "name": "SADASDASD",
+          "cardInfo": {
+            "title": "ASDASASDADS",
+            "items": []
+          }
+        }
+      ],
+      "status": "borrador",
+      "createdAt": "2026-05-11T14:59:48.340Z",
+      "updatedAt": "2026-05-11T14:59:48.340Z",
+      "authorId": "1"
+    }
+  ]
+}

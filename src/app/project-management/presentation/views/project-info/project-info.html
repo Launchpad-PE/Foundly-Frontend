@@ -1,0 +1,192 @@
+<!-- project-management/presentation/views/project-info/project-info.html -->
+<div class="project-detail-container" *ngIf="!loading; else loadingTemplate">
+
+  <!-- Header con navegación -->
+  <header class="detail-header">
+    <button class="back-btn" (click)="goBack()">
+      ← Volver a proyectos
+    </button>
+
+  </header>
+
+  <!-- Mensaje de error -->
+  <div class="error-message" *ngIf="error">
+    {{ error }}
+    <button (click)="error = null">×</button>
+  </div>
+
+  <!-- Contenido principal -->
+  <div class="detail-content" *ngIf="project">
+
+    <!-- Estado del proyecto -->
+    <div class="status-badge" [class]="getStatusClass(project.status)">
+      {{ getStatusLabel(project.status) }}
+    </div>
+
+    <!-- Título y área -->
+    <div class="title-section">
+      <h1 class="project-title">{{ project.name.getValue() }}</h1>
+      <div class="area-tag">{{ project.area.getValue() }}</div>
+    </div>
+
+    <!-- Tags -->
+    <div class="tags-section" *ngIf="project.tags.length > 0">
+      <span *ngFor="let tag of project.tags" class="tag">
+        {{ tag.toString() }}
+      </span>
+    </div>
+
+    <!-- Grid de información principal -->
+    <div class="info-grid">
+
+      <!-- Resumen -->
+      <div class="info-card full-width">
+        <h3>📝 Resumen del proyecto</h3>
+        <p>{{ project.summary.getValue() }}</p>
+      </div>
+
+      <!-- Duración -->
+      <div class="info-card">
+        <h3>⏱️ Duración estimada</h3>
+        <p class="duration-text">{{ getDurationText() }}</p>
+      </div>
+
+      <!-- Nivel académico -->
+      <div class="info-card" *ngIf="project.academicLevel?.getValue()">
+        <h3>🎓 Nivel académico</h3>
+        <p>{{ project.academicLevel?.getValue() }}</p>
+      </div>
+
+      <!-- Beneficios -->
+      <div class="info-card">
+        <h3>✨ Beneficios</h3>
+        <ul class="benefits-list">
+          <li *ngFor="let benefit of project.benefits">
+            {{ benefit.getDescription() }}
+          </li>
+        </ul>
+      </div>
+
+      <!-- Habilidades requeridas -->
+      <div class="info-card">
+        <h3>🛠️ Habilidades requeridas</h3>
+        <div class="skills-list">
+          <span *ngFor="let skill of project.requiredSkills" class="skill-tag">
+            {{ skill.toString() }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Impacto ambiental -->
+      <div class="info-card" *ngIf="getEnvironmentalMetrics().length > 0">
+        <h3>🌱 Impacto ambiental</h3>
+        <div class="metrics-list">
+          <span *ngFor="let metric of getEnvironmentalMetrics()" class="metric-tag">
+            {{ metric }}
+          </span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Roles disponibles -->
+    <div class="roles-section">
+      <h2>👥 Roles disponibles</h2>
+      <div class="roles-grid">
+        <div *ngFor="let role of project.roles; let i = index" class="role-card">
+          <h3>{{ role.name.getValue() }}</h3>
+
+          <div class="role-info">
+            <h4>{{ role.cardInfo.title.getValue() }}</h4>
+
+          </div>
+
+          <button class="btn-apply"
+                  *ngIf="!isAuthor && project.status === ProjectStatus.PUBLISHED"
+                  (click)="openApplyForm(role)">
+            Postular a este rol
+          </button>
+
+          <button class="btn-view-details"
+                  (click)="openRoleModal(role)">
+            Ver más detalles
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Metadatos del proyecto -->
+    <div class="metadata-section">
+      <div class="meta-item">
+        <span class="meta-label">Creado por:</span>
+        <span class="meta-value">Usuario {{ project.authorId.toString() }}</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Fecha de creación:</span>
+        <span class="meta-value">{{ formatDate(project.createdAt) }}</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Última actualización:</span>
+        <span class="meta-value">{{ formatDate(project.updatedAt) }}</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Modal de postulación -->
+  <div class="modal-overlay" *ngIf="showApplyForm" (click)="closeApplyForm()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Postular al proyecto</h2>
+        <button class="modal-close" (click)="closeApplyForm()">×</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="role-info" *ngIf="selectedRole">
+          <h4>Rol seleccionado: {{ selectedRole.name.getValue() }}</h4>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de detalles del rol -->
+  <div class="modal-overlay" *ngIf="showRoleModal" (click)="closeRoleModal()">
+    <div class="modal-content role-detail-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>{{ selectedRole?.name?.getValue() }}</h2>
+        <button class="modal-close" (click)="closeRoleModal()">×</button>
+      </div>
+
+      <div class="modal-body" *ngIf="selectedRole">
+        <div class="role-detail-info">
+          <h3>{{ selectedRole.cardInfo.title.getValue() }}</h3>
+
+          <div class="responsibilities">
+            <h4>Responsabilidades principales:</h4>
+            <ul>
+              <li *ngFor="let item of selectedRole.cardInfo.items">
+                {{ item.getDescription() }}
+              </li>
+            </ul>
+          </div>
+
+          <div class="apply-suggestion" *ngIf="!isAuthor && project && project.status === ProjectStatus.PUBLISHED">
+            <p>¿Te interesa este rol?</p>
+            <button class="btn-apply" (click)="openApplyForm(selectedRole); closeRoleModal()">
+              Postular ahora
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<ng-template #loadingTemplate>
+  <div class="loading-container">
+    <div class="spinner"></div>
+    <p>Cargando detalles del proyecto...</p>
+  </div>
+</ng-template>

@@ -1,0 +1,99 @@
+<div class="create-project-container">
+  <!-- Header -->
+  <header class="create-project-header">
+    <div class="logo" (click)="cancel()">
+      <h1>CollabUs</h1>
+    </div>
+    <div class="header-title">
+      <h2>Crear Proyecto</h2>
+    </div>
+    <div class="header-actions">
+      <button class="btn-cancel" (click)="cancel()">Cancelar</button>
+    </div>
+  </header>
+
+  <!-- Progress Steps -->
+  <div class="steps-progress">
+    <div class="step" [class.active]="currentStep() >= 1" [class.completed]="currentStep() > 1">
+      <div class="step-number">1</div>
+      <div class="step-label">Información Básica</div>
+    </div>
+    <div class="step-line" [class.active]="currentStep() > 1"></div>
+    <div class="step" [class.active]="currentStep() >= 2" [class.completed]="currentStep() > 2">
+      <div class="step-number">2</div>
+      <div class="step-label">Impacto Ambiental</div>
+    </div>
+    <div class="step-line" [class.active]="currentStep() > 2"></div>
+    <div class="step" [class.active]="currentStep() >= 3" [class.completed]="currentStep() > 3">
+      <div class="step-number">3</div>
+      <div class="step-label">Habilidades y Duración</div>
+    </div>
+    <div class="step-line" [class.active]="currentStep() > 3"></div>
+    <div class="step" [class.active]="currentStep() >= 4">
+      <div class="step-number">4</div>
+      <div class="step-label">Roles</div>
+    </div>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="error()" class="error-message">
+    {{ error() }}
+  </div>
+
+  <!-- Step Content -->
+  <div class="step-content">
+    <app-step-info
+      *ngIf="currentStep() === 1"
+      [formData]="formData"
+      [availableAreas]="availableAreas"
+      (update)="updateBasicInfo($event)">
+    </app-step-info>
+
+    <app-step-evironmental
+      *ngIf="currentStep() === 2"
+      [formData]="formData"
+      (update)="updateEnvironmental($event)">
+    </app-step-evironmental>
+
+    <app-step-skills-duration
+      *ngIf="currentStep() === 3"
+      [formData]="formData"
+      [academicLevels]="academicLevels"
+      [durationTypes]="durationTypes"
+      (update)="updateSkillsDuration($event)">
+    </app-step-skills-duration>
+
+    <app-step-roles
+      *ngIf="currentStep() === 4"
+      [formData]="formData"
+      (update)="updateRoles($event)">
+    </app-step-roles>
+  </div>
+
+  <!-- Navigation Buttons -->
+  <div class="navigation-buttons">
+    <button
+      *ngIf="currentStep() > 1"
+      class="btn-prev"
+      (click)="prevStep()">
+      ← Volver
+    </button>
+
+    <div class="nav-right">
+      <button
+        *ngIf="currentStep() < 4"
+        class="btn-next"
+        (click)="nextStep()">
+        Siguiente →
+      </button>
+
+      <button
+        *ngIf="currentStep() === 4"
+        class="btn-submit"
+        (click)="submitProject()"
+        [disabled]="loading()">
+        {{ loading() ? 'Creando...' : 'Publicar Proyecto' }}
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,80 @@
+<div class="step-card">
+  <div class="step-header">
+    <h1 class="main-title">Define tus Habilidades y Experiencias</h1>
+    <p class="subtitle">Agrega tus principales competencias o experiencias para que otros usuarios te conozcan mejor.</p>
+  </div>
+
+  <div class="step-content">
+    <!-- Skills Section -->
+    <div class="section">
+      <label class="section-label">Escribe una Habilidad</label>
+      <div class="add-skill">
+        <input
+          type="text"
+          [(ngModel)]="newSkill"
+          placeholder="Ej: JavaScript, Angular, UX Design"
+          class="skill-input"
+          (keyup.enter)="addSkill()"
+        />
+        <button class="add-btn" (click)="addSkill()">+ Agregar</button>
+      </div>
+
+      <div class="skills-list">
+        <span *ngFor="let skill of modelValue.abilities" class="skill-tag">
+          {{ skill }}
+          <button class="remove-skill" (click)="removeSkill(skill)">✕</button>
+        </span>
+      </div>
+    </div>
+
+    <!-- Experiences Section -->
+    <div class="section">
+      <label class="section-label">Añadir Experiencia</label>
+
+      <div *ngIf="!showExperienceForm" class="add-experience-btn">
+        <button (click)="showExperienceForm = true">+ Añadir experiencia</button>
+      </div>
+
+      <div *ngIf="showExperienceForm" class="experience-form">
+        <input
+          type="text"
+          [(ngModel)]="newExperience.title"
+          placeholder="Cargo/Puesto"
+          class="exp-input"
+        />
+        <input
+          type="text"
+          [(ngModel)]="newExperience.company"
+          placeholder="Empresa/Institución"
+          class="exp-input"
+        />
+        <input
+          type="text"
+          [(ngModel)]="newExperience.period"
+          placeholder="Tiempo (Ej: 2022 - Presente)"
+          class="exp-input"
+        />
+        <div class="exp-actions">
+          <button class="cancel-btn" (click)="showExperienceForm = false">Cancelar</button>
+          <button class="save-btn" (click)="addExperience()">Guardar</button>
+        </div>
+      </div>
+
+      <div class="experiences-list">
+        <div *ngFor="let exp of modelValue.experiences; let i = index" class="experience-item">
+          <div class="exp-info">
+            <strong>{{ exp.title }}</strong> | {{ exp.company }} | {{ exp.period }}
+          </div>
+          <button class="remove-exp" (click)="removeExperience(i)">✕</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-footer">
+    <button class="back-button" (click)="prev.emit()">Atrás</button>
+    <button class="continue-button" (click)="onSubmit()">
+      Guardar
+    </button>
+  </div>
+</div>
