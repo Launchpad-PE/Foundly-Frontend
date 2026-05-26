@@ -18,6 +18,14 @@ const projectDetail = () => import('./project-management/presentation/views/proj
   .then(m => m.ProjectDetailComponent);
 const projectInfo = () => import('./project-management/presentation/views/project-info/project-info')
   .then(m => m.ProjectInfo);
+const applyProject = () => import('./applications/presentation/views/apply-project/apply-project')
+  .then(m => m.ApplyProjectComponent);
+const postulantDetail = () => import('./applications/presentation/views/postulant-detail/postulant-detail')
+  .then(m => m.PostulantDetailComponent);
+const participatingProject = () => import('./task-management/presentation/views/participating-project/participating-project')
+  .then(m => m.ParticipatingProjectComponent);
+const taskDetail = () => import('./task-management/presentation/views/task-detail/task-detail')
+  .then(m => m.TaskDetailComponent);
 export const routes: Routes = [
   {
     path: 'login',
@@ -81,6 +89,30 @@ export const routes: Routes = [
     loadComponent: projectInfo,
     canActivate: [AuthGuard],
     title: `${baseTitle} - Detalle del Proyecto`
+  },
+  {
+    path: 'projects/:id/apply',
+    loadComponent: applyProject,
+    canActivate: [AuthGuard],
+    title: `${baseTitle} - Postular a un Proyecto`
+  },
+  {
+    path: 'projects/:id/postulantes/:applicationId',
+    loadComponent: postulantDetail,
+    canActivate: [AuthGuard],
+    title: `${baseTitle} - Detalle del Postulante`
+  },
+  {
+    path: 'projects/:id/participating',
+    loadComponent: participatingProject,
+    canActivate: [AuthGuard],
+    title: `${baseTitle} - Mi Proyecto`
+  },
+  {
+    path: 'projects/:id/tasks/:taskId',
+    loadComponent: taskDetail,
+    canActivate: [AuthGuard],
+    title: `${baseTitle} - Detalle de Tarea`
   },
   {
     path: '',
