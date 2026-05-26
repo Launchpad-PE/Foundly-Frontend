@@ -111,6 +111,7 @@ export class HomeComponent implements OnInit {
 
   applyToProject(projectId: string): void {
     console.log('Applying to project:', projectId);
+    this.router.navigate(['/projects', projectId, 'apply']);
   }
 
   viewProjectDetails(projectId: string): void {
