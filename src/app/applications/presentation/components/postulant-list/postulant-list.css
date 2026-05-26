@@ -1,0 +1,234 @@
+.postulant-list-wrapper {
+  width: 100%;
+  padding: 1rem 0;
+}
+
+/* Header con título + filtro */
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.list-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+.filter-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.role-filter {
+  padding: 0.55rem 2rem 0.55rem 0.85rem;
+  border: 1px solid #d1d5db;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #6b7280;
+  font-size: 0.9rem;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path fill='%236C63FF' d='M6 8L0 0h12z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 0.8rem center;
+  background-size: 10px 6px;
+  outline: none;
+}
+
+.role-filter:focus {
+  border-color: #6C63FF;
+  box-shadow: 0 0 0 2px rgba(108, 99, 255, 0.15);
+}
+
+/* Tabla */
+.table-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: 2fr 1.6fr 1fr 1.6fr;
+  align-items: center;
+  padding: 0.85rem 1.25rem;
+  gap: 1rem;
+}
+
+.table-head {
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+  font-weight: 600;
+  color: #1f2937;
+  font-size: 0.9rem;
+}
+
+.table-body-row {
+  border-bottom: 1px solid #f3f4f6;
+  font-size: 0.92rem;
+  color: #374151;
+}
+
+.table-body-row:last-child {
+  border-bottom: none;
+}
+
+.col-postulante {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #8176DC, #6C63FF);
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.postulante-name {
+  font-weight: 500;
+  color: #1f2937;
+}
+
+.col-rol,
+.col-fecha {
+  color: #1f2937;
+}
+
+.col-acciones {
+  display: flex;
+  gap: 0.4rem;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.btn-action {
+  padding: 0.4rem 0.85rem;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #1f2937;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.btn-action:hover {
+  background: #f3f4f6;
+}
+
+.btn-reject:hover {
+  background: #fee2e2;
+  color: #b91c1c;
+  border-color: #fca5a5;
+}
+
+.btn-accept:hover {
+  background: #dcfce7;
+  color: #15803d;
+  border-color: #86efac;
+}
+
+.btn-view:hover {
+  background: #ede9fe;
+  color: #6C63FF;
+  border-color: #c4b5fd;
+}
+
+.status-pill {
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+.status-pill.status-accepted {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.status-pill.status-rejected {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+/* States */
+.state-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  color: #6b7280;
+}
+
+.state-card.error {
+  color: #b91c1c;
+  background: #fee2e2;
+  border-color: #fecaca;
+}
+
+.state-card.empty {
+  color: #6b7280;
+}
+
+/* Invitar */
+.invite-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.btn-invite {
+  padding: 0.6rem 1.5rem;
+  background: #6C63FF;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.92rem;
+  transition: background 0.15s;
+}
+
+.btn-invite:hover {
+  background: #5048d8;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .table-row {
+    grid-template-columns: 1fr;
+    gap: 0.4rem;
+  }
+
+  .table-head {
+    display: none;
+  }
+
+  .table-body-row {
+    padding: 1rem;
+  }
+
+  .col-acciones {
+    justify-content: flex-end;
+  }
+}
