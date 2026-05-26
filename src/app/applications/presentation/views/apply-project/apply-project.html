@@ -1,0 +1,150 @@
+<div class="apply-page">
+  <div class="apply-card">
+    <header class="apply-header">
+      <button type="button" class="back-button" (click)="goBack()" aria-label="Volver">
+        <span aria-hidden="true">&larr;</span>
+      </button>
+      <h2 class="brand-title">Plataforma de E-Learning</h2>
+    </header>
+
+    @if (loading()) {
+      <div class="state-message">Cargando información del proyecto...</div>
+    } @else if (!project()) {
+      <div class="state-message error">No se encontró el proyecto.</div>
+    } @else {
+      <form class="apply-form" (ngSubmit)="submit()" novalidate>
+        <h1 class="form-title">Postular a un proyecto</h1>
+
+        <div class="form-grid">
+          <!-- Columna izquierda -->
+          <div class="form-col">
+            <div class="form-group">
+              <label for="fullName">Nombre Completo:</label>
+              <input
+                id="fullName"
+                name="fullName"
+                type="text"
+                class="form-input"
+                placeholder="ej. Ana Torres"
+                [(ngModel)]="formData.fullName"
+                required />
+            </div>
+
+            <div class="form-group">
+              <label for="email">Correo:</label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                class="form-input"
+                placeholder="ana@gmail.com"
+                [(ngModel)]="formData.email"
+                required />
+            </div>
+
+            <div class="form-group">
+              <label for="portfolioUrl">Portafolio/ LinkedIn (opcional)</label>
+              <input
+                id="portfolioUrl"
+                name="portfolioUrl"
+                type="url"
+                class="form-input"
+                placeholder="https://"
+                [(ngModel)]="formData.portfolioUrl" />
+            </div>
+
+            <div class="form-group">
+              <label for="phone">Numero telefono (opcional)</label>
+              <div class="phone-wrapper">
+                <span class="phone-prefix" aria-hidden="true">
+                  <span class="flag-pe"></span>
+                  <span class="prefix-code">+51</span>
+                </span>
+                <input
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  class="form-input phone-input"
+                  placeholder="999-999-999"
+                  [(ngModel)]="formData.phone" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="roleId">Selecciona uno de los puesto:</label>
+              <div class="puesto-row">
+                <select
+                  id="roleId"
+                  name="roleId"
+                  class="form-input"
+                  [(ngModel)]="formData.roleId"
+                  required>
+                  <option value="" disabled>Selecciona puesto</option>
+                  @for (role of roleOptions(); track role.id) {
+                    <option [value]="role.id">{{ role.name }}</option>
+                  }
+                </select>
+
+                <!-- Reemplazo del 'Adjuntar CV (PDF)' por un input de URL (regla: solo links) -->
+                <input
+                  id="cvUrl"
+                  name="cvUrl"
+                  type="url"
+                  class="form-input cv-input"
+                  placeholder="Enlace a tu CV (Drive, LinkedIn...)"
+                  [(ngModel)]="formData.cvUrl"
+                  required />
+              </div>
+            </div>
+          </div>
+
+          <!-- Columna derecha -->
+          <div class="form-col">
+            <div class="form-group message-group">
+              <label for="message">Mensaje/Presentacion</label>
+              <textarea
+                id="message"
+                name="message"
+                class="form-input message-input"
+                rows="10"
+                [(ngModel)]="formData.message"
+                required></textarea>
+            </div>
+
+            <label class="terms-row">
+              <input
+                type="checkbox"
+                name="acceptedTerms"
+                [(ngModel)]="formData.acceptedTerms"
+                required />
+              <span>Acepto los términos y el tratamiento de mis dato</span>
+            </label>
+
+            @if (errorMessage()) {
+              <div class="state-message error">{{ errorMessage() }}</div>
+            }
+            @if (successMessage()) {
+              <div class="state-message success">{{ successMessage() }}</div>
+            }
+
+            <div class="actions-row">
+              <button
+                type="submit"
+                class="btn-primary"
+                [disabled]="submitting()">
+                {{ submitting() ? 'Enviando...' : 'Enviar Postulación' }}
+              </button>
+              <button
+                type="button"
+                class="btn-secondary"
+                (click)="cancel()"
+                [disabled]="submitting()">
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    }
+  </div>
+</div>
