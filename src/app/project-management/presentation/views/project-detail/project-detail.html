@@ -51,22 +51,22 @@
             </span>
             <h3 class="card-heading">Progresó del Proyecto</h3>
           </div>
-          <span class="pct-chip">0% completado</span>
+          <span class="pct-chip">{{ tasksCompletionPct() }}% completado</span>
         </div>
 
         <div class="card-body">
           <div class="progress-track-wrap">
             <div class="progress-track">
-              <div class="progress-fill" style="width: 0%"></div>
+              <div class="progress-fill" [style.width.%]="tasksCompletionPct()"></div>
             </div>
             <span class="progress-track-label">Progreso general</span>
           </div>
 
           <div class="circles-row">
             <div class="circle-item">
-              <div class="ring ring--tasks">
+              <div class="ring ring--tasks" [style.background]="tasksRingStyle()">
                 <div class="ring-inner">
-                  <span class="ring-pct">0%</span>
+                  <span class="ring-pct">{{ tasksCompletionPct() }}%</span>
                   <span class="ring-sub">de tareas</span>
                 </div>
               </div>
@@ -126,19 +126,32 @@
             </span>
             <h3 class="card-heading">Colaboradores de tu proyecto</h3>
           </div>
-          <span class="count-chip">0</span>
+          <span class="count-chip">{{ acceptedCollaborators().length }}</span>
         </div>
         <div class="card-body">
-          <div class="empty-state">
-            <div class="empty-illustration colab-empty">
-              <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#c8ccf5" stroke-width="1.5" stroke-linecap="round">
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
-                <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
-              </svg>
+          <ng-container *ngIf="acceptedCollaborators().length > 0; else noCollaborators">
+            <ul class="collaborator-list">
+              <li *ngFor="let c of acceptedCollaborators()" class="collaborator-item">
+                <span class="collab-avatar" aria-hidden="true">{{ c.initials }}</span>
+                <div class="collab-info">
+                  <span class="collab-name">{{ c.fullName }}</span>
+                  <span class="collab-role">{{ c.roleId }}</span>
+                </div>
+              </li>
+            </ul>
+          </ng-container>
+          <ng-template #noCollaborators>
+            <div class="empty-state">
+              <div class="empty-illustration colab-empty">
+                <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#c8ccf5" stroke-width="1.5" stroke-linecap="round">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+              </div>
+              <p class="empty-title">Sin colaboradores aún</p>
+              <p class="empty-hint">Cuando alguien postule y sea aceptado, aparecerá aquí.</p>
             </div>
-            <p class="empty-title">Sin colaboradores aún</p>
-            <p class="empty-hint">Cuando alguien postule y sea aceptado, aparecerá aquí.</p>
-          </div>
+          </ng-template>
         </div>
       </div>
 
@@ -154,7 +167,7 @@
             </span>
             <h3 class="card-heading">Tareas Urgentes</h3>
           </div>
-          <span class="count-chip count-chip--urgent">0</span>
+          <span class="count-chip count-chip--urgent">{{ urgentTasksCount() }}</span>
         </div>
         <div class="card-body flex-col">
           <div class="empty-state">
@@ -177,8 +190,24 @@
       <app-iot-dashboard [metrics]="iotMetrics"></app-iot-dashboard>
     </div>
 
-    <!-- ════════════════ PLACEHOLDER ════════════════ -->
-    <div *ngIf="activeTab() === 'tareas' || activeTab() === 'hitos' || activeTab() === 'postulantes'"
+    <!-- ════════════════ POSTULANTES ════════════════ -->
+    <div *ngIf="activeTab() === 'postulantes'" class="postulantes-tab-wrapper">
+      <app-postulant-list
+        [projectId]="projectId"
+        [availableRoles]="projectRoleNames">
+      </app-postulant-list>
+    </div>
+
+    <!-- ════════════════ TAREAS ════════════════ -->
+    <div *ngIf="activeTab() === 'tareas'" class="tareas-tab-wrapper">
+      <app-task-list
+        [projectId]="projectId"
+        [assignees]="taskAssignees">
+      </app-task-list>
+    </div>
+
+    <!-- ════════════════ PLACEHOLDER (hitos) ════════════════ -->
+    <div *ngIf="activeTab() === 'hitos'"
          class="coming-soon">
       <div class="coming-visual">
         <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#d0d4f0" stroke-width="1.2" stroke-linecap="round">
