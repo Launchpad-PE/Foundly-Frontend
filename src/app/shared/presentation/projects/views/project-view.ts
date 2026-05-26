@@ -85,12 +85,18 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   }
 
   viewProjectDetails(projectId: string): void {
-    this.router.navigate(['/projects', projectId]);
+    // Si el usuario está mirando la pestaña "Participados", abrimos la vista
+    // del colaborador (no la del emprendedor).
+    if (this.activeTab === 'participated') {
+      this.router.navigate(['/projects', projectId, 'participating']);
+    } else {
+      this.router.navigate(['/projects', projectId]);
+    }
   }
 
   applyToProject(projectId: string): void {
     console.log('Apply to project:', projectId);
-    // TODO: Implementar lógica de postulación
+    this.router.navigate(['/projects', projectId, 'apply']);
   }
 
   createNewProject(): void {
@@ -112,5 +118,4 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       modality: project.duration.getType() === 'semanas' ? 'Remoto' : 'Presencial'
     }
   }
-
 }
