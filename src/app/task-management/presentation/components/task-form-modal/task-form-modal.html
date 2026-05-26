@@ -1,0 +1,154 @@
+<div class="modal-backdrop" (click)="onBackdropClick($event)">
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <header class="modal-header">
+      <button type="button" class="back-button" (click)="onCancel()" aria-label="Cerrar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 12H5M12 5l-7 7 7 7"/>
+        </svg>
+      </button>
+      <h2 id="modal-title" class="modal-title">Crear nueva Tarea</h2>
+    </header>
+
+    <form class="modal-body" (ngSubmit)="onSubmit()" novalidate>
+      <!-- Selector Colaborador -->
+      <select
+        class="form-input"
+        name="assigneeId"
+        [ngModel]="assigneeId()"
+        (ngModelChange)="assigneeId.set($event)"
+        required>
+        <option value="" disabled>Selecionar Colaborador</option>
+        @for (a of assignees; track a.id) {
+          <option [value]="a.id">{{ a.fullName }}</option>
+        }
+      </select>
+
+      <!-- Título -->
+      <input
+        type="text"
+        class="form-input"
+        name="title"
+        placeholder="Titulo de la tarea"
+        [ngModel]="title()"
+        (ngModelChange)="title.set($event)"
+        required />
+
+      <!-- Fecha de entrega -->
+      <input
+        type="date"
+        class="form-input"
+        name="dueDate"
+        [ngModel]="dueDate()"
+        (ngModelChange)="dueDate.set($event)"
+        required />
+
+      <!-- Descripción -->
+      <textarea
+        class="form-input form-textarea"
+        name="description"
+        placeholder="Descripcion"
+        rows="3"
+        [ngModel]="description()"
+        (ngModelChange)="description.set($event)"
+        required></textarea>
+
+      <!-- 2-col: Checklist + Adjuntos -->
+      <div class="two-col">
+        <!-- Checklist -->
+        <fieldset class="block">
+          <legend class="block-title">CheckList</legend>
+          @for (step of checklist(); track $index) {
+            <div class="chip">
+              <span>{{ step }}</span>
+              <button type="button" class="chip-x" (click)="removeStep($index)" aria-label="Quitar">×</button>
+            </div>
+          }
+          <div class="inline-add">
+            <input
+              type="text"
+              class="form-input compact"
+              placeholder="Describe un paso..."
+              [ngModel]="newStep()"
+              (ngModelChange)="newStep.set($event)"
+              name="newStep"
+              (keyup.enter)="addStep()" />
+            <button type="button" class="btn-mini" (click)="addStep()">+ Añadir Paso</button>
+          </div>
+        </fieldset>
+
+        <!-- Enlaces (sin archivos por regla del líder) -->
+        <fieldset class="block">
+          <legend class="block-title">Añadir Archivos Adjuntos</legend>
+          @for (link of attachments(); track $index) {
+            <div class="chip">
+              <a [href]="link" target="_blank" rel="noopener">{{ link }}</a>
+              <button type="button" class="chip-x" (click)="removeLink($index)" aria-label="Quitar">×</button>
+            </div>
+          }
+          @if (showLinkInput()) {
+            <div class="inline-add">
+              <input
+                type="url"
+                class="form-input compact"
+                placeholder="https://figma.com/..."
+                [ngModel]="newLink()"
+                (ngModelChange)="newLink.set($event)"
+                name="newLink"
+                (keyup.enter)="addLink()" />
+              <button type="button" class="btn-mini" (click)="addLink()">Agregar</button>
+              <button type="button" class="btn-mini-ghost" (click)="cancelLink()">Cancelar</button>
+            </div>
+          } @else {
+            <button type="button" class="btn-mini" (click)="openLinkInput()">Añadir Enlaces</button>
+          }
+          <p class="hint">Solo se aceptan enlaces (Drive, Figma, etc.), no archivos PDF.</p>
+        </fieldset>
+      </div>
+
+      <!-- Herramientas -->
+      <fieldset class="block">
+        <legend class="block-title">Herramientas Asignadas</legend>
+        @for (tool of tools(); track $index) {
+          <div class="chip">
+            <span>{{ tool }}</span>
+            <button type="button" class="chip-x" (click)="removeTool($index)" aria-label="Quitar">×</button>
+          </div>
+        }
+        <div class="inline-add">
+          <input
+            type="text"
+            class="form-input compact"
+            placeholder="Escribe las herramientas"
+            [ngModel]="newTool()"
+            (ngModelChange)="newTool.set($event)"
+            name="newTool"
+            (keyup.enter)="addTool()" />
+          <button type="button" class="btn-mini" (click)="addTool()">Agregar otra herramienta</button>
+        </div>
+      </fieldset>
+
+      <!-- Comentario -->
+      <fieldset class="block">
+        <legend class="block-title">Comentario</legend>
+        <textarea
+          class="form-input form-textarea"
+          name="comment"
+          placeholder="Deja un comentario a tu colaborador"
+          rows="2"
+          [ngModel]="comment()"
+          (ngModelChange)="comment.set($event)"></textarea>
+      </fieldset>
+
+      @if (errorMessage()) {
+        <div class="error-msg">{{ errorMessage() }}</div>
+      }
+
+      <!-- Acciones -->
+      <div class="actions">
+        <button type="submit" class="btn-submit" [disabled]="submitting()">
+          {{ submitting() ? 'Enviando...' : 'Enviar' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
