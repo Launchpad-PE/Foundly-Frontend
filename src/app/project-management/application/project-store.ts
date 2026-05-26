@@ -3,6 +3,8 @@ import { Injectable, signal, computed, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { Project } from '../domain/entities/project.entity';
 import { ProjectApi } from '../infrastructure/project-api';
+import { ApplicationApi } from '../../applications/infrastructure/application-api';
+import { ApplicationStatus } from '../../applications/domain/enum/application-status.enum';
 import { ProjectStatus } from '../domain/enum/project-status.enum';
 import { EnvironmentalMetric } from '../domain/value-objects/environmental-impact.vo';
 import { DurationType } from '../domain/value-objects/duration.vo';
@@ -49,6 +51,7 @@ export class ProjectStore {
 
   // Dependencies
   private projectApi = inject(ProjectApi);
+  private applicationApi = inject(ApplicationApi);
 
   // Computed properties
   readonly filteredProjects = computed(() => {
@@ -426,9 +429,25 @@ export class ProjectStore {
     this.clearError();
 
     try {
-      // TODO: Implementar endpoint para proyectos donde el usuario ha aplicado
-      // Por ahora, retornar array vacío
-      const projects: Project[] = []; // await firstValueFrom(this.projectApi.getParticipatedProjects(userId));
+      // 1. Traer las Applications del usuario y filtrar las aceptadas.
+      const applications = await firstValueFrom(
+        this.applicationApi.getApplicationsByUser(userId)
+      );
+      const acceptedProjectIds = Array.from(new Set(
+        applications
+          .filter(a => a.status === ApplicationStatus.ACCEPTED)
+          .map(a => a.projectId.toString())
+      ));
+
+      // 2. Cargar los Projects correspondientes. Ignoramos los que fallen
+      //    (ej. proyecto borrado) para no romper la pantalla entera.
+      const results = await Promise.all(
+        acceptedProjectIds.map(id =>
+          firstValueFrom(this.projectApi.getProject(id)).catch(() => null)
+        )
+      );
+      const projects = results.filter((p): p is Project => p !== null);
+
       this.participatedProjects.set(projects);
       return projects;
     } catch (err: any) {
