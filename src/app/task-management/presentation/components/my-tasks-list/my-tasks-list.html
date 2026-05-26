@@ -1,0 +1,35 @@
+<section class="my-tasks-list">
+  <header class="list-header">
+    <span class="header-label">Tareas asignadas:</span>
+    <span class="header-counter">{{ completedCount() }}/{{ totalCount() }} completadas</span>
+  </header>
+
+  @if (loading()) {
+    <p class="state-msg">Cargando tus tareas...</p>
+  } @else if (errorMessage()) {
+    <p class="state-msg error">{{ errorMessage() }}</p>
+  } @else if (tasks().length === 0) {
+    <p class="state-msg empty">Aún no tienes tareas asignadas en este proyecto.</p>
+  } @else {
+    <div class="task-cards">
+      @for (task of tasks(); track task.id) {
+        <article class="task-card" [class.completed]="task.isCompleted()">
+          <div class="card-info">
+            <h4 class="card-title">{{ task.title.getValue() }}</h4>
+            <p class="card-due">Vence: {{ formatDate(task.dueDate) }}</p>
+          </div>
+          <div class="card-actions">
+            <button type="button" class="btn-ver" (click)="viewTask(task)">Ver Tarea</button>
+            <button
+              type="button"
+              class="btn-hacer"
+              (click)="doTask(task)"
+              [disabled]="task.isCompleted()">
+              {{ task.isCompleted() ? 'Completada' : 'Hacer Tarea' }}
+            </button>
+          </div>
+        </article>
+      }
+    </div>
+  }
+</section>
