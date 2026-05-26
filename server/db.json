@@ -175,5 +175,94 @@
       "updatedAt": "2026-05-11T14:59:48.340Z",
       "authorId": "1"
     }
+  ],
+  "applications": [
+    {
+      "id": "907ab073-d11c-4e13-b822-4186da33dd16",
+      "projectId": "187dbdf6-2f3c-4772-8097-38837def4f3d",
+      "userId": "1",
+      "roleId": "SAASDASDASDASD",
+      "fullName": "Juan Pérez",
+      "email": "juan@example.com",
+      "portfolioUrl": "https://pe.linkedin.com/",
+      "phone": "910 089 304",
+      "cvUrl": "https://pe.linkedin.com/",
+      "message": ":-) wjwjwjwjwwieiu38i4uijkfms,fnsdnfjsdfhysudfuyyew7y783yirjewkfnekkefmdsnmfnmdsnfmsdnf",
+      "acceptedTerms": true,
+      "status": "pending",
+      "createdAt": "2026-05-21T06:39:48.541Z",
+      "updatedAt": "2026-05-21T06:39:48.541Z"
+    },
+    {
+      "id": "9a298dda-81b0-489d-8706-cf0b93b07c97",
+      "projectId": "04d5496e-e878-4056-95e1-e9e924067e4b",
+      "userId": "1",
+      "roleId": "SAADSASD",
+      "fullName": "Juan Pérez",
+      "email": "juan@example.com",
+      "portfolioUrl": "https://pe.linkedin.com/",
+      "phone": "910 089 304",
+      "cvUrl": "https://pe.linkedin.com/",
+      "message": "weiwieiejsjshshsndnnsdklalaiuwewueerosd",
+      "acceptedTerms": true,
+      "status": "accepted",
+      "createdAt": "2026-05-21T06:43:41.193Z",
+      "updatedAt": "2026-05-25T18:00:46.511Z"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "ecaad020-df60-413c-b604-e82c6c59296e",
+      "projectId": "04d5496e-e878-4056-95e1-e9e924067e4b",
+      "assigneeId": "1",
+      "creatorId": "1",
+      "title": "ayudar",
+      "description": "holalholaohoalalsaskaskas",
+      "dueDate": "2026-05-21T00:00:00.000Z",
+      "checklist": [
+        {
+          "description": "skdskdks",
+          "done": false
+        }
+      ],
+      "attachments": [],
+      "tools": [
+        "sdkskmdsd",
+        "lksdsd"
+      ],
+      "comment": "holis",
+      "status": "pending",
+      "deliveryUrl": null,
+      "deliveryNotes": null,
+      "createdAt": "2026-05-25T18:57:12.480Z",
+      "updatedAt": "2026-05-25T18:57:12.480Z"
+    },
+    {
+      "id": "452ee36f-aaa6-4979-97a7-736674baa08d",
+      "projectId": "04d5496e-e878-4056-95e1-e9e924067e4b",
+      "assigneeId": "1",
+      "creatorId": "1",
+      "title": "ayudar a algo",
+      "description": "holagolaholalalalalallla",
+      "dueDate": "2026-05-15T00:00:00.000Z",
+      "checklist": [
+        {
+          "description": "ayudar",
+          "done": false
+        }
+      ],
+      "attachments": [
+        "https://www.figma.com/design/5w3Mgz6F3KzoDXQeX93wxn/Mockup-Open-Source?node-id=0-1&p=f&t=HenMNF3feONWxICs-0"
+      ],
+      "tools": [
+        "hola"
+      ],
+      "comment": "holaholohola",
+      "status": "completed",
+      "deliveryUrl": null,
+      "deliveryNotes": null,
+      "createdAt": "2026-05-25T18:58:46.792Z",
+      "updatedAt": "2026-05-25T18:58:46.792Z"
+    }
   ]
 }
