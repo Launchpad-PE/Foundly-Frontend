@@ -1,0 +1,139 @@
+<div class="task-detail-page">
+  <header class="page-header">
+    <button type="button" class="back-button" (click)="goBack()" aria-label="Volver">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 12H5M12 5l-7 7 7 7"/>
+      </svg>
+    </button>
+    <h1 class="brand">{{ task()?.title?.getValue() || projectName() }}</h1>
+  </header>
+
+  @if (loading()) {
+    <div class="state-card">Cargando tarea...</div>
+  } @else if (!task()) {
+    <div class="state-card error">No se encontró la tarea.</div>
+  } @else if (isCompleted()) {
+    <!-- ════════════════ VISTA TAREA COMPLETADA ════════════════ -->
+
+    <!-- Header card: título + colaborador + status -->
+    <section class="card summary-card">
+      <div class="summary-info">
+        <h2 class="summary-title">{{ task()!.title.getValue() }}</h2>
+        <p class="summary-collab">{{ collaboratorName() || 'Colaborador' }}</p>
+      </div>
+      <span class="status-pill pill-completed">{{ statusLabel() }}</span>
+    </section>
+
+    <!-- Archivos entregados -->
+    <section class="card delivered-card">
+      <h3 class="block-title">Archivos entregados</h3>
+      @if (task()!.deliveryUrl) {
+        <div class="delivered-row">
+          <span class="delivered-name">{{ task()!.deliveryUrl!.getValue() }}</span>
+          <a class="btn-open" [href]="task()!.deliveryUrl!.getValue()" target="_blank" rel="noopener">Abrir</a>
+        </div>
+      }
+      @for (link of task()!.attachments; track $index) {
+        <div class="delivered-row">
+          <span class="delivered-name">{{ link.getValue() }}</span>
+          <a class="btn-open" [href]="link.getValue()" target="_blank" rel="noopener">Abrir</a>
+        </div>
+      }
+      @if (!task()!.deliveryUrl && task()!.attachments.length === 0) {
+        <p class="block-empty">El colaborador no dejó enlaces entregados.</p>
+      }
+    </section>
+
+    <!-- Nota del colaborador -->
+    <section class="card note-card">
+      <h3 class="block-title">Nota</h3>
+      <div class="note-row">
+        <span class="avatar" aria-hidden="true">{{ collaboratorInitials() }}</span>
+        <p class="note-text">
+          @if (task()!.deliveryNotes) {
+            {{ task()!.deliveryNotes }}
+          } @else {
+            <span class="block-empty">El colaborador no dejó nota.</span>
+          }
+        </p>
+      </div>
+    </section>
+
+  } @else {
+    <!-- ════════════════ VISTA TAREA NO COMPLETADA (read-only) ════════════════ -->
+
+    <!-- Card 1: Título + Fecha + Estado -->
+    <section class="card title-card">
+      <div class="title-row">
+        <h2 class="task-title">{{ task()!.title.getValue() }}</h2>
+        <span class="status-pill" [class]="'pill-' + displayStatus()">{{ statusLabel() }}</span>
+      </div>
+      <p class="due-date">Fecha de Vencimiento: {{ formatDate(task()!.dueDate) }}</p>
+    </section>
+
+    <section class="card">
+      <h3 class="block-title">Descripción</h3>
+      <p class="block-text">{{ task()!.description.getValue() }}</p>
+    </section>
+
+    @if (task()!.comment) {
+      <section class="card">
+        <h3 class="block-title">Comentario</h3>
+        <p class="block-text">{{ task()!.comment }}</p>
+      </section>
+    }
+
+    <section class="card">
+      <h3 class="block-title">Checklist</h3>
+      @if (task()!.checklist.length === 0) {
+        <p class="block-empty">Sin pasos definidos.</p>
+      } @else {
+        <ul class="checklist">
+          @for (step of task()!.checklist; track $index) {
+            <li class="check-item" [class.done]="step.isDone()">
+              <span class="check-box" [class.checked]="step.isDone()" aria-hidden="true">
+                @if (step.isDone()) { ✓ }
+              </span>
+              <span class="check-text">{{ step.getDescription() }}</span>
+            </li>
+          }
+        </ul>
+      }
+    </section>
+
+    @if (task()!.tools.length > 0) {
+      <section class="card">
+        <h3 class="block-title">Herramientas Asignadas</h3>
+        <div class="chip-row">
+          @for (tool of task()!.tools; track $index) {
+            <span class="chip">{{ tool.getName() }}</span>
+          }
+        </div>
+      </section>
+    }
+
+    <section class="card">
+      <h3 class="block-title">Archivos a entregar</h3>
+      @if (task()!.attachments.length === 0) {
+        <p class="block-empty">El emprendedor no adjuntó enlaces de referencia.</p>
+      } @else {
+        <ul class="link-list">
+          @for (link of task()!.attachments; track $index) {
+            <li>
+              <a [href]="link.getValue()" target="_blank" rel="noopener">{{ link.getValue() }}</a>
+            </li>
+          }
+        </ul>
+      }
+    </section>
+
+    <section class="card">
+      <h3 class="block-title">Notas de Colaborador</h3>
+      @if (task()!.deliveryNotes) {
+        <p class="block-text">{{ task()!.deliveryNotes }}</p>
+      } @else {
+        <p class="block-empty">El colaborador aún no ha dejado notas.</p>
+      }
+    </section>
+  }
+</div>
