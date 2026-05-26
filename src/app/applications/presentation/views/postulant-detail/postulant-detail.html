@@ -1,0 +1,71 @@
+<div class="postulant-detail-page">
+  <header class="page-header">
+    <button type="button" class="back-button" (click)="goBack()" aria-label="Volver">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 12H5M12 5l-7 7 7 7"/>
+      </svg>
+    </button>
+  </header>
+
+  @if (loading()) {
+    <div class="state-card">Cargando postulante...</div>
+  } @else if (!application()) {
+    <div class="state-card error">No se encontró la postulación.</div>
+  } @else {
+    <section class="postulant-summary">
+      <div class="avatar-big" aria-hidden="true">{{ initials() }}</div>
+      <div class="summary-text">
+        <span class="summary-label">Fecha de Postulacion</span>
+        <span class="summary-date">{{ dateLabel() }}</span>
+      </div>
+      <div class="summary-status">
+        <span
+          class="status-pill"
+          [class.status-accepted]="application()!.status === 'accepted'"
+          [class.status-rejected]="application()!.status === 'rejected'">
+          {{ statusLabel() }}
+        </span>
+      </div>
+    </section>
+
+    <section class="info-card">
+      <div class="info-row">
+        <span class="info-label">Nombre Completo</span>
+        <span class="info-value">{{ fullName() }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Correo Electronico</span>
+        <span class="info-value info-value--link">{{ email() }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Numero de telefono</span>
+        <span class="info-value">+51 {{ phone() }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Puesto sugerido</span>
+        <span class="info-value">{{ roleSuggested() }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Portafolio</span>
+        @if (portfolio() !== '—') {
+          <a class="info-value info-value--link" [href]="portfolio()" target="_blank" rel="noopener">
+            {{ portfolio() }}
+          </a>
+        } @else {
+          <span class="info-value">{{ portfolio() }}</span>
+        }
+      </div>
+
+      @if (isPending()) {
+        <div class="actions-row">
+          <button type="button" class="btn-primary" (click)="accept()">Aceptar</button>
+          <button type="button" class="btn-secondary" (click)="reject()">Rechazar</button>
+        </div>
+      }
+    </section>
+
+    <section class="message-card">
+      <pre class="message-text">{{ message() }}</pre>
+    </section>
+  }
+</div>

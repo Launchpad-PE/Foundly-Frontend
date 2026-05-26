@@ -1,0 +1,230 @@
+.postulant-detail-page {
+  min-height: 100vh;
+  background: #ffffff;
+  padding: 1.5rem 2rem 3rem;
+  max-width: 720px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.page-header {
+  margin-bottom: 1.25rem;
+}
+
+.back-button {
+  background: transparent;
+  border: none;
+  color: #6C63FF;
+  cursor: pointer;
+  padding: 0.25rem;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+}
+
+.back-button:hover {
+  color: #4d44d4;
+}
+
+/* Summary header (avatar + fecha) */
+.postulant-summary {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.avatar-big {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #8176DC, #6C63FF);
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.summary-text {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.summary-label {
+  font-size: 0.92rem;
+  color: #1f2937;
+  font-weight: 500;
+}
+
+.summary-date {
+  font-size: 0.92rem;
+  color: #6b7280;
+}
+
+.summary-status {
+  margin-left: auto;
+}
+
+.status-pill {
+  padding: 0.3rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+.status-pill.status-accepted {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.status-pill.status-rejected {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+/* Cards */
+.info-card,
+.message-card {
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 14px;
+  padding: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.info-row {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  align-items: center;
+  padding: 0.5rem 0;
+  gap: 1rem;
+  font-size: 0.92rem;
+}
+
+.info-label {
+  color: #1f2937;
+  font-weight: 500;
+}
+
+.info-value {
+  color: #1f2937;
+  word-break: break-word;
+}
+
+.info-value--link {
+  color: #1f2937;
+  text-decoration: underline;
+  text-decoration-color: #6b7280;
+  text-underline-offset: 3px;
+}
+
+a.info-value--link {
+  cursor: pointer;
+}
+
+a.info-value--link:hover {
+  color: #6C63FF;
+  text-decoration-color: #6C63FF;
+}
+
+/* Actions */
+.actions-row {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.btn-primary,
+.btn-secondary {
+  flex: 1;
+  padding: 0.7rem 1.25rem;
+  border-radius: 999px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: background 0.15s, color 0.15s;
+}
+
+.btn-primary {
+  background: #6C63FF;
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background: #5048d8;
+}
+
+.btn-secondary {
+  background: #ffffff;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+}
+
+.btn-secondary:hover {
+  background: #fee2e2;
+  color: #b91c1c;
+  border-color: #fca5a5;
+}
+
+/* Message */
+.message-text {
+  margin: 0;
+  font-family: inherit;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  line-height: 1.55;
+  font-size: 0.95rem;
+  color: #1f2937;
+  background: transparent;
+}
+
+/* State cards */
+.state-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  color: #6b7280;
+}
+
+.state-card.error {
+  background: #fee2e2;
+  color: #b91c1c;
+  border-color: #fecaca;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .postulant-detail-page {
+    padding: 1rem;
+  }
+
+  .info-row {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+    border-bottom: 1px solid #f3f4f6;
+    padding: 0.6rem 0;
+  }
+
+  .info-row:last-of-type {
+    border-bottom: none;
+  }
+
+  .info-label {
+    font-size: 0.82rem;
+    color: #6b7280;
+  }
+
+  .summary-status {
+    margin-left: 0;
+    width: 100%;
+  }
+}
