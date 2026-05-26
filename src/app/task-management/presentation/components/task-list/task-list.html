@@ -1,0 +1,81 @@
+<div class="task-list-wrapper">
+  <!-- Header con filtros -->
+  <div class="filters-row">
+    <button type="button" class="btn-create" (click)="openCreateModal()">
+      <span class="plus">+</span> Crear
+    </button>
+
+    <select
+      class="filter-select"
+      [ngModel]="selectedAssignee()"
+      (ngModelChange)="selectedAssignee.set($event)"
+      name="assigneeFilter"
+      aria-label="Filtrar por colaborador">
+      <option value="">Por Colaborador</option>
+      @for (a of assignees; track a.id) {
+        <option [value]="a.id">{{ a.fullName }}</option>
+      }
+    </select>
+
+    <input
+      type="text"
+      class="filter-search"
+      placeholder="Buscar tarea..."
+      [ngModel]="searchInput()"
+      (ngModelChange)="searchInput.set($event)"
+      (keyup.enter)="applySearch()" />
+
+    <button type="button" class="btn-search" (click)="applySearch()">Buscar</button>
+  </div>
+
+  <!-- Estado de carga / error -->
+  @if (loading()) {
+    <div class="state-card">Cargando tareas...</div>
+  } @else if (error()) {
+    <div class="state-card error">{{ error() }}</div>
+  } @else if (filteredTasks().length === 0) {
+    <div class="state-card empty">No hay tareas para mostrar.</div>
+  } @else {
+    <!-- Tabla -->
+    <div class="task-table">
+      <div class="task-row task-head">
+        <span class="col-collab">Colaborador</span>
+        <span class="col-title">Tarea</span>
+        <span class="col-due">Vencimiento</span>
+        <span class="col-status">Estado</span>
+        <span class="col-actions"></span>
+      </div>
+
+      @for (task of filteredTasks(); track task.id) {
+        <div class="task-row task-body-row">
+          <span class="col-collab">
+            <span class="avatar">{{ getInitials(getAssigneeName(task.assigneeId.toString())) }}</span>
+            <span class="collab-name">{{ getAssigneeName(task.assigneeId.toString()) }}</span>
+          </span>
+          <span class="col-title">{{ task.title.getValue() }}</span>
+          <span class="col-due">{{ formatDate(task.dueDate) }}</span>
+          <span class="col-status">
+            <span class="status-pill" [class]="statusClass(task)">{{ statusLabel(task) }}</span>
+          </span>
+          <span class="col-actions">
+            @if (isDelayed(task)) {
+              <button class="btn-danger" (click)="deleteTask(task)">Eliminar</button>
+              <button class="btn-warning" (click)="reschedule(task)">Poner Nueva fecha</button>
+            } @else {
+              <button class="btn-view" (click)="viewTask(task)">Ver Tarea</button>
+            }
+          </span>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Modal de crear/editar -->
+  @if (showModal()) {
+    <app-task-form-modal
+      [assignees]="assignees"
+      (close)="closeModal()"
+      (submitTask)="onFormSubmit($event)">
+    </app-task-form-modal>
+  }
+</div>
