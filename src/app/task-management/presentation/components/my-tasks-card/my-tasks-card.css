@@ -1,0 +1,78 @@
+.my-tasks-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem 1.5rem;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.card-header { margin-bottom: 1rem; }
+
+.card-title {
+  margin: 0;
+  color: #6C63FF;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.task-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.task-item {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+}
+
+.task-meta {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.85rem;
+  font-size: 0.75rem;
+  color: #9ca3af;
+  margin-bottom: 0.4rem;
+}
+
+.meta-value { color: #6b7280; font-weight: 500; }
+
+.task-body {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.task-title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #1f2937;
+  flex: 1 1 auto;
+}
+
+.btn-view {
+  padding: 0.45rem 1.1rem;
+  background: #6C63FF;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.btn-view:hover { background: #5048d8; }
+
+.state-msg {
+  margin: 0.5rem 0;
+  color: #6b7280;
+  font-size: 0.92rem;
+}
+.state-msg.error { color: #b91c1c; }
+.state-msg.empty { color: #6b7280; }

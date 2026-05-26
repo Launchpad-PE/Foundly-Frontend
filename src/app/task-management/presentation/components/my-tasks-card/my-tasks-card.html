@@ -1,0 +1,28 @@
+<section class="my-tasks-card">
+  <header class="card-header">
+    <h3 class="card-title">Mis Tareas</h3>
+  </header>
+
+  @if (loading()) {
+    <p class="state-msg">Cargando tus tareas...</p>
+  } @else if (errorMessage()) {
+    <p class="state-msg error">{{ errorMessage() }}</p>
+  } @else if (tasks().length === 0) {
+    <p class="state-msg empty">Aún no tienes tareas asignadas en este proyecto.</p>
+  } @else {
+    <div class="task-cards">
+      @for (task of tasks(); track task.id) {
+        <article class="task-item">
+          <div class="task-meta">
+            <span class="meta-label">Fecha de Vencimiento</span>
+            <span class="meta-value">{{ formatDate(task.dueDate) }}</span>
+          </div>
+          <div class="task-body">
+            <h4 class="task-title">{{ task.title.getValue() }}</h4>
+            <button type="button" class="btn-view" (click)="viewTask(task)">Ver Tarea</button>
+          </div>
+        </article>
+      }
+    </div>
+  }
+</section>
