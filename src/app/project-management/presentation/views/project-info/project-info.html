@@ -1,63 +1,59 @@
 <!-- project-management/presentation/views/project-info/project-info.html -->
-<div class="project-detail-container" *ngIf="!loading; else loadingTemplate">
+<div class="project-detail-container">
 
-  <!-- Header con navegación -->
   <header class="detail-header">
     <button class="back-btn" (click)="goBack()">
       ← Volver a proyectos
     </button>
-
   </header>
 
+  <!-- Mostrar loading mientras carga -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Cargando detalles del proyecto...</p>
+  </div>
+
   <!-- Mensaje de error -->
-  <div class="error-message" *ngIf="error">
+  <div class="error-message" *ngIf="error && !loading">
     {{ error }}
     <button (click)="error = null">×</button>
   </div>
 
   <!-- Contenido principal -->
-  <div class="detail-content" *ngIf="project">
+  <div class="detail-content" *ngIf="project && !loading">
 
-    <!-- Estado del proyecto -->
     <div class="status-badge" [class]="getStatusClass(project.status)">
       {{ getStatusLabel(project.status) }}
     </div>
 
-    <!-- Título y área -->
     <div class="title-section">
       <h1 class="project-title">{{ project.name.getValue() }}</h1>
       <div class="area-tag">{{ project.area.getValue() }}</div>
     </div>
 
-    <!-- Tags -->
     <div class="tags-section" *ngIf="project.tags.length > 0">
       <span *ngFor="let tag of project.tags" class="tag">
         {{ tag.toString() }}
       </span>
     </div>
 
-    <!-- Grid de información principal -->
     <div class="info-grid">
 
-      <!-- Resumen -->
       <div class="info-card full-width">
         <h3>📝 Resumen del proyecto</h3>
         <p>{{ project.summary.getValue() }}</p>
       </div>
 
-      <!-- Duración -->
       <div class="info-card">
         <h3>⏱️ Duración estimada</h3>
         <p class="duration-text">{{ getDurationText() }}</p>
       </div>
 
-      <!-- Nivel académico -->
       <div class="info-card" *ngIf="project.academicLevel?.getValue()">
         <h3>🎓 Nivel académico</h3>
         <p>{{ project.academicLevel?.getValue() }}</p>
       </div>
 
-      <!-- Beneficios -->
       <div class="info-card">
         <h3>✨ Beneficios</h3>
         <ul class="benefits-list">
@@ -67,7 +63,6 @@
         </ul>
       </div>
 
-      <!-- Habilidades requeridas -->
       <div class="info-card">
         <h3>🛠️ Habilidades requeridas</h3>
         <div class="skills-list">
@@ -77,7 +72,6 @@
         </div>
       </div>
 
-      <!-- Impacto ambiental -->
       <div class="info-card" *ngIf="getEnvironmentalMetrics().length > 0">
         <h3>🌱 Impacto ambiental</h3>
         <div class="metrics-list">
@@ -89,16 +83,14 @@
 
     </div>
 
-    <!-- Roles disponibles -->
     <div class="roles-section">
       <h2>👥 Roles disponibles</h2>
       <div class="roles-grid">
-        <div *ngFor="let role of project.roles; let i = index" class="role-card">
+        <div *ngFor="let role of project.roles" class="role-card">
           <h3>{{ role.name.getValue() }}</h3>
 
           <div class="role-info">
             <h4>{{ role.cardInfo.title.getValue() }}</h4>
-
           </div>
 
           <button class="btn-apply"
@@ -115,7 +107,6 @@
       </div>
     </div>
 
-    <!-- Metadatos del proyecto -->
     <div class="metadata-section">
       <div class="meta-item">
         <span class="meta-label">Creado por:</span>
@@ -133,60 +124,53 @@
 
   </div>
 
-  <!-- Modal de postulación -->
-  <div class="modal-overlay" *ngIf="showApplyForm" (click)="closeApplyForm()">
-    <div class="modal-content" (click)="$event.stopPropagation()">
-      <div class="modal-header">
-        <h2>Postular al proyecto</h2>
-        <button class="modal-close" (click)="closeApplyForm()">×</button>
-      </div>
-
-      <div class="modal-body">
-        <div class="role-info" *ngIf="selectedRole">
-          <h4>Rol seleccionado: {{ selectedRole.name.getValue() }}</h4>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal de detalles del rol -->
-  <div class="modal-overlay" *ngIf="showRoleModal" (click)="closeRoleModal()">
-    <div class="modal-content role-detail-modal" (click)="$event.stopPropagation()">
-      <div class="modal-header">
-        <h2>{{ selectedRole?.name?.getValue() }}</h2>
-        <button class="modal-close" (click)="closeRoleModal()">×</button>
-      </div>
-
-      <div class="modal-body" *ngIf="selectedRole">
-        <div class="role-detail-info">
-          <h3>{{ selectedRole.cardInfo.title.getValue() }}</h3>
-
-          <div class="responsibilities">
-            <h4>Responsabilidades principales:</h4>
-            <ul>
-              <li *ngFor="let item of selectedRole.cardInfo.items">
-                {{ item.getDescription() }}
-              </li>
-            </ul>
-          </div>
-
-          <div class="apply-suggestion" *ngIf="!isAuthor && project && project.status === ProjectStatus.PUBLISHED">
-            <p>¿Te interesa este rol?</p>
-            <button class="btn-apply" (click)="openApplyForm(selectedRole); closeRoleModal()">
-              Postular ahora
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div *ngIf="!loading && !project && !error" class="empty-state">
+    <p>No se encontró información del proyecto</p>
   </div>
 
 </div>
 
-<ng-template #loadingTemplate>
-  <div class="loading-container">
-    <div class="spinner"></div>
-    <p>Cargando detalles del proyecto...</p>
+<!-- Modal de postulación (simplificado) -->
+<div class="modal-overlay" *ngIf="showApplyForm" (click)="closeApplyForm()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Postular al proyecto</h2>
+      <button class="modal-close" (click)="closeApplyForm()">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="role-info" *ngIf="selectedRole">
+        <h4>Rol seleccionado: {{ selectedRole.name.getValue() }}</h4>
+      </div>
+      <p>Formulario de postulación aquí...</p>
+    </div>
   </div>
-</ng-template>
+</div>
+
+<!-- Modal de detalles del rol -->
+<div class="modal-overlay" *ngIf="showRoleModal" (click)="closeRoleModal()">
+  <div class="modal-content role-detail-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>{{ selectedRole?.name?.getValue() }}</h2>
+      <button class="modal-close" (click)="closeRoleModal()">×</button>
+    </div>
+    <div class="modal-body" *ngIf="selectedRole">
+      <div class="role-detail-info">
+        <h3>{{ selectedRole.cardInfo.title.getValue() }}</h3>
+        <div class="responsibilities">
+          <h4>Responsabilidades principales:</h4>
+          <ul>
+            <li *ngFor="let item of selectedRole.cardInfo.items">
+              {{ item.getDescription() }}
+            </li>
+          </ul>
+        </div>
+        <div class="apply-suggestion" *ngIf="!isAuthor && project?.status === ProjectStatus.PUBLISHED">
+          <p>¿Te interesa este rol?</p>
+          <button class="btn-apply" (click)="openApplyForm(selectedRole); closeRoleModal()">
+            Postular ahora
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

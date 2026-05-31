@@ -1,11 +1,10 @@
 // project-management/presentation/views/project-info/project-info.ts
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ProjectStore } from '../../../application/project-store';
 import { UserStore } from '../../../../iam/application/user.store';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Subject } from 'rxjs';
 import { Project } from '../../../domain/entities/project.entity';
 import { ProjectStatus } from '../../../domain/enum/project-status.enum';
 
@@ -22,10 +21,9 @@ export class ProjectInfo implements OnInit {
   private projectStore = inject(ProjectStore);
   private userStore = inject(UserStore);
   private fb = inject(FormBuilder);
-  private destroy$ = new Subject<void>();
 
   project: Project | null = null;
-  loading = false;  // ✅ Siempre false para que nunca muestre el spinner
+  loading = true;  // ✅ Inicia en true para mostrar spinner
   error: string | null = null;
   isAuthor = false;
   showApplyForm = false;
@@ -34,13 +32,6 @@ export class ProjectInfo implements OnInit {
 
   applyForm: FormGroup;
   ProjectStatus = ProjectStatus;
-  statusOptions = [
-    { value: ProjectStatus.DRAFT, label: 'Borrador' },
-    { value: ProjectStatus.PUBLISHED, label: 'Publicado' },
-    { value: ProjectStatus.IN_PROGRESS, label: 'En Curso' },
-    { value: ProjectStatus.COMPLETED, label: 'Completado' },
-    { value: ProjectStatus.CANCELLED, label: 'Cancelado' }
-  ];
 
   constructor() {
     this.applyForm = this.fb.group({
@@ -55,45 +46,75 @@ export class ProjectInfo implements OnInit {
     console.log('🔍 ProjectInfo - ID recibido:', projectId);
 
     if (projectId) {
-      // ✅ Cargar sin mostrar loading
-      await this.loadProjectDirect(projectId);
+      await this.loadProject(projectId);
     } else {
       this.error = 'No se especificó un proyecto';
+      this.loading = false;
     }
   }
 
-  // ✅ Nuevo método: carga los datos directamente sin loading
-  private async loadProjectDirect(projectId: string): Promise<void> {
+  private async loadProject(projectId: string): Promise<void> {
+    this.loading = true;
+    this.error = null;
+
     try {
-      // Intentar obtener de la caché del store primero
-      this.project = this.projectStore.currentProject();
+      // 1. Primero intentar obtener de la caché del store
+      let project = this.projectStore.currentProject();
 
-      // Si no está en caché, cargar todos los proyectos y buscar
-      if (!this.project || this.project.id !== projectId) {
-        const allProjects = await this.projectStore.loadAllProjects();
-        this.project = allProjects.find(p => p.id === projectId) || null;
-      }
-
-      console.log('✅ Proyecto encontrado:', this.project);
-
-      if (!this.project) {
-        this.error = 'Proyecto no encontrado';
+      if (project && project.id === projectId) {
+        console.log('✅ Proyecto encontrado en caché');
+        this.project = project;
+        this.checkAuthor();
+        this.loading = false;
         return;
       }
 
-      const currentUser = this.userStore.currentUser();
-      if (currentUser && this.project.authorId.toString() === currentUser.id?.toString()) {
-        this.isAuthor = true;
+      // 2. Buscar en allProjects (si ya están cargados)
+      const allProjects = this.projectStore.allProjects();
+      project = allProjects.find(p => p.id === projectId) || null;
+
+      if (project) {
+        console.log('✅ Proyecto encontrado en allProjects');
+        this.project = project;
+        this.checkAuthor();
+        this.loading = false;
+        return;
+      }
+
+      // 3. Último recurso: cargar todos los proyectos y buscar
+      console.log('📡 Cargando todos los proyectos desde API...');
+      const loadedProjects = await this.projectStore.loadAllProjects();
+      console.log('📡 Proyectos cargados:', loadedProjects.length);
+
+      project = loadedProjects.find(p => p.id === projectId) || null;
+
+      if (project) {
+        console.log('✅ Proyecto encontrado después de carga:', project.name.getValue());
+        this.project = project;
+        this.checkAuthor();
+      } else {
+        this.error = `No se encontró el proyecto con ID: ${projectId}`;
+        console.error('❌ Proyecto no encontrado');
       }
 
     } catch (err: any) {
-      console.error('Error cargando proyecto:', err);
+      console.error('❌ Error cargando proyecto:', err);
       this.error = err.message || 'Error al cargar el proyecto';
+    } finally {
+      this.loading = false;
+      console.log('🏁 Finalizado - loading:', this.loading, 'project:', !!this.project);
+    }
+  }
+
+  private checkAuthor(): void {
+    const currentUser = this.userStore.currentUser();
+    if (currentUser && this.project && this.project.authorId.toString() === currentUser.id?.toString()) {
+      this.isAuthor = true;
     }
   }
 
   getStatusClass(status: ProjectStatus): string {
-    const classes = {
+    const classes: Record<ProjectStatus, string> = {
       [ProjectStatus.DRAFT]: 'status-draft',
       [ProjectStatus.PUBLISHED]: 'status-published',
       [ProjectStatus.IN_PROGRESS]: 'status-progress',
@@ -126,15 +147,6 @@ export class ProjectInfo implements OnInit {
     return this.project.environmentalImpact.getMetrics();
   }
 
-  getAcademicLevel(): string | null {
-    return this.project?.academicLevel?.getValue() ?? null;
-  }
-
-  hasAcademicLevel(): boolean {
-    return !!this.project?.academicLevel?.getValue();
-  }
-
-
   openApplyForm(role?: any): void {
     this.selectedRole = role || null;
     this.showApplyForm = true;
@@ -166,6 +178,6 @@ export class ProjectInfo implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/projects']);
+    this.router.navigate(['/home']);
   }
 }
