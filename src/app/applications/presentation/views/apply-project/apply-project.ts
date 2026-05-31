@@ -53,7 +53,7 @@ export class ApplyProjectComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     const projectId = this.route.snapshot.paramMap.get('id');
     if (!projectId) {
-      this.router.navigate(['/projects']);
+      this.router.navigate(['/home']);  // ✅ Cambiar a home
       return;
     }
 
@@ -64,24 +64,36 @@ export class ApplyProjectComponent implements OnInit {
       this.formData.email = currentUser.email ?? '';
     }
 
-    // Cargar el proyecto para obtener los roles del dropdown
-    const loaded = await this.projectStore.loadProject(projectId);
-    if (!loaded) {
-      this.errorMessage.set('No se pudo cargar el proyecto.');
+    // Cargar el proyecto
+    this.loading.set(true);  // ✅ Asegurar que loading esté true
+    try {
+      // Intentar cargar directamente desde el store/API
+      let project = this.projectStore.currentProject();
+      if (!project || project.id !== projectId) {
+        project = await this.projectStore.loadProject(projectId);
+      }
+
+      if (!project) {
+        const allProjects = await this.projectStore.loadAllProjects();
+        project = allProjects.find(p => p.id === projectId) || null;
+      }
+
+      if (!project) {
+        this.errorMessage.set('No se encontró el proyecto.');
+        this.loading.set(false);
+        return;
+      }
+
+      this.project.set(project);
+    } catch (err) {
+      this.errorMessage.set('Error al cargar el proyecto.');
+    } finally {
       this.loading.set(false);
-      return;
     }
-    this.project.set(loaded);
-    this.loading.set(false);
   }
 
   goBack(): void {
-    const projectId = this.project()?.id;
-    if (projectId) {
-      this.router.navigate(['/projects/info', projectId]);
-    } else {
-      this.router.navigate(['/projects']);
-    }
+    this.router.navigate(['/home']);  // ✅ Navegar a home
   }
 
   cancel(): void {
