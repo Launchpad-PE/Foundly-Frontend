@@ -2,7 +2,7 @@
 import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { ProjectCardComponent, Project as ProjectCardData } from '../components/project-card/projectc-card';
 import { CollaboratorCardComponent } from '../components/collaborator-card/collaborator-card';
@@ -11,7 +11,6 @@ import { ProfileApi } from '../../../../profile-management/infrastructure/profil
 import { Profile } from '../../../../profile-management/domain/entities/profile.entity';
 import { ProjectStore } from '../../../../project-management/application/project-store';
 import { Project as DomainProject } from '../../../../project-management/domain/entities/project.entity';
-import { ProjectStatus } from '../../../../project-management/domain/enum/project-status.enum';
 
 @Component({
   selector: 'app-home',
@@ -22,7 +21,6 @@ import { ProjectStatus } from '../../../../project-management/domain/enum/projec
     ProjectCardComponent,
     CollaboratorCardComponent,
     RouterLink,
-    RouterLinkActive,
   ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
@@ -32,14 +30,13 @@ export class HomeComponent implements OnInit {
   private router = inject(Router);
   private profileApi = inject(ProfileApi);
   private projectStore = inject(ProjectStore);
-  private cdr = inject(ChangeDetectorRef); // ✅ Agregar esto
+  private cdr = inject(ChangeDetectorRef);
 
   currentPlan: string = 'Gratuito';
   searchTerm: string = '';
   filterRole: string = '';
   filterArea: string = '';
 
-  // Datos desde la API
   highlightedCollaborators: Profile[] = [];
   featuredProjects: ProjectCardData[] = [];
   allProjects: ProjectCardData[] = [];
@@ -53,7 +50,6 @@ export class HomeComponent implements OnInit {
     await this.loadHomeData();
   }
 
-  // home.component.ts
   async loadHomeData(): Promise<void> {
     try {
       const profiles = await firstValueFrom(this.profileApi.getAllProfiles());
@@ -62,15 +58,7 @@ export class HomeComponent implements OnInit {
       this.highlightedCollaborators = profiles;
       this.allProjects = domainProjects.map((p: DomainProject) => this.mapToProjectCardData(p));
       this.featuredProjects = this.allProjects.slice(0, 3);
-
-      // ✅ Forzar detección de cambios
       this.cdr.detectChanges();
-
-      console.log('Datos asignados:', {
-        collaborators: this.highlightedCollaborators.length,
-        allProjects: this.allProjects.length
-      });
-
     } catch (err: any) {
       console.error('Error cargando datos:', err);
     }
@@ -94,11 +82,6 @@ export class HomeComponent implements OnInit {
     };
   }
 
-  logout(): void {
-    this.userStore.logout();
-    this.router.navigate(['/login']);
-  }
-
   onSearch(): void {
     this.router.navigate(['/projects'], {
       queryParams: {
@@ -110,7 +93,6 @@ export class HomeComponent implements OnInit {
   }
 
   applyToProject(projectId: string): void {
-    console.log('Applying to project:', projectId);
     this.router.navigate(['/projects', projectId, 'apply']);
   }
 

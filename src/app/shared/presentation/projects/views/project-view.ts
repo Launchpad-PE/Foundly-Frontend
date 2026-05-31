@@ -1,11 +1,11 @@
-// shared/presentation/views/projects/projects.component.ts
+// project-view.ts
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { UserStore } from '../../../../iam/application/user.store';
 import { Project } from '../../../../project-management/domain/entities/project.entity';
-import {MyProjects} from '../components/my-projects/my-projects';
+import { MyProjects } from '../components/my-projects/my-projects';
 import { ProjectStore } from '../../../../project-management/application/project-store';
 
 @Component({
@@ -20,11 +20,9 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   private userStore = inject(UserStore);
   private router = inject(Router);
 
-  // UI State
   activeTab: 'my-projects' | 'participated' = 'my-projects';
   searchTerm: string = '';
 
-  // Store signals
   myProjects = this.projectStore.userProjects;
   participatedProjects = this.projectStore.participatedProjects;
   loading = this.projectStore.loading;
@@ -33,9 +31,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     this.loadProjects();
   }
 
-  ngOnDestroy(): void {
-    // Opcional: limpiar algo si es necesario
-  }
+  ngOnDestroy(): void {}
 
   async loadProjects(): Promise<void> {
     const userId = this.userStore.currentUser()?.id;
@@ -52,7 +48,6 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     this.activeTab = tab;
     this.projectStore.setActiveTab(tab);
 
-    // Limpiar búsqueda al cambiar de tab
     if (this.searchTerm) {
       this.searchTerm = '';
       this.restoreProjects();
@@ -85,8 +80,6 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   }
 
   viewProjectDetails(projectId: string): void {
-    // Si el usuario está mirando la pestaña "Participados", abrimos la vista
-    // del colaborador (no la del emprendedor).
     if (this.activeTab === 'participated') {
       this.router.navigate(['/projects', projectId, 'participating']);
     } else {
@@ -95,7 +88,6 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   }
 
   applyToProject(projectId: string): void {
-    console.log('Apply to project:', projectId);
     this.router.navigate(['/projects', projectId, 'apply']);
   }
 

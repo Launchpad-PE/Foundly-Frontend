@@ -1,21 +1,5 @@
-<!-- home.component.html - Sin loading state -->
+<!-- home.component.html -->
 <div class="home-container">
-
-  <header class="home-header">
-    <div class="logo">
-      <h1>Foundly</h1>
-    </div>
-    <nav class="nav-menu">
-      <a routerLink="/home" routerLinkActive="active" class="nav-link">Inicio</a>
-      <a routerLink="/projects" routerLinkActive="active" class="nav-link">Proyectos</a>
-      <a routerLink="/collaborators" class="nav-link">Colaboradores</a>
-    </nav>
-    <div class="user-actions">
-      <button class="btn-logout" (click)="logout()">Log out</button>
-      <div class="user-avatar">U</div>
-    </div>
-  </header>
-
   <!-- Search Bar -->
   <div class="search-bar-wrapper">
     <div class="search-bar">
@@ -60,7 +44,6 @@
 
   <!-- Main 3-column layout -->
   <div class="main-content">
-
     <!-- Left Sidebar -->
     <aside class="sidebar">
       <section class="sidebar-card">
@@ -123,6 +106,5 @@
         <p class="no-featured">Sin proyectos destacados por el momento.</p>
       </ng-template>
     </aside>
-
   </div>
 </div>

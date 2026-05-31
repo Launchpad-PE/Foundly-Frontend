@@ -1,9 +1,9 @@
-// shared/presentation/collaborators/views/collaborators.component.ts
+// collaborators.component.ts
 import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
-import {CollaboratorList} from '../components/collaborator-list/collaborator-list';
+import { Router } from '@angular/router';
+import { CollaboratorList } from '../components/collaborator-list/collaborator-list';
 import { UserStore } from '../../../../iam/application/user.store';
 import { ProfileApi } from '../../../../profile-management/infrastructure/profile-api';
 import { Profile } from '../../../../profile-management/domain/entities/profile.entity';
@@ -12,7 +12,7 @@ import { firstValueFrom } from 'rxjs';
 @Component({
   selector: 'app-collaborators',
   standalone: true,
-  imports: [CommonModule, FormsModule, CollaboratorList ,RouterLink, RouterLinkActive],
+  imports: [CommonModule, FormsModule, CollaboratorList],
   templateUrl: './collaborators.component.html',
   styleUrls: ['./collaborators.component.css'],
 })
@@ -75,11 +75,6 @@ export class CollaboratorsComponent implements OnInit {
       this.loading = false;
       this.cdr.detectChanges();
     }
-  }
-
-  logout(): void {
-    this.userStore.logout();
-    this.router.navigate(['/login']);
   }
 
   viewProfile(collaboratorId: string): void {
