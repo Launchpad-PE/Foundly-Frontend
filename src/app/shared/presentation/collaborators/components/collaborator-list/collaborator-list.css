@@ -1,113 +1,90 @@
-.collaborator-list-item {
+.collab-list-card {
   display: flex;
-  gap: 1.5rem;
-  padding: 1.5rem;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s, box-shadow 0.2s;
-  margin-bottom: 1rem;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: #fff;
+  border: 1px solid #eeeef6;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: border-color 0.15s ease-out, box-shadow 0.15s ease-out;
 }
 
-.collaborator-list-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+.collab-list-card:hover {
+  border-color: #c8c4f8;
+  box-shadow: 0 4px 16px rgba(108, 99, 255, 0.09);
 }
 
-.collaborator-avatar {
-  width: 80px;
-  height: 80px;
+.collab-list-card:hover .cl-arrow {
+  color: #6c63ff;
+}
+
+/* Avatar */
+.cl-avatar {
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
+  background: #e8e8f0;
+  color: #5a5a7a;
+  font-size: 1rem;
+  font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #4f46e5, #7c3aed);
-  color: white;
-  font-weight: 700;
-  font-size: 1.5rem;
   flex-shrink: 0;
 }
 
-.collaborator-info {
+/* Info */
+.cl-info {
   flex: 1;
-}
-
-.collaborator-header {
+  min-width: 0;
   display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 0.75rem;
+  flex-direction: column;
+  gap: 0.15rem;
 }
 
-.collaborator-name {
+.cl-name {
   margin: 0;
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #1e293b;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1e1e3a;
 }
 
-.collaborator-role {
-  color: #4f46e5;
-  font-weight: 500;
-  background: #e0e7ff;
-  padding: 0.25rem 0.75rem;
-  border-radius: 20px;
-  font-size: 0.85rem;
+.cl-role {
+  margin: 0 0 0.4rem;
+  font-size: 0.8rem;
+  color: #9595b2;
 }
 
-.collaborator-bio {
-  color: #64748b;
-  margin-bottom: 0.75rem;
-  line-height: 1.5;
-}
-
-.collaborator-skills {
+.cl-skills {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
+  gap: 0.3rem;
 }
 
-.skill-badge {
-  background: #f1f5f9;
-  color: #475569;
-  padding: 0.25rem 0.75rem;
-  border-radius: 20px;
-  font-size: 0.8rem;
+.cl-skill {
+  background: #f2f2f9;
+  color: #6060a0;
+  padding: 0.18rem 0.55rem;
+  border-radius: 6px;
+  font-size: 0.72rem;
   font-weight: 500;
 }
 
-.btn-view-profile {
-  background: #4f46e5;
-  color: white;
-  border: none;
-  padding: 0.5rem 1.25rem;
-  border-radius: 8px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
+.cl-skill.more {
+  background: #ebebf5;
+  color: #a0a0bb;
 }
 
-.btn-view-profile:hover {
-  background: #3730a3;
+/* Arrow */
+.cl-arrow {
+  width: 16px;
+  height: 16px;
+  color: #c8c8de;
+  flex-shrink: 0;
+  transition: color 0.15s ease-out;
 }
 
-@media (max-width: 768px) {
-  .collaborator-list-item {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-
-  .collaborator-header {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .collaborator-skills {
-    justify-content: center;
-  }
+@media (prefers-reduced-motion: reduce) {
+  .collab-list-card, .cl-arrow { transition: none; }
 }

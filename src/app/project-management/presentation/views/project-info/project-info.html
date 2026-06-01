@@ -1,175 +1,241 @@
-<!-- project-management/presentation/views/project-info/project-info.html -->
-<div class="project-detail-container">
+<!-- project-info.html -->
+<div class="pi-shell">
 
-  <header class="detail-header">
-    <button class="back-btn" (click)="goBack()">
-      ← Volver a proyectos
+  <!-- Top nav bar -->
+  <div class="pi-topbar">
+    <button class="pi-back" (click)="goBack()">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" class="pi-back-icon">
+        <path d="M12 5l-5 5 5 5"/>
+      </svg>
+      Volver
     </button>
-  </header>
-
-  <!-- Mostrar loading mientras carga -->
-  <div *ngIf="loading" class="loading-container">
-    <div class="spinner"></div>
-    <p>Cargando detalles del proyecto...</p>
   </div>
 
-  <!-- Mensaje de error -->
-  <div class="error-message" *ngIf="error && !loading">
-    {{ error }}
-    <button (click)="error = null">×</button>
+  <!-- ── Loading skeleton ── -->
+  <div class="pi-skeleton" *ngIf="loading">
+    <div class="sk-hero"></div>
+    <div class="sk-body">
+      <div class="sk-block tall"></div>
+      <div class="sk-side">
+        <div class="sk-block"></div>
+        <div class="sk-block"></div>
+        <div class="sk-block"></div>
+      </div>
+    </div>
   </div>
 
-  <!-- Contenido principal -->
-  <div class="detail-content" *ngIf="project && !loading">
+  <!-- ── Error ── -->
+  <div class="pi-error" *ngIf="error && !loading">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="pi-error-icon">
+      <circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>
+    </svg>
+    <p>{{ error }}</p>
+    <button class="pi-error-dismiss" (click)="error = null">Cerrar</button>
+  </div>
 
-    <div class="status-badge" [class]="getStatusClass(project.status)">
-      {{ getStatusLabel(project.status) }}
+  <!-- ── Main content ── -->
+  <div class="pi-content" *ngIf="project && !loading">
+
+    <!-- Hero -->
+    <div class="pi-hero">
+      <div class="pi-hero-meta">
+        <span class="pi-status" [class]="getStatusClass(project.status)">
+          {{ getStatusLabel(project.status) }}
+        </span>
+        <span class="pi-area-chip">{{ project.area.getValue() }}</span>
+      </div>
+
+      <h1 class="pi-title">{{ project.name.getValue() }}</h1>
+
+      <div class="pi-tags" *ngIf="project.tags.length > 0">
+        <span *ngFor="let tag of project.tags" class="pi-tag">#{{ tag.toString() }}</span>
+      </div>
+
+      <div class="pi-hero-footer">
+        <span class="pi-meta-pill">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" class="pi-meta-icon">
+            <circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/>
+          </svg>
+          {{ getDurationText() }}
+        </span>
+        <span class="pi-meta-pill">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" class="pi-meta-icon">
+            <path d="M8 2a3 3 0 100 6 3 3 0 000-6zM3 13a5 5 0 0110 0"/>
+          </svg>
+          Usuario {{ project.authorId.toString() }}
+        </span>
+        <span class="pi-meta-pill" *ngIf="project.academicLevel?.getValue()">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" class="pi-meta-icon">
+            <path d="M2 6l6-4 6 4-6 4-6-4z"/><path d="M14 7v5M5 8.5v3a3 3 0 006 0v-3"/>
+          </svg>
+          {{ project.academicLevel?.getValue() }}
+        </span>
+      </div>
     </div>
 
-    <div class="title-section">
-      <h1 class="project-title">{{ project.name.getValue() }}</h1>
-      <div class="area-tag">{{ project.area.getValue() }}</div>
-    </div>
+    <!-- Two-column layout -->
+    <div class="pi-layout">
 
-    <div class="tags-section" *ngIf="project.tags.length > 0">
-      <span *ngFor="let tag of project.tags" class="tag">
-        {{ tag.toString() }}
-      </span>
-    </div>
+      <!-- ── Left: main body ── -->
+      <div class="pi-main">
 
-    <div class="info-grid">
+        <!-- Summary -->
+        <section class="pi-section">
+          <h2 class="pi-section-title">Sobre el proyecto</h2>
+          <p class="pi-summary">{{ project.summary.getValue() }}</p>
+        </section>
 
-      <div class="info-card full-width">
-        <h3>📝 Resumen del proyecto</h3>
-        <p>{{ project.summary.getValue() }}</p>
-      </div>
-
-      <div class="info-card">
-        <h3>⏱️ Duración estimada</h3>
-        <p class="duration-text">{{ getDurationText() }}</p>
-      </div>
-
-      <div class="info-card" *ngIf="project.academicLevel?.getValue()">
-        <h3>🎓 Nivel académico</h3>
-        <p>{{ project.academicLevel?.getValue() }}</p>
-      </div>
-
-      <div class="info-card">
-        <h3>✨ Beneficios</h3>
-        <ul class="benefits-list">
-          <li *ngFor="let benefit of project.benefits">
-            {{ benefit.getDescription() }}
-          </li>
-        </ul>
-      </div>
-
-      <div class="info-card">
-        <h3>🛠️ Habilidades requeridas</h3>
-        <div class="skills-list">
-          <span *ngFor="let skill of project.requiredSkills" class="skill-tag">
-            {{ skill.toString() }}
-          </span>
-        </div>
-      </div>
-
-      <div class="info-card" *ngIf="getEnvironmentalMetrics().length > 0">
-        <h3>🌱 Impacto ambiental</h3>
-        <div class="metrics-list">
-          <span *ngFor="let metric of getEnvironmentalMetrics()" class="metric-tag">
-            {{ metric }}
-          </span>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="roles-section">
-      <h2>👥 Roles disponibles</h2>
-      <div class="roles-grid">
-        <div *ngFor="let role of project.roles" class="role-card">
-          <h3>{{ role.name.getValue() }}</h3>
-
-          <div class="role-info">
-            <h4>{{ role.cardInfo.title.getValue() }}</h4>
-          </div>
-
-          <button class="btn-apply"
+        <!-- Roles -->
+        <section class="pi-section">
+          <h2 class="pi-section-title">Roles disponibles</h2>
+          <div class="pi-roles-grid">
+            <div *ngFor="let role of project.roles" class="pi-role-card">
+              <div class="pi-role-header">
+                <div class="pi-role-avatar">
+                  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" class="pi-role-icon">
+                    <path d="M10 2a4 4 0 100 8 4 4 0 000-8zM4 18a6 6 0 0112 0"/>
+                  </svg>
+                </div>
+                <h3 class="pi-role-name">{{ role.name.getValue() }}</h3>
+              </div>
+              <p class="pi-role-desc">{{ role.cardInfo.title.getValue() }}</p>
+              <div class="pi-role-actions">
+                <button class="pi-btn-ghost" (click)="openRoleModal(role)">Ver detalles</button>
+                <button class="pi-btn-primary"
                   *ngIf="!isAuthor && project.status === ProjectStatus.PUBLISHED"
                   (click)="openApplyForm(role)">
-            Postular a este rol
-          </button>
+                  Postular
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
 
-          <button class="btn-view-details"
-                  (click)="openRoleModal(role)">
-            Ver más detalles
-          </button>
+      </div>
+
+      <!-- ── Right: sidebar ── -->
+      <aside class="pi-sidebar">
+
+        <!-- Required skills -->
+        <div class="pi-widget" *ngIf="project.requiredSkills.length > 0">
+          <h4 class="pi-widget-title">Habilidades requeridas</h4>
+          <div class="pi-chips">
+            <span *ngFor="let skill of project.requiredSkills" class="pi-chip skill">
+              {{ skill.toString() }}
+            </span>
+          </div>
         </div>
-      </div>
-    </div>
 
-    <div class="metadata-section">
-      <div class="meta-item">
-        <span class="meta-label">Creado por:</span>
-        <span class="meta-value">Usuario {{ project.authorId.toString() }}</span>
-      </div>
-      <div class="meta-item">
-        <span class="meta-label">Fecha de creación:</span>
-        <span class="meta-value">{{ formatDate(project.createdAt) }}</span>
-      </div>
-      <div class="meta-item">
-        <span class="meta-label">Última actualización:</span>
-        <span class="meta-value">{{ formatDate(project.updatedAt) }}</span>
-      </div>
-    </div>
-
-  </div>
-
-  <div *ngIf="!loading && !project && !error" class="empty-state">
-    <p>No se encontró información del proyecto</p>
-  </div>
-
-</div>
-
-<!-- Modal de postulación (simplificado) -->
-<div class="modal-overlay" *ngIf="showApplyForm" (click)="closeApplyForm()">
-  <div class="modal-content" (click)="$event.stopPropagation()">
-    <div class="modal-header">
-      <h2>Postular al proyecto</h2>
-      <button class="modal-close" (click)="closeApplyForm()">×</button>
-    </div>
-    <div class="modal-body">
-      <div class="role-info" *ngIf="selectedRole">
-        <h4>Rol seleccionado: {{ selectedRole.name.getValue() }}</h4>
-      </div>
-      <p>Formulario de postulación aquí...</p>
-    </div>
-  </div>
-</div>
-
-<!-- Modal de detalles del rol -->
-<div class="modal-overlay" *ngIf="showRoleModal" (click)="closeRoleModal()">
-  <div class="modal-content role-detail-modal" (click)="$event.stopPropagation()">
-    <div class="modal-header">
-      <h2>{{ selectedRole?.name?.getValue() }}</h2>
-      <button class="modal-close" (click)="closeRoleModal()">×</button>
-    </div>
-    <div class="modal-body" *ngIf="selectedRole">
-      <div class="role-detail-info">
-        <h3>{{ selectedRole.cardInfo.title.getValue() }}</h3>
-        <div class="responsibilities">
-          <h4>Responsabilidades principales:</h4>
-          <ul>
-            <li *ngFor="let item of selectedRole.cardInfo.items">
-              {{ item.getDescription() }}
+        <!-- Benefits -->
+        <div class="pi-widget" *ngIf="project.benefits.length > 0">
+          <h4 class="pi-widget-title">Beneficios</h4>
+          <ul class="pi-benefit-list">
+            <li *ngFor="let benefit of project.benefits" class="pi-benefit-item">
+              <svg viewBox="0 0 16 16" fill="currentColor" class="pi-check">
+                <path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"/>
+              </svg>
+              {{ benefit.getDescription() }}
             </li>
           </ul>
         </div>
-        <div class="apply-suggestion" *ngIf="!isAuthor && project?.status === ProjectStatus.PUBLISHED">
-          <p>¿Te interesa este rol?</p>
-          <button class="btn-apply" (click)="openApplyForm(selectedRole); closeRoleModal()">
-            Postular ahora
-          </button>
+
+        <!-- Environmental impact -->
+        <div class="pi-widget" *ngIf="getEnvironmentalMetrics().length > 0">
+          <h4 class="pi-widget-title">Impacto ambiental</h4>
+          <div class="pi-chips">
+            <span *ngFor="let metric of getEnvironmentalMetrics()" class="pi-chip green">
+              {{ metric }}
+            </span>
+          </div>
         </div>
+
+        <!-- Metadata -->
+        <div class="pi-widget muted">
+          <div class="pi-meta-row">
+            <span class="pi-meta-label">Publicado</span>
+            <span class="pi-meta-val">{{ formatDate(project.createdAt) }}</span>
+          </div>
+          <div class="pi-meta-row">
+            <span class="pi-meta-label">Actualizado</span>
+            <span class="pi-meta-val">{{ formatDate(project.updatedAt) }}</span>
+          </div>
+        </div>
+
+      </aside>
+    </div>
+
+  </div>
+
+  <!-- ── Empty state ── -->
+  <div class="pi-empty" *ngIf="!loading && !project && !error">
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" class="pi-empty-icon">
+      <rect x="8" y="12" width="32" height="28" rx="4"/>
+      <path d="M16 12V9a2 2 0 012-2h12a2 2 0 012 2v3"/>
+    </svg>
+    <p>No se encontró este proyecto.</p>
+    <button class="pi-btn-primary" (click)="goBack()">Volver al inicio</button>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════
+     Modal: Role details
+══════════════════════════════ -->
+<div class="pi-overlay" *ngIf="showRoleModal" (click)="closeRoleModal()">
+  <div class="pi-modal" (click)="$event.stopPropagation()">
+    <div class="pi-modal-header">
+      <h2 class="pi-modal-title">{{ selectedRole?.name?.getValue() }}</h2>
+      <button class="pi-modal-close" (click)="closeRoleModal()" aria-label="Cerrar">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M6 6l8 8M14 6l-8 8"/>
+        </svg>
+      </button>
+    </div>
+    <div class="pi-modal-body" *ngIf="selectedRole">
+      <p class="pi-modal-subtitle">{{ selectedRole.cardInfo.title.getValue() }}</p>
+      <h4 class="pi-modal-section">Responsabilidades</h4>
+      <ul class="pi-resp-list">
+        <li *ngFor="let item of selectedRole.cardInfo.items" class="pi-resp-item">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" class="pi-resp-dot">
+            <circle cx="8" cy="8" r="3"/>
+          </svg>
+          {{ item.getDescription() }}
+        </li>
+      </ul>
+      <div class="pi-modal-cta" *ngIf="!isAuthor && project?.status === ProjectStatus.PUBLISHED">
+        <button class="pi-btn-primary full" (click)="openApplyForm(selectedRole); closeRoleModal()">
+          Postular a este rol
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     Modal: Apply
+══════════════════════════════ -->
+<div class="pi-overlay" *ngIf="showApplyForm" (click)="closeApplyForm()">
+  <div class="pi-modal" (click)="$event.stopPropagation()">
+    <div class="pi-modal-header">
+      <div>
+        <h2 class="pi-modal-title">Postular al proyecto</h2>
+        <p class="pi-modal-subtitle" *ngIf="selectedRole">
+          Rol: {{ selectedRole.name.getValue() }}
+        </p>
+      </div>
+      <button class="pi-modal-close" (click)="closeApplyForm()" aria-label="Cerrar">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M6 6l8 8M14 6l-8 8"/>
+        </svg>
+      </button>
+    </div>
+    <div class="pi-modal-body">
+      <p class="pi-apply-note">
+        El equipo revisará tu perfil y se pondrá en contacto contigo si hay compatibilidad.
+      </p>
+      <div class="pi-modal-cta">
+        <button class="pi-btn-ghost" (click)="closeApplyForm()">Cancelar</button>
+        <button class="pi-btn-primary" (click)="closeApplyForm()">Confirmar postulación</button>
       </div>
     </div>
   </div>

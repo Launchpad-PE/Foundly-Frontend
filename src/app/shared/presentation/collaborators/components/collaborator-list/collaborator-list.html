@@ -1,17 +1,14 @@
-<div class="collaborator-list-item">
-  <div class="collaborator-avatar" [style.background]="avatarGradient">
-    {{ initials }}
-  </div>
-  <div class="collaborator-info">
-    <div class="collaborator-header">
-      <h3 class="collaborator-name">{{ displayName }}</h3>
-      <span class="collaborator-role">{{ collaborator.role }}</span>
-    </div>
-
-    <div class="collaborator-actions">
-      <button class="btn-view-profile" (click)="onViewProfile()">
-        Ver perfil completo
-      </button>
+<div class="collab-list-card" (click)="onViewProfile()">
+  <div class="cl-avatar">{{ initials }}</div>
+  <div class="cl-info">
+    <p class="cl-name">{{ displayName }}</p>
+    <p class="cl-role">{{ collaborator.role }}</p>
+    <div class="cl-skills" *ngIf="collaborator.skills?.length">
+      <span *ngFor="let skill of collaborator.skills.slice(0, 3)" class="cl-skill">{{ skill }}</span>
+      <span class="cl-skill more" *ngIf="collaborator.skills.length > 3">+{{ collaborator.skills.length - 3 }}</span>
     </div>
   </div>
+  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" class="cl-arrow">
+    <path d="M6 3l5 5-5 5"/>
+  </svg>
 </div>

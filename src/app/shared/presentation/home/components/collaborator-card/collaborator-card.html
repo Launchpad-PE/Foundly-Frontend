@@ -1,15 +1,15 @@
 <!-- collaborator-card.html -->
-<div class="collaborator-card">
-  <div class="collaborator-avatar" [style.background]="avatarGradient">
-    {{ initials }}
-  </div>
-  <div class="collaborator-info">
-    <p class="collaborator-name">{{ displayName }}</p>
-    <p class="collaborator-role">{{ collaborator.role }}</p>
-    <div class="collaborator-skills" *ngIf="collaborator.skills && collaborator.skills.length > 0">
-      <span class="skill-badge" *ngFor="let skill of collaborator.skills.slice(0, 3)">{{ skill }}</span>
-      <span class="skill-badge" *ngIf="collaborator.skills.length > 3">+{{ collaborator.skills.length - 3 }}</span>
+<div class="collab-card" (click)="onViewProfile()">
+  <div class="collab-avatar">{{ initials }}</div>
+  <div class="collab-info">
+    <p class="collab-name">{{ displayName }}</p>
+    <p class="collab-role">{{ collaborator.role }}</p>
+    <div class="collab-skills" *ngIf="collaborator.skills?.length">
+      <span *ngFor="let skill of collaborator.skills.slice(0, 3)" class="collab-skill">{{ skill }}</span>
+      <span class="collab-skill more" *ngIf="collaborator.skills.length > 3">+{{ collaborator.skills.length - 3 }}</span>
     </div>
-    <button class="btn-view-profile" (click)="onViewProfile()">Ver perfil</button>
   </div>
+  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" class="collab-arrow">
+    <path d="M6 3l5 5-5 5"/>
+  </svg>
 </div>

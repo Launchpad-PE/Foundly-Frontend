@@ -16,12 +16,10 @@
 
 .logo h1 {
   font-size: 1.5rem;
-  font-weight: 700;
-  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
+  font-weight: 800;
+  color: #6c63ff;
   margin: 0;
+  letter-spacing: -0.02em;
 }
 
 .nav-menu {
@@ -76,13 +74,18 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: #3b82f6;
-  color: white;
+  background: #ede9ff;
+  color: #6c63ff;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 600;
   cursor: pointer;
+  transition: background 0.2s;
+}
+
+.user-avatar:hover {
+  background: #d8d0ff;
 }
 
 @media (max-width: 768px) {

@@ -1,0 +1,140 @@
+<!-- public-profile.html -->
+<div class="pp-shell">
+
+  <!-- Banner -->
+  <div class="pp-banner">
+    <button class="pp-back" (click)="goBack()">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" class="pp-back-icon">
+        <path d="M12 5l-5 5 5 5"/>
+      </svg>
+      Volver
+    </button>
+    <h1 class="pp-banner-title">Perfil de Colaborador</h1>
+  </div>
+
+  <!-- Skeleton -->
+  <div class="pp-skeleton" *ngIf="loading()">
+    <div class="sk-card">
+      <div class="sk-left"></div>
+      <div class="sk-right">
+        <div class="sk-block short"></div>
+        <div class="sk-block"></div>
+        <div class="sk-block short"></div>
+        <div class="sk-block"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Not found -->
+  <div class="pp-empty" *ngIf="!loading() && !profile()">
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" class="pp-empty-icon">
+      <circle cx="24" cy="18" r="10"/><path d="M6 42a18 18 0 0136 0"/>
+    </svg>
+    <p>No se encontró este perfil.</p>
+    <button class="pp-btn-primary" (click)="goBack()">Volver al inicio</button>
+  </div>
+
+  <!-- Main content -->
+  <div class="pp-content" *ngIf="!loading() && profile()">
+
+    <!-- Profile card -->
+    <div class="pp-card-main">
+
+      <!-- Left column -->
+      <aside class="pp-left">
+        <div class="pp-avatar-card">
+          <div class="pp-avatar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="pp-avatar-icon">
+              <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+          </div>
+          <h2 class="pp-name">{{ profile()!.username }}</h2>
+          <p class="pp-role">{{ profile()!.role }}</p>
+        </div>
+
+        <button class="pp-btn-outline">See CV</button>
+        <button class="pp-btn-outline-primary">Portfolio</button>
+        <button class="pp-btn-solid">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" class="pp-btn-icon">
+            <path d="M17 21v-2a4 4 0 00-4-4H7a4 4 0 00-4 4v2"/><circle cx="10" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/>
+          </svg>
+          Invitar a Colaborar
+        </button>
+        <button class="pp-btn-outline-comment">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" class="pp-btn-icon">
+            <path d="M17 2H3a1 1 0 00-1 1v10a1 1 0 001 1h3v4l4-4h7a1 1 0 001-1V3a1 1 0 00-1-1z"/>
+          </svg>
+          Dejar Comentario
+        </button>
+      </aside>
+
+      <!-- Right column -->
+      <div class="pp-right">
+
+        <!-- Stats -->
+        <div class="pp-stats-row">
+          <div class="pp-stat">
+            <span class="pp-stat-value">0</span>
+            <span class="pp-stat-label">Points</span>
+          </div>
+          <div class="pp-stat">
+            <span class="pp-stat-value">0</span>
+            <span class="pp-stat-label">Projects</span>
+          </div>
+        </div>
+
+        <!-- Personal Description -->
+        <div class="pp-info-card" *ngIf="profile()!.bio">
+          <h3 class="pp-info-title">Personal Description</h3>
+          <p class="pp-info-body">{{ profile()!.bio }}</p>
+        </div>
+
+        <!-- Skills -->
+        <div class="pp-info-card" *ngIf="profile()!.skills?.length">
+          <h3 class="pp-info-title">Skills</h3>
+          <div class="pp-chips">
+            <span *ngFor="let skill of profile()!.skills" class="pp-chip">{{ skill }}</span>
+          </div>
+        </div>
+
+        <!-- Experiences accordion -->
+        <div class="pp-info-card pp-accordion">
+          <button class="pp-accordion-header" (click)="toggleExperiences()">
+            <span>Experiences</span>
+            <svg [class.rotated]="showExperiences" viewBox="0 0 24 24" fill="currentColor" class="pp-chevron">
+              <path d="M7 10l5 5 5-5z"/>
+            </svg>
+          </button>
+          <div class="pp-accordion-body" *ngIf="showExperiences">
+            <div *ngFor="let exp of profile()!.experiences" class="pp-exp-item">
+              <div class="pp-exp-header">
+                <span class="pp-exp-title">{{ exp.title }}</span>
+                <span class="pp-exp-period">{{ exp.period }}</span>
+              </div>
+              <span class="pp-exp-company">{{ exp.company }}</span>
+              <p class="pp-exp-desc" *ngIf="exp.description">{{ exp.description }}</p>
+            </div>
+            <p class="pp-no-data" *ngIf="!profile()!.experiences?.length">Sin experiencias registradas</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Bottom tabs: Projects / Comments -->
+    <div class="pp-bottom">
+      <div class="pp-tabs">
+        <button class="pp-tab" [class.active]="activeTab === 'projects'" (click)="activeTab = 'projects'">Projects</button>
+        <button class="pp-tab" [class.active]="activeTab === 'comments'" (click)="activeTab = 'comments'">Comments</button>
+      </div>
+
+      <div class="pp-tab-content">
+        <p class="pp-no-data center" *ngIf="activeTab === 'projects'">No hay proyectos públicos aún.</p>
+        <p class="pp-no-data center" *ngIf="activeTab === 'comments'">No comments yet for this profile.</p>
+      </div>
+    </div>
+
+  </div>
+</div>

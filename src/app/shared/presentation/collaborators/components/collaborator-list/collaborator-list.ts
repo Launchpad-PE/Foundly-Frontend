@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Profile } from '../../../../../profile-management/domain/entities/profile.entity';
 
 const AVATAR_GRADIENTS = [
@@ -12,7 +13,7 @@ const AVATAR_GRADIENTS = [
 
 @Component({
   selector: 'app-collaborator-list',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './collaborator-list.html',
   styleUrl: './collaborator-list.css',
 })

@@ -1,84 +1,98 @@
-.collaborator-card {
+.collab-card {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.6rem 0.75rem;
-  border-radius: 10px;
-  transition: background 0.2s;
+  padding: 0.75rem;
+  border-radius: 12px;
+  border: 1px solid #eeeef6;
+  background: #fff;
   cursor: pointer;
-
-  &:hover {
-    background: #f5f6ff;
-  }
+  transition: border-color 0.15s ease-out, box-shadow 0.15s ease-out;
 }
 
-.collaborator-avatar {
+.collab-card:hover {
+  border-color: #c8c4f8;
+  box-shadow: 0 2px 12px rgba(108, 99, 255, 0.08);
+}
+
+.collab-card:hover .collab-arrow {
+  color: #6c63ff;
+}
+
+/* Avatar */
+.collab-avatar {
   width: 42px;
   height: 42px;
   border-radius: 50%;
+  background: #e8e8f0;
+  color: #5a5a7a;
+  font-size: 0.875rem;
+  font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #4f46e5, #7c3aed);
-  color: white;
-  font-weight: 700;
-  font-size: 0.85rem;
   flex-shrink: 0;
   letter-spacing: 0.5px;
 }
 
-.collaborator-info {
+/* Info */
+.collab-info {
   flex: 1;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
 }
 
-.collaborator-name {
-  margin: 0 0 0.15rem 0;
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: #2d2d4e;
+.collab-name {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #1e1e3a;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.collaborator-role {
-  margin: 0 0 0.5rem 0;
-  font-size: 0.76rem;
-  color: #9599b8;
+.collab-role {
+  margin: 0 0 0.35rem;
+  font-size: 0.75rem;
+  color: #9595b2;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.collaborator-skills {
+/* Skills */
+.collab-skills {
   display: flex;
   flex-wrap: wrap;
   gap: 0.25rem;
-  margin-bottom: 0.5rem;
 }
 
-.skill-badge {
-  background: #e0e7ff;
-  color: #4f46e5;
-  padding: 0.2rem 0.5rem;
-  border-radius: 12px;
-  font-size: 0.7rem;
+.collab-skill {
+  background: #f2f2f9;
+  color: #6060a0;
+  padding: 0.15rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.68rem;
   font-weight: 500;
 }
 
-.btn-view-profile {
-  background: #4f46e5;
-  color: white;
-  border: none;
-  padding: 0.4rem 0.8rem;
-  border-radius: 6px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
+.collab-skill.more {
+  background: #ebebf5;
+  color: #a0a0bb;
+}
 
-  &:hover {
-    background: #3730a3;
-  }
+/* Arrow */
+.collab-arrow {
+  width: 14px;
+  height: 14px;
+  color: #c8c8de;
+  flex-shrink: 0;
+  transition: color 0.15s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .collab-card, .collab-arrow { transition: none; }
 }

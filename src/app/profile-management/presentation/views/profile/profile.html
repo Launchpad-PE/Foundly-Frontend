@@ -1,0 +1,141 @@
+<!-- profile.html -->
+<div class="profile-wrapper">
+
+  <!-- Header Banner -->
+  <div class="profile-banner">
+    <div class="banner-text">
+      <h1>Mi Perfil</h1>
+      <p>Gestiona tu información y proyectos</p>
+    </div>
+    <button class="btn-logout" (click)="logout()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="logout-icon">
+        <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1"/>
+      </svg>
+      Cerrar Sesión
+    </button>
+  </div>
+
+  <!-- Main Profile Card -->
+  <div class="profile-card" *ngIf="!loading(); else loadingTpl">
+
+    <!-- Left Column -->
+    <aside class="profile-left">
+      <div class="avatar-card">
+        <div class="avatar-circle">
+          <svg *ngIf="!profile()?.avatar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="avatar-icon">
+            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          <img *ngIf="profile()?.avatar" [src]="profile()!.avatar!" alt="avatar" class="avatar-img"/>
+        </div>
+        <h2 class="profile-name">{{ profile()?.username || 'Sin nombre' }}</h2>
+        <p class="profile-role">{{ profile()?.role || 'Sin rol' }}</p>
+      </div>
+
+      <button class="btn-outline">See CV</button>
+      <button class="btn-primary-outline">Portfolio</button>
+    </aside>
+
+    <!-- Right Column -->
+    <div class="profile-right">
+
+      <!-- Stats Row -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <span class="stat-value">0</span>
+          <span class="stat-label">Points</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value">{{ projectCount }}</span>
+          <span class="stat-label">Projects</span>
+        </div>
+      </div>
+
+      <!-- Personal Description -->
+      <div class="info-card">
+        <h3 class="info-title">Personal Description</h3>
+        <p class="info-body">{{ profile()?.bio || 'Sin descripción' }}</p>
+      </div>
+
+      <!-- Skills -->
+      <div class="info-card">
+        <h3 class="info-title">Skills</h3>
+        <div class="skills-list">
+          <span *ngFor="let skill of profile()?.skills" class="skill-chip">{{ skill }}</span>
+          <span *ngIf="!profile()?.skills?.length" class="no-data">Sin habilidades registradas</span>
+        </div>
+      </div>
+
+      <!-- Experiences Accordion -->
+      <div class="info-card accordion">
+        <button class="accordion-header" (click)="toggleExperiences()">
+          <span>Experiences</span>
+          <svg [class.rotated]="showExperiences" viewBox="0 0 24 24" fill="currentColor" class="chevron-icon">
+            <path d="M7 10l5 5 5-5z"/>
+          </svg>
+        </button>
+        <div class="accordion-body" *ngIf="showExperiences">
+          <div *ngFor="let exp of profile()?.experiences" class="experience-item">
+            <div class="exp-title">{{ exp.title }}</div>
+            <div class="exp-company">{{ exp.company }}</div>
+            <div class="exp-period">{{ exp.period }}</div>
+            <p *ngIf="exp.description" class="exp-desc">{{ exp.description }}</p>
+          </div>
+          <p *ngIf="!profile()?.experiences?.length" class="no-data">Sin experiencias registradas</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Bottom Tabs: Projects / Comments -->
+  <div class="bottom-section" *ngIf="!loading()">
+    <div class="section-tabs">
+      <button class="section-tab" [class.active]="activeSection === 'projects'" (click)="activeSection = 'projects'">Projects</button>
+      <button class="section-tab" [class.active]="activeSection === 'comments'" (click)="activeSection = 'comments'">Comments</button>
+    </div>
+
+    <!-- Projects Sub-section -->
+    <div *ngIf="activeSection === 'projects'">
+      <div class="sub-tabs">
+        <button class="sub-tab" [class.active]="activeProjectTab === 'mine'" (click)="activeProjectTab = 'mine'">Mis Proyectos</button>
+        <button class="sub-tab" [class.active]="activeProjectTab === 'favorites'" (click)="activeProjectTab = 'favorites'">Favoritos</button>
+      </div>
+
+      <div class="projects-list-card">
+        <ng-container *ngIf="activeProjectTab === 'mine'">
+          <div *ngFor="let project of myProjects()" class="project-row" (click)="viewProject(project.id)">
+            <div class="project-row-info">
+              <span class="project-row-name">{{ project.name.getValue() }}</span>
+              <span class="project-row-meta">{{ project.authorId }}</span>
+              <span class="project-row-date">{{ formatDate(project.createdAt) }}</span>
+            </div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="row-arrow">
+              <path d="M9 18l6-6-6-6"/>
+            </svg>
+          </div>
+          <div *ngIf="myProjects().length === 0" class="no-data center">No tienes proyectos creados</div>
+        </ng-container>
+
+        <ng-container *ngIf="activeProjectTab === 'favorites'">
+          <div class="no-data center">No tienes proyectos favoritos</div>
+        </ng-container>
+      </div>
+    </div>
+
+    <!-- Comments Sub-section -->
+    <div *ngIf="activeSection === 'comments'">
+      <div class="projects-list-card">
+        <p class="no-data center">No hay comentarios aún</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<ng-template #loadingTpl>
+  <div class="loading-state">
+    <div class="spinner"></div>
+    <p>Cargando perfil...</p>
+  </div>
+</ng-template>

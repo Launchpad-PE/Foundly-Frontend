@@ -1,5 +1,6 @@
 <!-- home.component.html -->
 <div class="home-container">
+
   <!-- Search Bar -->
   <div class="search-bar-wrapper">
     <div class="search-bar">
@@ -44,6 +45,7 @@
 
   <!-- Main 3-column layout -->
   <div class="main-content">
+
     <!-- Left Sidebar -->
     <aside class="sidebar">
       <section class="sidebar-card">
@@ -54,25 +56,35 @@
             [collaborator]="collaborator"
             (viewProfile)="viewProfile($event)">
           </app-collaborator-card>
-          <div *ngIf="highlightedCollaborators.length === 0" class="empty-message">
-            No hay colaboradores registrados
+          <div *ngIf="highlightedCollaborators.length === 0" class="empty-collab">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="empty-collab-icon">
+              <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+            </svg>
+            <p>Aún no hay colaboradores registrados</p>
           </div>
         </div>
-        <a routerLink="/collaborators" class="view-more-btn">Ver más</a>
+        <a routerLink="/collaborators" class="view-more-btn">Ver todos</a>
       </section>
 
       <section class="sidebar-card plan-card">
         <h3 class="sidebar-title">Plan Actual</h3>
-        <div class="plan-circle">
-          <span class="plan-label">Plan</span>
+        <div class="plan-badge">
+          <span class="plan-icon">✦</span>
           <span class="plan-name">{{ currentPlan }}</span>
         </div>
+        <p class="plan-desc">Accede a proyectos y colaboradores sin límites.</p>
       </section>
     </aside>
 
     <!-- Projects Feed -->
     <main class="projects-feed">
-      <h2 class="feed-title">Lista de proyectos</h2>
+      <div class="feed-header">
+        <h2 class="feed-title">Proyectos disponibles</h2>
+        <span class="feed-count" *ngIf="allProjects.length > 0">{{ allProjects.length }} proyectos</span>
+      </div>
+
       <div class="projects-list" *ngIf="allProjects.length > 0; else emptyFeed">
         <app-project-card
           *ngFor="let project of allProjects"
@@ -82,18 +94,25 @@
           (apply)="applyToProject($event)">
         </app-project-card>
       </div>
+
       <ng-template #emptyFeed>
         <div class="empty-state">
-          <div class="empty-icon">📋</div>
+          <div class="empty-icon-wrap">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" class="empty-svg">
+              <rect x="8" y="12" width="32" height="28" rx="4"/>
+              <path d="M16 12V9a2 2 0 012-2h12a2 2 0 012 2v3"/>
+              <path d="M24 24v6M21 27h6"/>
+            </svg>
+          </div>
           <p class="empty-title">No hay proyectos disponibles</p>
-          <p class="empty-sub">Aún no hay proyectos publicados en los que puedas participar.</p>
+          <p class="empty-sub">Cuando se publiquen proyectos aparecerán aquí. También puedes crear el tuyo.</p>
         </div>
       </ng-template>
     </main>
 
     <!-- Right Sidebar -->
     <aside class="featured-sidebar sidebar-card">
-      <h3 class="sidebar-title centered">Proyectos Destacados</h3>
+      <h3 class="sidebar-title">Proyectos Destacados</h3>
       <div class="featured-list" *ngIf="featuredProjects.length > 0; else emptyFeatured">
         <app-project-card
           *ngFor="let project of featuredProjects"
@@ -103,8 +122,14 @@
         </app-project-card>
       </div>
       <ng-template #emptyFeatured>
-        <p class="no-featured">Sin proyectos destacados por el momento.</p>
+        <div class="empty-featured">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="empty-feat-icon">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+          <p>Sin proyectos destacados aún</p>
+        </div>
       </ng-template>
     </aside>
+
   </div>
 </div>

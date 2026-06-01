@@ -2,51 +2,57 @@
 <div class="project-card" [class.compact]="isCompact">
 
   <span class="own-badge" *ngIf="isOwn && !isCompact">Tu proyecto</span>
-  <span class="participating-badge" *ngIf="isParticipating && !isOwn">✓ Participando</span>
+  <span class="participating-badge" *ngIf="isParticipating && !isOwn && !isCompact">
+    <svg viewBox="0 0 16 16" fill="currentColor" class="badge-icon"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"/></svg>
+    Participando
+  </span>
 
   <h3 class="project-title">{{ project.title }}</h3>
 
   <!-- Roles -->
-  <div class="card-section">
-    <span class="section-label">Puesto disponibles:</span>
+  <div class="card-section" *ngIf="getRolesToShow().length > 0">
+    <p class="section-label">Puestos disponibles</p>
     <div class="tags-row">
       <span *ngFor="let role of getRolesToShow()" class="role-tag">{{ role }}</span>
-      <span *ngIf="isCompact && project.roles.length > 2" class="role-tag more-tag">
-        +{{ project.roles.length - 2 }}
-      </span>
+      <span *ngIf="isCompact && project.roles.length > 2" class="role-tag more-tag">+{{ project.roles.length - 2 }}</span>
     </div>
   </div>
 
   <!-- Areas -->
-  <div class="card-section">
-    <span class="section-label" *ngIf="!isCompact">Área</span>
-    <div class="tags-row">
-      <span *ngFor="let area of project.areas" class="area-tag">{{ area }}</span>
-    </div>
+  <div class="tags-row area-row" *ngIf="project.areas?.length">
+    <span *ngFor="let area of project.areas" class="area-tag">{{ area }}</span>
   </div>
 
   <!-- Meta (full card only) -->
   <div class="project-meta" *ngIf="!isCompact">
-    <span><strong>Publicado por:</strong> {{ project.author }}</span>
-    <span><strong>Duración:</strong> {{ project.duration }}</span>
+    <span class="meta-item">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" class="meta-icon">
+        <circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/>
+      </svg>
+      {{ project.duration }}
+    </span>
+    <span class="meta-item">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" class="meta-icon">
+        <path d="M8 2a3 3 0 100 6 3 3 0 000-6zM3 13a5 5 0 0110 0"/>
+      </svg>
+      {{ project.author }}
+    </span>
+    <span class="meta-item">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" class="meta-icon">
+        <path d="M8 1.5C5.5 1.5 3 3.5 3 6.5c0 3.5 5 8 5 8s5-4.5 5-8c0-3-2.5-5-5-5z"/>
+        <circle cx="8" cy="6.5" r="1.5"/>
+      </svg>
+      {{ project.modality }}
+    </span>
   </div>
 
-  <!-- Meta (compact) -->
-  <p class="compact-meta" *ngIf="isCompact">
-    Duración: {{ project.duration }} · {{ project.modality }}
-  </p>
-
-  <!-- Modality tags (full card only) -->
-  <div class="modality-tags" *ngIf="!isCompact">
-    <span class="modality-tag">#{{ project.modality }}</span>
-    <span class="modality-tag" *ngIf="project.modality === 'Remoto'">#Junior</span>
-    <span class="modality-tag">#Tiempo {{ project.modality === 'Remoto' ? 'Remoto' : 'Parcial' }}</span>
-  </div>
+  <!-- Compact meta -->
+  <p class="compact-meta" *ngIf="isCompact">{{ project.duration }} · {{ project.modality }}</p>
 
   <!-- Actions -->
   <div class="project-actions">
     <button class="btn-view" (click)="onViewDetails()">Ver más</button>
-    <button class="btn-apply" *ngIf="!isCompact && !isOwn" (click)="onApply()">Postular</button>
+    <button class="btn-apply" *ngIf="!isCompact && !isOwn && !isParticipating" (click)="onApply()">Postular</button>
   </div>
 
 </div>

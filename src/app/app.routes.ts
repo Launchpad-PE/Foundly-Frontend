@@ -26,6 +26,10 @@ const participatingProject = () => import('./task-management/presentation/views/
   .then(m => m.ParticipatingProjectComponent);
 const taskDetail = () => import('./task-management/presentation/views/task-detail/task-detail')
   .then(m => m.TaskDetailComponent);
+const profile = () => import('./profile-management/presentation/views/profile/profile')
+  .then(m => m.ProfileComponent);
+const publicProfile = () => import('./profile-management/presentation/views/public-profile/public-profile')
+  .then(m => m.PublicProfileComponent);
 export const routes: Routes = [
   {
     path: 'login',
@@ -113,6 +117,18 @@ export const routes: Routes = [
     loadComponent: taskDetail,
     canActivate: [AuthGuard],
     title: `${baseTitle} - Detalle de Tarea`
+  },
+  {
+    path: 'profile',
+    loadComponent: profile,
+    canActivate: [AuthGuard],
+    title: `${baseTitle} - Mi Perfil`
+  },
+  {
+    path: 'profile/:id',
+    loadComponent: publicProfile,
+    canActivate: [AuthGuard],
+    title: `${baseTitle} - Perfil`
   },
   {
     path: '',

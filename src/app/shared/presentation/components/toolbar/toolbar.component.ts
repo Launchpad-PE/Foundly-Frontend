@@ -32,4 +32,8 @@ export class ToolbarComponent {
   goToHome(): void {
     this.router.navigate(['/home']);
   }
+
+  goToProfile(): void {
+    this.router.navigate(['/profile']);
+  }
 }
