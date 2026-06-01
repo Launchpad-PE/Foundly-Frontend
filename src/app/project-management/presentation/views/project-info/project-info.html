@@ -62,7 +62,7 @@
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" class="pi-meta-icon">
             <path d="M8 2a3 3 0 100 6 3 3 0 000-6zM3 13a5 5 0 0110 0"/>
           </svg>
-          Usuario {{ project.authorId.toString() }}
+          {{ project.authorName || 'Usuario ' + project.authorId.toString() }}
         </span>
         <span class="pi-meta-pill" *ngIf="project.academicLevel?.getValue()">
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" class="pi-meta-icon">

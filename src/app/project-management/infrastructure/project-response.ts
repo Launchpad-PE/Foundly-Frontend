@@ -32,6 +32,7 @@ export interface ProjectResource extends BaseResource {
   createdAt: string;
   updatedAt: string;
   authorId: string;
+  authorName?: string | null;
 }
 
 export interface ProjectResponse extends BaseResponse {

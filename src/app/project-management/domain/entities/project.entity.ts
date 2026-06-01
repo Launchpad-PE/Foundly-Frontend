@@ -29,6 +29,7 @@ export class Project  {
   public readonly createdAt: Date;
   public readonly updatedAt: Date;
   public readonly authorId: UserId;
+  public readonly authorName: string | null = null;
 
   private constructor(
     projectId: ProjectId,
@@ -45,7 +46,9 @@ export class Project  {
     status: ProjectStatus,
     createdAt: Date,
     updatedAt: Date,
-    authorId: UserId
+    authorId: UserId,
+    authorName: string | null = null
+
   ) {
     this.id = projectId.toString();
     this.name = name;
@@ -62,6 +65,7 @@ export class Project  {
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
     this.authorId = authorId;
+    this.authorName = authorName;
   }
 
   static create(props: {
@@ -80,6 +84,7 @@ export class Project  {
       cardInfo: { title: string; items: string[] };
     }>;
     authorId: string;
+    authorName?: string | null;
     status?: ProjectStatus;
     createdAt?: string;
     updatedAt?: string;
@@ -107,7 +112,8 @@ export class Project  {
       props.status !== undefined ? props.status : ProjectStatus.DRAFT,
       props.createdAt ? new Date(props.createdAt) : new Date(),
       props.updatedAt ? new Date(props.updatedAt) : new Date(),
-      new UserId(props.authorId)
+      new UserId(props.authorId),
+      props.authorName || null
     );
   }
 
