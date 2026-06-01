@@ -29,6 +29,14 @@
         (next)="nextStep()"
         (prev)="prevStep()"
       />
+
+      <app-description-step
+        *ngIf="currentStep === 4"
+        [(modelValue)]="descriptionData"
+        (complete)="completeOnboarding()"
+        (prev)="prevStep()"
+      />
+
     </div>
   </div>
 </div>

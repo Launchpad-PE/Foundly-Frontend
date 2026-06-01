@@ -8,6 +8,7 @@ import { ProfileConfigComponent, ProfileConfigData } from '../../components/prof
 import { SkillsFormComponent, SkillsFormData, ExperienceData } from '../../components/skills-form/skills-form';
 import { RoleFormComponent, RoleFormData } from '../../components/role-form/role-form';
 import { Experience } from '../../../domain/entities/experience.entity';
+import { DescriptionStepComponent, DescriptionStepData } from '../../components/description-step/description-step';
 
 @Component({
   selector: 'app-onboarding',
@@ -16,7 +17,8 @@ import { Experience } from '../../../domain/entities/experience.entity';
     CommonModule,
     ProfileConfigComponent,
     SkillsFormComponent,
-    RoleFormComponent
+    RoleFormComponent,
+    DescriptionStepComponent
   ],
   templateUrl: './onboarding.html',
   styleUrls: ['./onboarding.css']
@@ -32,6 +34,7 @@ export class OnboardingComponent implements OnInit {
   profileData: ProfileConfigData = { username: '', avatar: null };
   skillsData: SkillsFormData = { abilities: [], experiences: [] };
   roleData: RoleFormData = { selectedRole: '', customRole: '' };
+  descriptionData: DescriptionStepData = { bio: '' };
 
   ngOnInit(): void {
     console.log('🔍 Onboarding init - Checking auth status');
@@ -54,7 +57,7 @@ export class OnboardingComponent implements OnInit {
   }
 
   nextStep(): void {
-    if (this.currentStep < 3) {
+    if (this.currentStep < 4) {
       this.currentStep++;
     } else {
       this.completeOnboarding();
@@ -108,7 +111,7 @@ export class OnboardingComponent implements OnInit {
       await this.profileStore.createProfile(user.id, {
         username: this.profileData.username,
         avatar: null,
-        bio: '',
+        bio: this.descriptionData.bio,
         role: selectedRole,
         skills: this.skillsData.abilities,
         experiences: experiences,
