@@ -1,0 +1,140 @@
+<!-- ranking.html -->
+<div class="rk-shell">
+
+  <!-- Top bar -->
+  <div class="rk-topbar">
+    <button class="rk-back" (click)="goBack()">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" class="rk-back-icon">
+        <path d="M12 5l-5 5 5 5"/>
+      </svg>
+      Volver
+    </button>
+  </div>
+
+  <div class="rk-layout">
+
+    <!-- ── Left: ranking list ── -->
+    <div class="rk-main">
+
+      <!-- Hero banner -->
+      <div class="rk-hero">
+        <div class="rk-hero-glow"></div>
+        <div class="rk-hero-content">
+          <svg viewBox="0 0 48 48" fill="none" class="rk-trophy">
+            <path d="M24 4l4.5 9.5L39 15l-7.5 7 2 10.5L24 28l-9.5 4.5 2-10.5L9 15l10.5-1.5L24 4z"
+              fill="rgba(255,255,255,0.25)" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"/>
+            <path d="M18 34v6M30 34v6M14 40h20" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <h1 class="rk-hero-title">Ranking de Colaboradores</h1>
+          <p class="rk-hero-sub">Colabora con los mejores y ten buen éxito en tus proyectos</p>
+        </div>
+      </div>
+
+      <!-- List -->
+      <div class="rk-list-card">
+
+        <!-- Loading -->
+        <div class="rk-loading" *ngIf="loading">
+          <div class="rk-spinner"></div>
+          <p>Cargando ranking...</p>
+        </div>
+
+        <!-- Error -->
+        <div class="rk-error" *ngIf="error && !loading">
+          <p>{{ error }}</p>
+          <button class="rk-btn-profile" (click)="ngOnInit()">Reintentar</button>
+        </div>
+
+        <!-- Rows -->
+        <ng-container *ngIf="!loading && !error">
+          <div
+            *ngFor="let item of rankedCollaborators; let i = index"
+            class="rk-row"
+            [class.top-three]="i < 3"
+            (click)="viewProfile(item.id!)">
+
+            <!-- Position badge -->
+            <div class="rk-pos" [class]="'pos-' + (i + 1)">
+              <span *ngIf="i === 0">🥇</span>
+              <span *ngIf="i === 1">🥈</span>
+              <span *ngIf="i === 2">🥉</span>
+              <span *ngIf="i > 2">{{ i + 1 }}</span>
+            </div>
+
+            <!-- Avatar -->
+            <div class="rk-avatar">{{ getInitials(item.username) }}</div>
+
+            <!-- Info -->
+            <div class="rk-info">
+              <p class="rk-name">{{ item.username }}</p>
+              <p class="rk-role">{{ item.role }}</p>
+            </div>
+
+            <!-- Skills -->
+            <div class="rk-skills" *ngIf="item.skills?.length">
+              <span *ngFor="let s of item.skills.slice(0,3)" class="rk-skill">{{ s }}</span>
+            </div>
+
+            <!-- Points -->
+            <div class="rk-pts-wrap">
+              <span class="rk-pts">0 pts</span>
+            </div>
+
+            <!-- CTA -->
+            <button class="rk-btn-profile" (click)="$event.stopPropagation(); viewProfile(item.id!)">
+              Ver Perfil
+            </button>
+
+          </div>
+
+          <!-- Empty -->
+          <div class="rk-empty" *ngIf="rankedCollaborators.length === 0">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" class="rk-empty-icon">
+              <circle cx="24" cy="18" r="10"/><path d="M6 42a18 18 0 0136 0"/>
+            </svg>
+            <p>No hay colaboradores registrados aún.</p>
+          </div>
+        </ng-container>
+
+      </div>
+    </div>
+
+    <!-- ── Right: promo card ── -->
+    <aside class="rk-promo">
+      <div class="rk-promo-card">
+        <div class="rk-promo-header">
+          <div class="rk-promo-logo-wrap">
+            <svg viewBox="0 0 24 24" fill="currentColor" class="rk-promo-logo-icon">
+              <path d="M16 11c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+            </svg>
+          </div>
+          <h2 class="rk-promo-brand">Foundly</h2>
+        </div>
+
+        <p class="rk-promo-tagline">
+          Colabora con los mejores<br>y ten buen éxito<br>de tus proyectos
+        </p>
+
+        <button class="rk-promo-cta" (click)="goBack()">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" class="rk-cta-icon">
+            <path d="M8 15l5-5-5-5"/>
+          </svg>
+        </button>
+
+        <div class="rk-promo-divider"></div>
+
+        <div class="rk-promo-stats">
+          <div class="rk-promo-stat">
+            <span class="rk-ps-value">{{ rankedCollaborators.length }}+</span>
+            <span class="rk-ps-label">Colaboradores</span>
+          </div>
+          <div class="rk-promo-stat">
+            <span class="rk-ps-value">95%</span>
+            <span class="rk-ps-label">Éxito</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+</div>

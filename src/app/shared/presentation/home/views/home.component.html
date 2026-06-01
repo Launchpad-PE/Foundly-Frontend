@@ -8,7 +8,12 @@
         <svg class="field-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="9" cy="9" r="6"/><path d="M15 15l3 3"/>
         </svg>
-        <input type="text" [(ngModel)]="searchTerm" placeholder="Nombre o palabra clave" class="field-input"/>
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          (keyup.enter)="onSearch()"
+          placeholder="Nombre o palabra clave"
+          class="field-input"/>
       </label>
       <div class="search-divider"></div>
       <label class="search-field">
@@ -40,6 +45,27 @@
         </select>
       </label>
       <button class="btn-search" (click)="onSearch()">Buscar</button>
+      <button class="btn-clear" *ngIf="hasSearched" (click)="onClear()" title="Limpiar búsqueda">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;">
+          <path d="M6 6l8 8M14 6l-8 8"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Active filters chips -->
+    <div class="active-filters" *ngIf="hasSearched">
+      <span class="filter-chip" *ngIf="searchTerm">
+        "{{ searchTerm }}"
+        <button (click)="searchTerm=''; onSearch()">×</button>
+      </span>
+      <span class="filter-chip" *ngIf="filterRole">
+        {{ filterRole }}
+        <button (click)="filterRole=''; onSearch()">×</button>
+      </span>
+      <span class="filter-chip" *ngIf="filterArea">
+        {{ filterArea }}
+        <button (click)="filterArea=''; onSearch()">×</button>
+      </span>
     </div>
   </div>
 
@@ -82,12 +108,23 @@
     <main class="projects-feed">
       <div class="feed-header">
         <h2 class="feed-title">Proyectos disponibles</h2>
-        <span class="feed-count" *ngIf="allProjects.length > 0">{{ allProjects.length }} proyectos</span>
+        <span class="feed-count">{{ resultLabel }}</span>
       </div>
 
-      <div class="projects-list" *ngIf="allProjects.length > 0; else emptyFeed">
+      <!-- No results after search -->
+      <div class="no-search-results" *ngIf="hasSearched && displayedProjects.length === 0">
+        <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" class="nsr-icon">
+          <circle cx="22" cy="22" r="14"/><path d="M32 32l8 8"/>
+          <path d="M16 22h12M22 16v12"/>
+        </svg>
+        <p class="nsr-title">Sin resultados</p>
+        <p class="nsr-sub">Ningún proyecto coincide con tu búsqueda. Intenta con otros términos.</p>
+        <button class="nsr-btn" (click)="onClear()">Ver todos los proyectos</button>
+      </div>
+
+      <div class="projects-list" *ngIf="displayedProjects.length > 0">
         <app-project-card
-          *ngFor="let project of allProjects"
+          *ngFor="let project of displayedProjects"
           [project]="project"
           [isParticipating]="isParticipatingIn(project.id)"
           (viewDetails)="viewProjectDetails($event)"
@@ -95,19 +132,17 @@
         </app-project-card>
       </div>
 
-      <ng-template #emptyFeed>
-        <div class="empty-state">
-          <div class="empty-icon-wrap">
-            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" class="empty-svg">
-              <rect x="8" y="12" width="32" height="28" rx="4"/>
-              <path d="M16 12V9a2 2 0 012-2h12a2 2 0 012 2v3"/>
-              <path d="M24 24v6M21 27h6"/>
-            </svg>
-          </div>
-          <p class="empty-title">No hay proyectos disponibles</p>
-          <p class="empty-sub">Cuando se publiquen proyectos aparecerán aquí. También puedes crear el tuyo.</p>
+      <div class="empty-state" *ngIf="!hasSearched && displayedProjects.length === 0">
+        <div class="empty-icon-wrap">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" class="empty-svg">
+            <rect x="8" y="12" width="32" height="28" rx="4"/>
+            <path d="M16 12V9a2 2 0 012-2h12a2 2 0 012 2v3"/>
+            <path d="M24 24v6M21 27h6"/>
+          </svg>
         </div>
-      </ng-template>
+        <p class="empty-title">No hay proyectos disponibles</p>
+        <p class="empty-sub">Cuando se publiquen proyectos aparecerán aquí. También puedes crear el tuyo.</p>
+      </div>
     </main>
 
     <!-- Right Sidebar -->

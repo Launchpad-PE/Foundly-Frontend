@@ -45,11 +45,14 @@
           type="text"
           [(ngModel)]="newTag"
           (keyup.enter)="addTag()"
-          placeholder="Escribe una etiqueta y presiona Enter"
+          (input)="tagError=''"
+          placeholder="Ej: Remoto, Junior, Machine Learning"
           class="tag-input"
+          [class.tag-input-error]="tagError"
         />
         <button type="button" class="btn-add-tag" (click)="addTag()">Añadir</button>
       </div>
+      <p class="tag-error-msg" *ngIf="tagError">⚠ {{ tagError }}</p>
     </div>
   </div>
 

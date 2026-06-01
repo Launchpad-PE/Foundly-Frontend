@@ -30,6 +30,8 @@ const profile = () => import('./profile-management/presentation/views/profile/pr
   .then(m => m.ProfileComponent);
 const publicProfile = () => import('./profile-management/presentation/views/public-profile/public-profile')
   .then(m => m.PublicProfileComponent);
+const ranking = () => import('./shared/presentation/collaborators/views/ranking/ranking')
+  .then(m => m.RankingComponent);
 export const routes: Routes = [
   {
     path: 'login',
@@ -123,6 +125,12 @@ export const routes: Routes = [
     loadComponent: profile,
     canActivate: [AuthGuard],
     title: `${baseTitle} - Mi Perfil`
+  },
+  {
+    path: 'collaborators/ranking',
+    loadComponent: ranking,
+    canActivate: [AuthGuard],
+    title: `${baseTitle} - Ranking de Colaboradores`
   },
   {
     path: 'profile/:id',

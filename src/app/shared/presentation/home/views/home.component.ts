@@ -32,64 +32,90 @@ export class HomeComponent implements OnInit {
   private projectStore = inject(ProjectStore);
   private cdr = inject(ChangeDetectorRef);
 
-  currentPlan: string = 'Gratuito';
-  searchTerm: string = '';
-  filterRole: string = '';
-  filterArea: string = '';
+  currentPlan = 'Gratuito';
+  searchTerm = '';
+  filterRole = '';
+  filterArea = '';
+  hasSearched = false;
 
   highlightedCollaborators: Profile[] = [];
   featuredProjects: ProjectCardData[] = [];
-  allProjects: ProjectCardData[] = [];
+
+  // Source list (never mutated after load)
+  private _allProjects: ProjectCardData[] = [];
+  // Displayed list (filtered)
+  displayedProjects: ProjectCardData[] = [];
+
+  get allProjects(): ProjectCardData[] { return this.displayedProjects; }
 
   async ngOnInit(): Promise<void> {
     if (this.userStore.needsOnboarding()) {
       this.router.navigate(['/onboarding']);
       return;
     }
-
     await this.loadHomeData();
   }
 
   async loadHomeData(): Promise<void> {
     try {
-      const profiles = await firstValueFrom(this.profileApi.getAllProfiles());
-      const domainProjects = await this.projectStore.loadAllProjects();
+      const [profiles, domainProjects] = await Promise.all([
+        firstValueFrom(this.profileApi.getAllProfiles()),
+        this.projectStore.loadAllProjects(),
+      ]);
 
       this.highlightedCollaborators = profiles;
-      this.allProjects = domainProjects.map((p: DomainProject) => this.mapToProjectCardData(p));
-      this.featuredProjects = this.allProjects.slice(0, 3);
+      this._allProjects = domainProjects.map((p: DomainProject) => this.mapToProjectCardData(p));
+      this.displayedProjects = [...this._allProjects];
+      this.featuredProjects = this._allProjects.slice(0, 3);
       this.cdr.detectChanges();
     } catch (err: any) {
       console.error('Error cargando datos:', err);
     }
   }
 
-  private mapToProjectCardData(domainProject: DomainProject): ProjectCardData {
-    const roleNames = domainProject.roles.map(role => role.name.getValue());
-    const areas = [domainProject.area.getValue()];
-    const duration = `${domainProject.duration.getAmount()} ${domainProject.duration.getType()}`;
-    const modality = 'Remoto';
-    const author = `Usuario ${domainProject.authorId}`;
-
+  private mapToProjectCardData(p: DomainProject): ProjectCardData {
     return {
-      id: domainProject.id.toString(),
-      title: domainProject.name.getValue(),
-      roles: roleNames,
-      areas: areas,
-      author: author,
-      duration: duration,
-      modality: modality
+      id: p.id.toString(),
+      title: p.name.getValue(),
+      roles: p.roles.map(r => r.name.getValue()),
+      areas: [p.area.getValue()],
+      author: `Usuario ${p.authorId}`,
+      duration: `${p.duration.getAmount()} ${p.duration.getType()}`,
+      modality: 'Remoto',
     };
   }
 
   onSearch(): void {
-    this.router.navigate(['/projects'], {
-      queryParams: {
-        search: this.searchTerm,
-        role: this.filterRole,
-        area: this.filterArea
-      }
+    const term = this.searchTerm.trim().toLowerCase();
+    const role = this.filterRole.toLowerCase();
+    const area = this.filterArea.toLowerCase();
+
+    this.displayedProjects = this._allProjects.filter(p => {
+      const matchesTerm = !term ||
+        p.title.toLowerCase().includes(term) ||
+        p.roles.some(r => r.toLowerCase().includes(term)) ||
+        p.areas.some(a => a.toLowerCase().includes(term));
+
+      const matchesRole = !role ||
+        p.roles.some(r => r.toLowerCase().includes(role));
+
+      const matchesArea = !area ||
+        p.areas.some(a => a.toLowerCase().includes(area));
+
+      return matchesTerm && matchesRole && matchesArea;
     });
+
+    this.hasSearched = !!(term || role || area);
+    this.cdr.detectChanges();
+  }
+
+  onClear(): void {
+    this.searchTerm = '';
+    this.filterRole = '';
+    this.filterArea = '';
+    this.hasSearched = false;
+    this.displayedProjects = [...this._allProjects];
+    this.cdr.detectChanges();
   }
 
   applyToProject(projectId: string): void {
@@ -104,7 +130,13 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['/profile', collaboratorId]);
   }
 
-  isParticipatingIn(projectId: string): boolean {
+  isParticipatingIn(_projectId: string): boolean {
     return false;
+  }
+
+  get resultLabel(): string {
+    const n = this.displayedProjects.length;
+    if (!this.hasSearched) return `${n} proyecto${n !== 1 ? 's' : ''}`;
+    return `${n} resultado${n !== 1 ? 's' : ''}`;
   }
 }

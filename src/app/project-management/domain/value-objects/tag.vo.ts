@@ -1,22 +1,28 @@
 export class Tag {
-  constructor(private readonly value: string) {
-    const cleanTag = value.trim().replace(/^#/, '');
-    if (!cleanTag || cleanTag.length < 2) {
-      throw new Error('Tag must have at least 2 characters');
+  private readonly cleanValue: string;
+
+  constructor(value: string) {
+    // Normalize: trim, collapse spaces → single space, allow letters/numbers/spaces/hyphens
+    const normalized = value.trim().replace(/^#/, '').replace(/\s+/g, ' ');
+
+    if (!normalized || normalized.length < 2) {
+      throw new Error('La etiqueta debe tener al menos 2 caracteres');
     }
-    if (cleanTag.length > 30) {
-      throw new Error('Tag cannot exceed 30 characters');
+    if (normalized.length > 40) {
+      throw new Error('La etiqueta no puede superar los 40 caracteres');
     }
-    if (!/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ]+$/.test(cleanTag)) {
-      throw new Error('Tag can only contain letters and numbers');
+    if (!/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s\-]+$/.test(normalized)) {
+      throw new Error('La etiqueta solo puede contener letras, números, espacios y guiones');
     }
+
+    this.cleanValue = normalized;
   }
 
   toString(): string {
-    return `#${this.value}`;
+    return `#${this.cleanValue}`;
   }
 
   getValue(): string {
-    return this.value;
+    return this.cleanValue;
   }
 }
