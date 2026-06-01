@@ -21,6 +21,12 @@
       "email": "chester@gmail.com",
       "password": "123456",
       "id": 3
+    },
+    {
+      "fullName": "test_1",
+      "email": "test_1@gmail.com",
+      "password": "123123",
+      "id": 4
     }
   ],
   "profiles": [
@@ -47,7 +53,7 @@
       "userId": "3",
       "username": "chesterb",
       "avatar": null,
-      "bio": "",
+      "bio": "testeo",
       "role": "Mobile Developer",
       "skills": [
         "asdas",
@@ -70,6 +76,65 @@
       "isComplete": true,
       "createdAt": "2026-05-10T15:15:45.056Z",
       "updatedAt": "2026-05-10T15:15:45.056Z"
+    },
+    {
+      "id": 3,
+      "userId": "4",
+      "username": "test_1",
+      "avatar": null,
+      "bio": "testeo d prueba de biografia ",
+      "role": "Desarrollador Frontend",
+      "skills": [
+        "java",
+        "ddd"
+      ],
+      "experiences": [
+        {
+          "id": null,
+          "title": "1",
+          "company": "1",
+          "period": "2024 - 2026",
+          "description": null,
+          "current": false,
+          "startDate": null,
+          "endDate": null,
+          "createdAt": "2026-06-01T02:58:32.059Z",
+          "updatedAt": "2026-06-01T02:58:32.059Z"
+        }
+      ],
+      "isComplete": true,
+      "createdAt": "2026-06-01T02:58:32.059Z",
+      "updatedAt": "2026-06-01T02:58:32.059Z"
+    },
+    {
+      "id": 4,
+      "userId": "2",
+      "username": "maria",
+      "avatar": null,
+      "bio": "asdasdasdas d asd asdas",
+      "role": "QA Tester",
+      "skills": [
+        "a",
+        "s",
+        "sad"
+      ],
+      "experiences": [
+        {
+          "id": null,
+          "title": "asd",
+          "company": "sda",
+          "period": "sad",
+          "description": null,
+          "current": false,
+          "startDate": null,
+          "endDate": null,
+          "createdAt": "2026-06-01T13:14:19.347Z",
+          "updatedAt": "2026-06-01T13:14:19.347Z"
+        }
+      ],
+      "isComplete": true,
+      "createdAt": "2026-06-01T13:14:19.348Z",
+      "updatedAt": "2026-06-01T13:14:19.348Z"
     }
   ],
   "projects": [
@@ -174,6 +239,185 @@
       "createdAt": "2026-05-11T14:59:48.340Z",
       "updatedAt": "2026-05-11T14:59:48.340Z",
       "authorId": "1"
+    },
+    {
+      "id": "ebbd2490-4be0-49bf-81bf-73b3869aa305",
+      "name": "sadassad",
+      "area": "Tecnología",
+      "tags": [
+        "asdasddsa"
+      ],
+      "summary": "sadsasdaasdsad sasadsadsadsadasdsadsadsadsadasd asd asasdasasdas",
+      "environmentalImpact": [
+        "Calidad del aire",
+        "Humedad ambiental"
+      ],
+      "academicLevel": "Pregrado",
+      "benefits": [
+        "sdasddas",
+        "sdaasdasd"
+      ],
+      "requiredSkills": [
+        "asdasdads",
+        "sdaasdsad"
+      ],
+      "duration": {
+        "amount": 1,
+        "type": "meses"
+      },
+      "roles": [
+        {
+          "id": "4f420742-5b22-49a0-a1f3-eebd4b7a4633",
+          "name": "asdads",
+          "cardInfo": {
+            "title": "sadasdasd",
+            "items": [
+              "asdasd"
+            ]
+          }
+        },
+        {
+          "id": "d27adaa5-88ff-4604-9aaa-8472416d1453",
+          "name": "sdaadsasd",
+          "cardInfo": {
+            "title": "saasddsa",
+            "items": [
+              "sdaasdsdads"
+            ]
+          }
+        }
+      ],
+      "status": "borrador",
+      "createdAt": "2026-06-01T13:15:05.124Z",
+      "updatedAt": "2026-06-01T13:15:05.124Z",
+      "authorId": "2"
+    },
+    {
+      "id": "d82afed9-6cf6-4474-b63f-4feefca5f2b6",
+      "name": "sadassad",
+      "area": "Ciencia",
+      "tags": [
+        "asdsddsaasdasdasd"
+      ],
+      "summary": "dsassssssssssssssssss  asasasasasasasasasasasasasasasasasasas",
+      "environmentalImpact": [
+        "Humedad ambiental",
+        "Calidad del aire",
+        "Temperatura",
+        "Participación ciudadana"
+      ],
+      "academicLevel": "Postgrado",
+      "benefits": [
+        "sadasdasdasdasd"
+      ],
+      "requiredSkills": [
+        "sdaasdads",
+        "sdaasdsad"
+      ],
+      "duration": {
+        "amount": 6,
+        "type": "meses"
+      },
+      "roles": [
+        {
+          "id": "ac4e460e-44ea-47fc-b19f-076005bcc96f",
+          "name": "sadsad",
+          "cardInfo": {
+            "title": "sadsdaasd",
+            "items": [
+              "sadasd"
+            ]
+          }
+        }
+      ],
+      "status": "borrador",
+      "createdAt": "2026-06-01T13:23:35.644Z",
+      "updatedAt": "2026-06-01T13:23:35.644Z",
+      "authorId": "2"
+    },
+    {
+      "id": "b4a367d5-4f63-4f05-b223-bd70975ef145",
+      "name": "Plataforma Impacto Ambiental",
+      "area": "Ciencia",
+      "tags": [
+        "sadsadsa"
+      ],
+      "summary": "sdsdadsa asd asdasdas dd asd asd asdsad asd sadasdas asd",
+      "environmentalImpact": [
+        "Humedad ambiental",
+        "Calidad del aire",
+        "Participación ciudadana"
+      ],
+      "academicLevel": "Doctorado",
+      "benefits": [
+        "sadasdasdasd"
+      ],
+      "requiredSkills": [
+        "sdsdsad",
+        "sadasdasd"
+      ],
+      "duration": {
+        "amount": 1,
+        "type": "meses"
+      },
+      "roles": [
+        {
+          "id": "1691c111-0fe7-4469-bd36-0634c965be34",
+          "name": "saasd",
+          "cardInfo": {
+            "title": "sadasdasdasd",
+            "items": [
+              "asdasdasd"
+            ]
+          }
+        }
+      ],
+      "status": "borrador",
+      "createdAt": "2026-06-01T13:25:01.972Z",
+      "updatedAt": "2026-06-01T13:25:01.972Z",
+      "authorId": "2"
+    },
+    {
+      "id": "5aa91b74-79c5-470e-b4af-4b8c708531d8",
+      "name": "Prueba",
+      "area": "Tecnología",
+      "tags": [
+        "sadasddas"
+      ],
+      "summary": "sadasdasasdasd asd asdd ",
+      "environmentalImpact": [
+        "Humedad ambiental",
+        "Calidad del aire",
+        "Participación ciudadana",
+        "Temperatura"
+      ],
+      "academicLevel": "Pregrado",
+      "benefits": [
+        "sdsdaasdasd"
+      ],
+      "requiredSkills": [
+        "asddasadsasd"
+      ],
+      "duration": {
+        "amount": 1,
+        "type": "meses"
+      },
+      "roles": [
+        {
+          "id": "ff09b676-978d-449a-b419-31775d522848",
+          "name": "saddas",
+          "cardInfo": {
+            "title": "sadasdasdasd",
+            "items": [
+              "sadadsasdw"
+            ]
+          }
+        }
+      ],
+      "status": "borrador",
+      "createdAt": "2026-06-01T13:31:47.038Z",
+      "updatedAt": "2026-06-01T13:31:47.038Z",
+      "authorId": "2"
     }
   ],
   "applications": [
@@ -211,32 +455,6 @@
     }
   ],
   "tasks": [
-    {
-      "id": "ecaad020-df60-413c-b604-e82c6c59296e",
-      "projectId": "04d5496e-e878-4056-95e1-e9e924067e4b",
-      "assigneeId": "1",
-      "creatorId": "1",
-      "title": "ayudar",
-      "description": "holalholaohoalalsaskaskas",
-      "dueDate": "2026-05-21T00:00:00.000Z",
-      "checklist": [
-        {
-          "description": "skdskdks",
-          "done": false
-        }
-      ],
-      "attachments": [],
-      "tools": [
-        "sdkskmdsd",
-        "lksdsd"
-      ],
-      "comment": "holis",
-      "status": "pending",
-      "deliveryUrl": null,
-      "deliveryNotes": null,
-      "createdAt": "2026-05-25T18:57:12.480Z",
-      "updatedAt": "2026-05-25T18:57:12.480Z"
-    },
     {
       "id": "452ee36f-aaa6-4979-97a7-736674baa08d",
       "projectId": "04d5496e-e878-4056-95e1-e9e924067e4b",
