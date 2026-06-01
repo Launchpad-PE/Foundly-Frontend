@@ -51,9 +51,10 @@ export class ProjectAssembler implements BaseAssembler<Project, ProjectResource,
       },
       roles: roles,
       authorId: resource.authorId,
+      authorName: resource.authorName || null,
       status: resource.status,
       createdAt: resource.createdAt,
-      updatedAt: resource.updatedAt
+      updatedAt: resource.updatedAt,
     });
   }
 
