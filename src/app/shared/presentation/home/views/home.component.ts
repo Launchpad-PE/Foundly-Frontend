@@ -54,9 +54,18 @@ export class HomeComponent implements OnInit {
     try {
       const profiles = await firstValueFrom(this.profileApi.getAllProfiles());
       const domainProjects = await this.projectStore.loadAllProjects();
+      const currentUserId = this.userStore.currentUser()?.id;
+
+      // Crear un mapa de userId -> username
+      const userNames = new Map<string, string>();
+      profiles.forEach(profile => {
+        userNames.set(profile.userId.toString(), profile.username);
+      });
 
       this.highlightedCollaborators = profiles;
-      this.allProjects = domainProjects.map((p: DomainProject) => this.mapToProjectCardData(p));
+      this.allProjects = domainProjects.map((p: DomainProject) =>
+        this.mapToProjectCardData(p, currentUserId, userNames)
+      );
       this.featuredProjects = this.allProjects.slice(0, 3);
       this.cdr.detectChanges();
     } catch (err: any) {
@@ -64,12 +73,22 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  private mapToProjectCardData(domainProject: DomainProject): ProjectCardData {
+  private mapToProjectCardData(
+    domainProject: DomainProject,
+    currentUserId?: string,
+    userNames?: Map<string, string>
+  ): ProjectCardData {
     const roleNames = domainProject.roles.map(role => role.name.getValue());
     const areas = [domainProject.area.getValue()];
     const duration = `${domainProject.duration.getAmount()} ${domainProject.duration.getType()}`;
-    const modality = 'Remoto';
-    const author = `Usuario ${domainProject.authorId}`;
+    const modality = 'Remoto'; // Ajusta según tengas este dato
+
+    // Obtener el nombre del autor del mapa, o usar el ID como fallback
+    const authorId = domainProject.authorId.toString();
+    const author = userNames?.get(authorId) || `Usuario ${authorId}`;
+
+    // Verificar si el proyecto pertenece al usuario actual
+    const isOwn = currentUserId ? authorId === currentUserId : false;
 
     return {
       id: domainProject.id.toString(),
@@ -78,7 +97,8 @@ export class HomeComponent implements OnInit {
       areas: areas,
       author: author,
       duration: duration,
-      modality: modality
+      modality: modality,
+      isOwn: isOwn
     };
   }
 
