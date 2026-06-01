@@ -107,24 +107,67 @@ export class ProjectStore {
   /**
    * Create a new project
    */
+
   async createProject(projectData: CreateProjectData, authorId: string): Promise<Project> {
     this.setLoading(true);
     this.clearError();
 
     try {
+      // Obtener el perfil del autor para obtener el username
+      let authorName = null;
+      try {
+        const profile = await firstValueFrom(this.profileApi.getProfileByUserId(authorId));
+        authorName = profile?.username || null;
+      } catch (err) {
+        console.warn('Could not fetch author profile:', err);
+      }
+
       const project = Project.create({
         ...projectData,
         authorId: authorId,
+        authorName: authorName,  // ✅ Incluir el authorName
       });
 
       const savedProject = await firstValueFrom(this.projectApi.createProject(project));
 
-      // Update stores
-      this.currentProject.set(savedProject);
-      this.userProjects.update(projects => [savedProject, ...projects]);
+      // ✅ Enriquecer el proyecto guardado con el authorName si es necesario
+      const enrichedProject = authorName
+        ? Project.create({
+          id: savedProject.id,
+          name: savedProject.name.getValue(),
+          area: savedProject.area.getValue(),
+          tags: savedProject.tags.map(t => t.getValue()),
+          summary: savedProject.summary.getValue(),
+          environmentalImpact: savedProject.environmentalImpact?.getMetrics(),
+          academicLevel: savedProject.academicLevel?.getValue(),
+          benefits: savedProject.benefits.map(b => b.getDescription()),
+          requiredSkills: savedProject.requiredSkills.map(s => s.getValue()),
+          duration: {
+            amount: savedProject.duration.getAmount(),
+            type: savedProject.duration.getType()
+          },
+          roles: savedProject.roles.map(r => ({
+            name: r.name.getValue(),
+            cardInfo: {
+              title: r.cardInfo.title.getValue(),
+              items: r.cardInfo.items.map(i => i.getDescription())
+            }
+          })),
+          authorId: savedProject.authorId.toString(),
+          authorName: authorName,
+          status: savedProject.status,
+          createdAt: savedProject.createdAt.toISOString(),
+          updatedAt: savedProject.updatedAt.toISOString()
+        })
+        : savedProject;
 
-      console.log('✅ Project created successfully', savedProject);
-      return savedProject;
+      // Update stores
+      this.currentProject.set(enrichedProject);
+      this.userProjects.update(projects => [enrichedProject, ...projects]);
+      this.allProjects.update(projects => [enrichedProject, ...projects]); // ✅ También actualizar allProjects
+
+      console.log('✅ Project created successfully', enrichedProject);
+      return enrichedProject;
     } catch (err: any) {
       const msg = err?.message || 'Error al crear el proyecto';
       this.setError(msg);
