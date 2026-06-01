@@ -8,6 +8,7 @@ import { ApplicationStatus } from '../../applications/domain/enum/application-st
 import { ProjectStatus } from '../domain/enum/project-status.enum';
 import { EnvironmentalMetric } from '../domain/value-objects/environmental-impact.vo';
 import { DurationType } from '../domain/value-objects/duration.vo';
+import {ProfileApi} from '../../profile-management/infrastructure/profile-api';
 
 export interface CreateProjectData {
   name: string;
@@ -51,6 +52,7 @@ export class ProjectStore {
 
   // Dependencies
   private projectApi = inject(ProjectApi);
+  private profileApi = inject(ProfileApi);
   private applicationApi = inject(ApplicationApi);
 
   // Computed properties
@@ -201,7 +203,11 @@ export class ProjectStore {
     this.clearError();
 
     try {
-      const projects = await firstValueFrom(this.projectApi.getAllProjects());
+      let projects = await firstValueFrom(this.projectApi.getAllProjects());
+
+      // Enriquecer proyectos con nombre del autor
+      projects = await this.enrichProjectsWithAuthorNames(projects);
+
       this.allProjects.set(projects);
       return projects;
     } catch (err: any) {
@@ -210,6 +216,62 @@ export class ProjectStore {
     } finally {
       this.setLoading(false);
     }
+  }
+
+  private async enrichProjectsWithAuthorNames(projects: Project[]): Promise<Project[]> {
+    try {
+      // Obtener todos los perfiles
+      const profiles = await firstValueFrom(this.profileApi.getAllProfiles());
+
+      // Crear un mapa de userId -> username
+      const userNames = new Map<string, string>();
+      profiles.forEach(profile => {
+        userNames.set(profile.userId.toString(), profile.username);
+      });
+
+      // Enriquecer cada proyecto
+      return projects.map(project => {
+        const authorName = userNames.get(project.authorId.toString()) || 'Usuario';
+        // Crear un nuevo proyecto con el authorName (necesitarías un método updateName)
+        // O clonar el proyecto y asignar el nombre
+        return this.addAuthorNameToProject(project, authorName);
+      });
+    } catch (err) {
+      console.error('Error enriching projects:', err);
+      return projects;
+    }
+  }
+
+  private addAuthorNameToProject(project: Project, authorName: string): Project {
+    // Método temporal para agregar el nombre - idealmente deberías
+    // tener un método en Project.updateAuthorName()
+    return Project.create({
+      id: project.id,
+      name: project.name.getValue(),
+      area: project.area.getValue(),
+      tags: project.tags.map(t => t.getValue()),
+      summary: project.summary.getValue(),
+      environmentalImpact: project.environmentalImpact?.getMetrics(),
+      academicLevel: project.academicLevel?.getValue(),
+      benefits: project.benefits.map(b => b.getDescription()),
+      requiredSkills: project.requiredSkills.map(s => s.getValue()),
+      duration: {
+        amount: project.duration.getAmount(),
+        type: project.duration.getType()
+      },
+      roles: project.roles.map(r => ({
+        name: r.name.getValue(),
+        cardInfo: {
+          title: r.cardInfo.title.getValue(),
+          items: r.cardInfo.items.map(i => i.getDescription())
+        }
+      })),
+      authorId: project.authorId.toString(),
+      authorName: authorName,
+      status: project.status,
+      createdAt: project.createdAt.toISOString(),
+      updatedAt: project.updatedAt.toISOString()
+    });
   }
 
   /**
