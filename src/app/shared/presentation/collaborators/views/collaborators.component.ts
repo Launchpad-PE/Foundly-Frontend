@@ -22,31 +22,34 @@ export class CollaboratorsComponent implements OnInit {
   private profileApi = inject(ProfileApi);
   private cdr = inject(ChangeDetectorRef);
 
-  searchTerm: string = '';
-  filterRole: string = '';
-  filterSkill: string = '';
+  // Filters
+  searchTerm = '';
+  filterRole = '';
+  filterSkill = '';
+  minScore: number | null = null;
+  maxScore: number | null = null;
 
+  // Data
   allCollaborators: Profile[] = [];
-  loading: boolean = true;
+  loading = true;
   error: string | null = null;
 
+  // Sidebar stats (mock — no points field in Profile yet)
+  userPoints = 220;
+  userRanking = 500;
+  activeProjects = 2;
+
   get filteredCollaborators(): Profile[] {
-    return this.allCollaborators.filter((collaborator) => {
-      const matchesName =
-        this.searchTerm === '' ||
-        collaborator.username.toLowerCase().includes(this.searchTerm.toLowerCase());
+    return this.allCollaborators.filter(c => {
+      const term = this.searchTerm.toLowerCase();
+      const matchesName = !this.searchTerm ||
+        c.username.toLowerCase().includes(term) ||
+        c.skills.some(s => s.toLowerCase().includes(term));
 
-      const matchesRole =
-        this.filterRole === '' ||
-        collaborator.role.toLowerCase().includes(this.filterRole.toLowerCase());
+      const matchesRole = !this.filterRole ||
+        c.role.toLowerCase().includes(this.filterRole.toLowerCase());
 
-      const matchesSkill =
-        this.filterSkill === '' ||
-        collaborator.skills.some((skill) =>
-          skill.toLowerCase().includes(this.filterSkill.toLowerCase()),
-        );
-
-      return matchesName && matchesRole && matchesSkill;
+      return matchesName && matchesRole;
     });
   }
 
@@ -55,7 +58,6 @@ export class CollaboratorsComponent implements OnInit {
       this.router.navigate(['/onboarding']);
       return;
     }
-
     await this.loadAllCollaborators();
   }
 
@@ -67,17 +69,31 @@ export class CollaboratorsComponent implements OnInit {
       const profiles = await firstValueFrom(this.profileApi.getAllProfiles());
       this.allCollaborators = profiles;
       this.cdr.detectChanges();
-      console.log('✅ Collaborators loaded:', this.allCollaborators);
     } catch (err: any) {
-      console.error('Error loading collaborators:', err);
-      this.error = err.message || 'Error al cargar los colaboradores';
+      this.error = 'Error al cargar los colaboradores';
     } finally {
       this.loading = false;
       this.cdr.detectChanges();
     }
   }
 
+  onSearch(): void {
+    this.cdr.detectChanges();
+  }
+
+  onClear(): void {
+    this.searchTerm = '';
+    this.filterRole = '';
+    this.filterSkill = '';
+    this.minScore = null;
+    this.maxScore = null;
+  }
+
   viewProfile(collaboratorId: string): void {
     this.router.navigate(['/profile', collaboratorId]);
+  }
+
+  goToRanking(): void {
+    this.router.navigate(['/collaborators/ranking']);
   }
 }

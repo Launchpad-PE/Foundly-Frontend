@@ -1,72 +1,147 @@
-<header class="login-header">
-  <div class="header-content">
-    <div class="logo">
-      <img src="/logo.png" alt="Foundly" class="logo-image" />
-    </div>
-    <div class="right-container">
-      <button class="back-button" (click)="goBack()">← Volver</button>
+<!-- login.html -->
+<div class="ln-shell">
+
+  <!-- ── Left panel ── -->
+  <div class="ln-left">
+    <div class="ln-left-inner">
+
+      <!-- Brand -->
+      <div class="ln-brand">
+        <div class="ln-brand-logo">
+          <svg viewBox="0 0 32 32" fill="none" class="ln-logo-icon">
+            <rect width="32" height="32" rx="8" fill="white" fill-opacity="0.2"/>
+            <path d="M8 22v-2a6 6 0 0112 0v2" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="14" cy="12" r="4" stroke="white" stroke-width="2"/>
+            <path d="M20 16a4 4 0 010 8" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="24" cy="11" r="3" stroke="white" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <span class="ln-brand-name">Foundly</span>
+      </div>
+
+      <!-- Headline -->
+      <div class="ln-headline">
+        <h2 class="ln-tagline">Bienvenido de vuelta<br>a tu comunidad</h2>
+        <p class="ln-sub">Retoma tus proyectos, conecta con tu equipo y sigue construyendo.</p>
+      </div>
+
+      <!-- Stats -->
+      <div class="ln-stats">
+        <div class="ln-stat">
+          <span class="ln-stat-value">500+</span>
+          <span class="ln-stat-label">Colaboradores</span>
+        </div>
+        <div class="ln-stat-divider"></div>
+        <div class="ln-stat">
+          <span class="ln-stat-value">200+</span>
+          <span class="ln-stat-label">Proyectos activos</span>
+        </div>
+        <div class="ln-stat-divider"></div>
+        <div class="ln-stat">
+          <span class="ln-stat-value">95%</span>
+          <span class="ln-stat-label">Tasa de éxito</span>
+        </div>
+      </div>
+
+      <!-- Abstract visual -->
+      <div class="ln-visual">
+        <svg viewBox="0 0 220 140" fill="none" class="ln-vis-svg">
+          <!-- Outer rings -->
+          <circle cx="110" cy="70" r="60" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+          <circle cx="110" cy="70" r="42" stroke="rgba(255,255,255,0.09)" stroke-width="1"/>
+          <circle cx="110" cy="70" r="26" fill="rgba(255,255,255,0.10)"/>
+          <circle cx="110" cy="70" r="14" fill="rgba(255,255,255,0.18)"/>
+          <!-- Check icon center -->
+          <path d="M103 70l5 5 9-9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- Nodes -->
+          <line x1="110" y1="44" x2="110" y2="10" stroke="rgba(255,255,255,0.2)" stroke-width="1" stroke-dasharray="3 3"/>
+          <line x1="133" y1="57" x2="192" y2="22" stroke="rgba(255,255,255,0.2)" stroke-width="1" stroke-dasharray="3 3"/>
+          <line x1="133" y1="83" x2="192" y2="118" stroke="rgba(255,255,255,0.2)" stroke-width="1" stroke-dasharray="3 3"/>
+          <line x1="87" y1="83" x2="28" y2="118" stroke="rgba(255,255,255,0.2)" stroke-width="1" stroke-dasharray="3 3"/>
+          <line x1="87" y1="57" x2="28" y2="22" stroke="rgba(255,255,255,0.2)" stroke-width="1" stroke-dasharray="3 3"/>
+          <!-- Node circles -->
+          <circle cx="110" cy="10" r="9" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.35)" stroke-width="1"/>
+          <circle cx="192" cy="22" r="9" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.35)" stroke-width="1"/>
+          <circle cx="192" cy="118" r="9" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.35)" stroke-width="1"/>
+          <circle cx="28" cy="118" r="9" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.35)" stroke-width="1"/>
+          <circle cx="28" cy="22" r="9" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.35)" stroke-width="1"/>
+        </svg>
+      </div>
+
     </div>
   </div>
-</header>
 
-<div class="login-container">
-  <div class="login-card">
-    <div class="login-card-header">
-      <h1 class="logo-text">Foundly</h1>
-      <p class="login-subtitle">Inicia sesión para continuar</p>
-    </div>
+  <!-- ── Right panel ── -->
+  <div class="ln-right">
+    <div class="ln-form-wrap">
 
-    <!-- Error -->
-    <div *ngIf="loginError()" class="error-message">
-      ⚠ {{ loginError() }}
-    </div>
-
-    <!-- Loading -->
-    <div *ngIf="userStore.loading()" class="loading-state">
-      <div class="loading-spinner"></div>
-      <span>Iniciando sesión...</span>
-    </div>
-
-    <form (ngSubmit)="handleLogin()" class="login-form" [class.disabled]="userStore.loading()">
-      <div class="form-group">
-        <label for="email">Correo electrónico</label>
-        <input type="email" id="email" [(ngModel)]="email" name="email"
-               placeholder="email@example.com" required class="form-input"
-               [disabled]="userStore.loading()" />
+      <div class="ln-form-header">
+        <h1 class="ln-title">Iniciar sesión</h1>
+        <p class="ln-subtitle">Ingresa tus credenciales para continuar</p>
       </div>
 
-      <div class="form-group">
-        <label for="password">Contraseña</label>
-        <input type="password" id="password" [(ngModel)]="password" name="password"
-               placeholder="Tu contraseña" required class="form-input"
-               [disabled]="userStore.loading()" />
+      <!-- Error -->
+      <div class="ln-error" *ngIf="loginError()">
+        <svg viewBox="0 0 20 20" fill="currentColor" class="ln-err-icon">
+          <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"/>
+        </svg>
+        {{ loginError() }}
       </div>
 
-      <div class="forgot-password">
-        <a href="#" (click)="openForgotPasswordModal(); $event.preventDefault()">
-          ¿Olvidaste tu contraseña?
-        </a>
-      </div>
+      <form (ngSubmit)="handleLogin()" class="ln-form" [class.ln-form-disabled]="userStore.loading()">
 
-      <button
-        type="submit"
-        class="login-button"
-        [disabled]="userStore.loading() || !email || !password"
-      >
-        {{ userStore.loading() ? 'Iniciando sesión...' : 'Iniciar sesión' }}
-      </button>
-    </form>
+        <div class="ln-field">
+          <label class="ln-label" for="email">Correo electrónico</label>
+          <div class="ln-input-wrap">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" class="ln-input-icon">
+              <path d="M3 8l7 5 7-5M3 8v8a1 1 0 001 1h12a1 1 0 001-1V8M3 8l1-1h12l1 1"/>
+            </svg>
+            <input type="email" id="email" [(ngModel)]="email" name="email"
+                   placeholder="email@example.com" required class="ln-input"
+                   [disabled]="userStore.loading()"/>
+          </div>
+        </div>
 
-    <div class="register-link">
-      <p>¿No tienes cuenta?
-        <a href="#" (click)="goToRegister(); $event.preventDefault()">Regístrate</a>
+        <div class="ln-field">
+          <div class="ln-label-row">
+            <label class="ln-label" for="password">Contraseña</label>
+            <a href="#" class="ln-forgot" (click)="openForgotPasswordModal(); $event.preventDefault()">
+              ¿Olvidaste tu contraseña?
+            </a>
+          </div>
+          <div class="ln-input-wrap">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" class="ln-input-icon">
+              <rect x="3" y="9" width="14" height="10" rx="2"/><path d="M7 9V6a3 3 0 016 0v3"/>
+            </svg>
+            <input type="password" id="password" [(ngModel)]="password" name="password"
+                   placeholder="Tu contraseña" required class="ln-input"
+                   [disabled]="userStore.loading()"/>
+          </div>
+        </div>
+
+        <button type="submit" class="ln-submit"
+                [disabled]="userStore.loading() || !email || !password">
+          <span *ngIf="!userStore.loading()">Iniciar sesión</span>
+          <span *ngIf="userStore.loading()" class="ln-loading">
+            <svg class="ln-spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" stroke-opacity="0.25"/>
+              <path d="M12 2a10 10 0 0110 10" stroke-linecap="round"/>
+            </svg>
+            Iniciando sesión...
+          </span>
+        </button>
+
+      </form>
+
+      <p class="ln-register-link">
+        ¿No tienes cuenta?
+        <a routerLink="/register" class="ln-link">Regístrate gratis</a>
       </p>
-    </div>
 
-    <div class="footer">
-      <p>Todos los derechos reservados Foundly © 2026</p>
+      <p class="ln-copyright">© 2026 Foundly. Todos los derechos reservados.</p>
     </div>
   </div>
+
 </div>
 
 <app-modal-forget-password
