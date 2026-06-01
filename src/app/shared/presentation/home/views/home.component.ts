@@ -37,9 +37,21 @@ export class HomeComponent implements OnInit {
   filterRole: string = '';
   filterArea: string = '';
 
+  // Propiedades para búsqueda y filtrado
+  hasSearched: boolean = false;
+  displayedProjects: ProjectCardData[] = [];
+  allProjectsOriginal: ProjectCardData[] = []; // Guardar copia original
+
   highlightedCollaborators: Profile[] = [];
   featuredProjects: ProjectCardData[] = [];
-  allProjects: ProjectCardData[] = [];
+
+  // Propiedad computada para el label de resultados
+  get resultLabel(): string {
+    if (this.hasSearched) {
+      return `${this.displayedProjects.length} ${this.displayedProjects.length === 1 ? 'resultado' : 'resultados'}`;
+    }
+    return `${this.displayedProjects.length} ${this.displayedProjects.length === 1 ? 'proyecto' : 'proyectos'}`;
+  }
 
   async ngOnInit(): Promise<void> {
     if (this.userStore.needsOnboarding()) {
@@ -63,10 +75,15 @@ export class HomeComponent implements OnInit {
       });
 
       this.highlightedCollaborators = profiles;
-      this.allProjects = domainProjects.map((p: DomainProject) =>
+      this.allProjectsOriginal = domainProjects.map((p: DomainProject) =>
         this.mapToProjectCardData(p, currentUserId, userNames)
       );
-      this.featuredProjects = this.allProjects.slice(0, 3);
+
+      // Inicializar displayedProjects con todos los proyectos
+      this.displayedProjects = [...this.allProjectsOriginal];
+      this.featuredProjects = this.allProjectsOriginal.slice(0, 3);
+      this.hasSearched = false;
+
       this.cdr.detectChanges();
     } catch (err: any) {
       console.error('Error cargando datos:', err);
@@ -81,13 +98,10 @@ export class HomeComponent implements OnInit {
     const roleNames = domainProject.roles.map(role => role.name.getValue());
     const areas = [domainProject.area.getValue()];
     const duration = `${domainProject.duration.getAmount()} ${domainProject.duration.getType()}`;
-    const modality = 'Remoto'; // Ajusta según tengas este dato
+    const modality = 'Remoto';
 
-    // Obtener el nombre del autor del mapa, o usar el ID como fallback
     const authorId = domainProject.authorId.toString();
     const author = userNames?.get(authorId) || `Usuario ${authorId}`;
-
-    // Verificar si el proyecto pertenece al usuario actual
     const isOwn = currentUserId ? authorId === currentUserId : false;
 
     return {
@@ -102,13 +116,74 @@ export class HomeComponent implements OnInit {
     };
   }
 
+  /**
+   * Realizar búsqueda/filtrado de proyectos
+   */
   onSearch(): void {
-    this.router.navigate(['/projects'], {
+    this.hasSearched = true;
+
+    let filtered = [...this.allProjectsOriginal];
+
+    // Filtrar por término de búsqueda (título)
+    if (this.searchTerm.trim()) {
+      const term = this.searchTerm.toLowerCase().trim();
+      filtered = filtered.filter(project =>
+        project.title.toLowerCase().includes(term) ||
+        project.roles.some(role => role.toLowerCase().includes(term))
+      );
+    }
+
+    // Filtrar por rol
+    if (this.filterRole) {
+      const roleFilter = this.filterRole.toLowerCase();
+      filtered = filtered.filter(project =>
+        project.roles.some(role => role.toLowerCase().includes(roleFilter))
+      );
+    }
+
+    // Filtrar por área
+    if (this.filterArea) {
+      const areaFilter = this.filterArea.toLowerCase();
+      filtered = filtered.filter(project =>
+        project.areas.some(area => area.toLowerCase().includes(areaFilter))
+      );
+    }
+
+    this.displayedProjects = filtered;
+
+    // Actualizar URL con parámetros de búsqueda (opcional)
+    this.router.navigate([], {
+      relativeTo: this.router.routerState.root,
       queryParams: {
-        search: this.searchTerm,
-        role: this.filterRole,
-        area: this.filterArea
-      }
+        search: this.searchTerm || null,
+        role: this.filterRole || null,
+        area: this.filterArea || null
+      },
+      queryParamsHandling: 'merge',
+      replaceUrl: true
+    });
+  }
+
+  /**
+   * Limpiar todos los filtros de búsqueda
+   */
+  onClear(): void {
+    this.searchTerm = '';
+    this.filterRole = '';
+    this.filterArea = '';
+    this.hasSearched = false;
+    this.displayedProjects = [...this.allProjectsOriginal];
+
+    // Limpiar query params
+    this.router.navigate([], {
+      relativeTo: this.router.routerState.root,
+      queryParams: {
+        search: null,
+        role: null,
+        area: null
+      },
+      queryParamsHandling: 'merge',
+      replaceUrl: true
     });
   }
 
