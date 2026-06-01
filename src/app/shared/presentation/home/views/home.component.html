@@ -90,6 +90,7 @@
           *ngFor="let project of allProjects"
           [project]="project"
           [isParticipating]="isParticipatingIn(project.id)"
+          [isOwn]="project.isOwn || false"
           (viewDetails)="viewProjectDetails($event)"
           (apply)="applyToProject($event)">
         </app-project-card>
