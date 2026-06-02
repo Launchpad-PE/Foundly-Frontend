@@ -1,7 +1,17 @@
-import { Component, computed, inject, input, output, signal } from '@angular/core';
+import { Component, inject, input, output, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MilestoneStore } from '../../application/MilestoneStore';
+import { ApplicationStatus } from '../../../applications/domain/enum/application-status.enum';
+import { ApplicationStore } from '../../../applications/application/application.store';
+
+interface TaskItem {
+  title: string;
+  description: string;
+  assigneeId: string;
+  checklist: Array<{ description: string; done: boolean }>;
+  attachments: string[];
+}
 
 @Component({
   selector: 'app-create-milestone-modal',
@@ -10,8 +20,9 @@ import { MilestoneStore } from '../../application/MilestoneStore';
   templateUrl: './create-milestone-modal.component.html',
   styleUrls: ['./create-milestone-modal.component.css']
 })
-export class CreateMilestoneModalComponent {
+export class CreateMilestoneModalComponent implements OnInit {
   private milestoneStore = inject(MilestoneStore);
+  private applicationStore = inject(ApplicationStore);
 
   isOpen = input(false);
   projectId = input.required<string>();
@@ -27,41 +38,46 @@ export class CreateMilestoneModalComponent {
   attachments: string[] = [];
   generalComment = '';
 
-  // Temporary inputs
-  currentTool = '';
+  // Tareas del hito
+  tasks: TaskItem[] = [];
+
+  // Tarea temporal
+  currentTask: TaskItem = {
+    title: '',
+    description: '',
+    assigneeId: '',
+    checklist: [],
+    attachments: []
+  };
+  currentChecklistItem = '';
   currentAttachment = '';
+  showTaskForm = signal(false);
+  editingTaskIndex = signal<number | null>(null);
+
+  currentTool = '';
+  currentAttachmentUrl = '';
 
   loading = signal(false);
+  collaborators = signal<Array<{ id: string; fullName: string }>>([]);
 
-  // Fecha mínima = hoy (para no permitir fechas pasadas)
+  // Sin validaciones - siempre true
+  isValid = true;
+
   minDate = new Date().toISOString().split('T')[0];
 
-  // Validations
-  isTitleValid = computed(() => this.title.trim().length >= 3 && this.title.trim().length <= 120);
-  isDescriptionValid = computed(
-    () => this.description.trim().length >= 5 && this.description.trim().length <= 2000,
-  );
-  isDueDateValid = computed(() => !!this.dueDate);
+  ngOnInit(): void {
+    this.loadCollaborators();
+  }
 
-  isValid = computed(
-    () => this.isTitleValid() && this.isDescriptionValid() && this.isDueDateValid(),
-  );
-
-  titleError = computed(() => {
-    if (!this.title) return '';
-    const len = this.title.trim().length;
-    if (len < 3) return 'Mínimo 3 caracteres';
-    if (len > 120) return 'Máximo 120 caracteres';
-    return '';
-  });
-
-  descriptionError = computed(() => {
-    if (!this.description) return '';
-    const len = this.description.trim().length;
-    if (len < 5) return 'Mínimo 5 caracteres';
-    if (len > 2000) return 'Máximo 2000 caracteres';
-    return '';
-  });
+  async loadCollaborators(): Promise<void> {
+    await this.applicationStore.loadApplicationsByProject(this.projectId());
+    const apps = this.applicationStore.projectApplications();
+    const accepted = apps.filter(a => a.status === ApplicationStatus.ACCEPTED);
+    this.collaborators.set(accepted.map(a => ({
+      id: a.userId.toString(),
+      fullName: a.fullName.getValue()
+    })));
+  }
 
   addTool(): void {
     const tool = this.currentTool.trim();
@@ -76,10 +92,10 @@ export class CreateMilestoneModalComponent {
   }
 
   addAttachment(): void {
-    const url = this.currentAttachment.trim();
-    if (url && this.isValidUrl(url) && !this.attachments.includes(url)) {
+    const url = this.currentAttachmentUrl.trim();
+    if (url && !this.attachments.includes(url)) {
       this.attachments.push(url);
-      this.currentAttachment = '';
+      this.currentAttachmentUrl = '';
     }
   }
 
@@ -87,13 +103,73 @@ export class CreateMilestoneModalComponent {
     this.attachments.splice(index, 1);
   }
 
-  isValidUrl(url: string): boolean {
-    try {
-      new URL(url);
-      return true;
-    } catch {
-      return false;
+  openTaskForm(): void {
+    this.showTaskForm.set(true);
+    this.resetCurrentTask();
+  }
+
+  closeTaskForm(): void {
+    this.showTaskForm.set(false);
+    this.editingTaskIndex.set(null);
+    this.resetCurrentTask();
+  }
+
+  resetCurrentTask(): void {
+    this.currentTask = {
+      title: '',
+      description: '',
+      assigneeId: '',
+      checklist: [],
+      attachments: []
+    };
+    this.currentChecklistItem = '';
+    this.currentAttachment = '';
+  }
+
+  addTaskChecklistItem(): void {
+    const item = this.currentChecklistItem.trim();
+    if (item) {
+      this.currentTask.checklist.push({ description: item, done: false });
+      this.currentChecklistItem = '';
     }
+  }
+
+  removeTaskChecklistItem(index: number): void {
+    this.currentTask.checklist.splice(index, 1);
+  }
+
+  addTaskAttachment(): void {
+    const url = this.currentAttachment.trim();
+    if (url && !this.currentTask.attachments.includes(url)) {
+      this.currentTask.attachments.push(url);
+      this.currentAttachment = '';
+    }
+  }
+
+  removeTaskAttachment(index: number): void {
+    this.currentTask.attachments.splice(index, 1);
+  }
+
+  saveTask(): void {
+    if (!this.currentTask.title.trim() || !this.currentTask.assigneeId) return;
+
+    if (this.editingTaskIndex() !== null) {
+      this.tasks[this.editingTaskIndex()!] = { ...this.currentTask };
+    } else {
+      this.tasks.push({ ...this.currentTask });
+    }
+
+    this.closeTaskForm();
+  }
+
+  editTask(index: number): void {
+    this.currentTask = { ...this.tasks[index] };
+    this.editingTaskIndex.set(index);
+    this.showTaskForm.set(true);
+  }
+
+  removeTask(index: number): void {
+    this.tasks.splice(index, 1);
   }
 
   truncateUrl(url: string): string {
@@ -101,9 +177,12 @@ export class CreateMilestoneModalComponent {
     return url.substring(0, 40) + '...';
   }
 
-  async onSubmit(): Promise<void> {
-    if (!this.isValid()) return;
+  getAssigneeName(assigneeId: string): string {
+    const assignee = this.collaborators().find(c => c.id === assigneeId);
+    return assignee?.fullName || 'Sin asignar';
+  }
 
+  async onSubmit(): Promise<void> {
     this.loading.set(true);
     try {
       const milestone = await this.milestoneStore.createMilestone({
@@ -111,10 +190,17 @@ export class CreateMilestoneModalComponent {
         creatorId: this.creatorId(),
         title: this.title.trim(),
         description: this.description.trim(),
-        dueDate: new Date(this.dueDate),
+        dueDate: this.dueDate ? new Date(this.dueDate) : new Date(),
         tools: this.tools.length > 0 ? this.tools : undefined,
         generalComment: this.generalComment.trim() || undefined,
         attachments: this.attachments.length > 0 ? this.attachments : undefined,
+        tasks: this.tasks.map(task => ({
+          title: task.title,
+          description: task.description,
+          assigneeId: task.assigneeId,
+          checklist: task.checklist,
+          attachments: task.attachments
+        }))
       });
 
       this.created.emit(milestone);
@@ -133,8 +219,11 @@ export class CreateMilestoneModalComponent {
     this.tools = [];
     this.attachments = [];
     this.generalComment = '';
+    this.tasks = [];
     this.currentTool = '';
-    this.currentAttachment = '';
+    this.currentAttachmentUrl = '';
+    this.showTaskForm.set(false);
+    this.editingTaskIndex.set(null);
   }
 
   onClose(): void {

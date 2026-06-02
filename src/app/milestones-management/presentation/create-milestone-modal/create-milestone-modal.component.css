@@ -264,3 +264,211 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+/* Sección de Tareas */
+.tasks-section {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px;
+  background: #faf9ff;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.section-header label {
+  margin-bottom: 0;
+  font-weight: 600;
+}
+
+.btn-add-task {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  background: #4f46e5;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.tasks-list {
+  margin-bottom: 12px;
+}
+
+.task-preview {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background: white;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  border: 1px solid #e2e8f0;
+}
+
+.task-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.task-info strong {
+  font-size: 14px;
+}
+
+.assignee {
+  font-size: 11px;
+  color: #64748b;
+}
+
+.task-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-edit-small, .btn-delete-small {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px;
+}
+
+.btn-edit-small {
+  color: #4f46e5;
+}
+
+.btn-delete-small {
+  color: #ef4444;
+}
+
+/* Task Form */
+.task-form {
+  margin-top: 16px;
+  padding: 16px;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.task-form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.task-form-header h4 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.btn-close-small {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #94a3b8;
+}
+
+.task-title-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.input-with-button.small {
+  gap: 4px;
+}
+
+.input-with-button.small button {
+  padding: 0 12px;
+  font-size: 16px;
+}
+
+.checklist-preview, .attachments-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.checklist-tag, .attachment-tag {
+  background: #f1f5f9;
+  padding: 4px 8px;
+  border-radius: 16px;
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.checklist-tag button, .attachment-tag button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #94a3b8;
+  font-size: 14px;
+}
+
+.btn-save-task {
+  width: 100%;
+  padding: 10px;
+  background: #4f46e5;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  margin-top: 12px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.btn-save-task:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.badge {
+  font-size: 10px;
+  background: #eef2ff;
+  color: #4f46e5;
+  padding: 2px 6px;
+  border-radius: 10px;
+  margin-left: 8px;
+}
+
+.checklist-items {
+  margin-top: 8px;
+}
+
+.checklist-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 8px;
+  background: #f8fafc;
+  border-radius: 6px;
+  margin-bottom: 4px;
+  font-size: 12px;
+}
+
+.checklist-item button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #ef4444;
+}
+
+.attachments-list.small .attachment-item {
+  font-size: 11px;
+  padding: 4px 8px;
+}
