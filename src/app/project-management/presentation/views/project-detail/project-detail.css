@@ -600,3 +600,21 @@
 .collab-info { display: flex; flex-direction: column; line-height: 1.2; }
 .collab-name { color: #1f2937; font-weight: 500; font-size: 0.92rem; }
 .collab-role { color: #6b7280; font-size: 0.8rem; }
+/* Cuando se muestra el detalle del hito en pantalla completa */
+.milestone-fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: white;
+  z-index: 100;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+/* Ajuste para que el detalle ocupe toda la pantalla */
+.milestone-fullscreen app-milestone-detail {
+  display: block;
+  height: 100%;
+}
