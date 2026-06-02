@@ -138,4 +138,8 @@ export class MilestoneDetailComponent implements OnInit {
     this.loadMilestone();
     this.updated.emit(this.milestone()!);
   }
+
+  goBack(): void {
+    this.closed.emit();
+  }
 }

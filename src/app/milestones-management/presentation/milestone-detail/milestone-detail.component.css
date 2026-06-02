@@ -1,64 +1,60 @@
-.detail-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(4px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
-.detail-container {
-  background: white;
-  border-radius: 24px;
-  width: 90%;
+.milestone-detail-page {
   max-width: 900px;
-  max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: 0 20px 35px rgba(0, 0, 0, 0.2);
+  margin: 0 auto;
+  padding: 24px;
+  background: #ffffff;
+  min-height: 100vh;
 }
 
 /* Header */
 .detail-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 24px;
+  margin-bottom: 32px;
+  padding-bottom: 16px;
   border-bottom: 1px solid #e2e8f0;
-  position: sticky;
-  top: 0;
-  background: white;
-  z-index: 10;
 }
 
 .header-left {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
+/* Botón Volver */
 .btn-back {
-  background: #f1f5f9;
-  border: none;
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 8px;
+  background: #f1f5f9;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1e293b;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
+.btn-back:hover {
+  background: #e2e8f0;
+  transform: translateX(-2px);
+}
+
+.btn-back svg {
+  stroke: #4f46e5;
+}
+
+/* Status Badge */
 .status-badge {
-  padding: 4px 12px;
-  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  border-radius: 30px;
   font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .status-pending {
@@ -76,132 +72,253 @@
   color: #dc2626;
 }
 
-.header-actions {
-  display: flex;
-  gap: 8px;
+/* Skeleton Loading */
+.skeleton {
+  animation: pulse 1.5s ease-in-out infinite;
 }
 
-.btn-edit, .btn-delete {
-  padding: 8px 16px;
+.skeleton-title {
+  width: 60%;
+  height: 32px;
+  background: #e2e8f0;
   border-radius: 8px;
-  font-size: 13px;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
+  margin-bottom: 24px;
 }
 
-.btn-edit {
-  background: #eef2ff;
-  border: none;
-  color: #4f46e5;
+.skeleton-line {
+  width: 100%;
+  height: 16px;
+  background: #e2e8f0;
+  border-radius: 4px;
+  margin-bottom: 12px;
 }
 
-.btn-delete {
-  background: #fee2e2;
-  border: none;
-  color: #dc2626;
+.skeleton-line:last-child {
+  width: 80%;
 }
 
-/* Content */
-.detail-content {
-  padding: 24px;
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }
 
+/* View Mode */
+.view-mode {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Título */
 .milestone-title {
-  font-size: 28px;
+  font-size: 32px;
   font-weight: 700;
-  color: #1a1a2e;
-  margin: 0 0 20px 0;
+  color: #0f172a;
+  margin: 0 0 24px 0;
+  line-height: 1.3;
 }
 
+/* Due Date Section */
 .due-date-section {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 16px;
+  gap: 14px;
   background: #f8fafc;
-  border-radius: 12px;
-  margin-bottom: 24px;
+  padding: 16px 20px;
+  border-radius: 16px;
+  margin-bottom: 28px;
+  border: 1px solid #e2e8f0;
+}
+
+.due-date-section svg {
+  flex-shrink: 0;
+  stroke: #64748b;
+}
+
+.due-date-section .label {
+  font-size: 13px;
+  color: #64748b;
+  margin-right: 8px;
+}
+
+.due-date-section .date {
+  font-weight: 600;
+  color: #0f172a;
 }
 
 .due-date-section.overdue {
   background: #fef2f2;
+  border-color: #fecaca;
 }
 
+.due-date-section.overdue svg {
+  stroke: #dc2626;
+}
+
+.due-date-section.overdue .date {
+  color: #dc2626;
+}
+
+.overdue-badge {
+  background: #dc2626;
+  color: white;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-left: 12px;
+}
+
+/* Sections comunes */
 .description-section,
 .tools-section,
 .attachments-section,
 .comment-section {
-  margin-bottom: 28px;
+  margin-bottom: 32px;
 }
 
 h3 {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 600;
-  color: #1a1a2e;
-  margin: 0 0 12px 0;
+  color: #0f172a;
+  margin: 0 0 14px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
+h3::before {
+  content: '';
+  width: 4px;
+  height: 20px;
+  background: #4f46e5;
+  border-radius: 2px;
+}
+
+/* Descripción */
+.description-section p {
+  color: #334155;
+  line-height: 1.6;
+  margin: 0;
+  font-size: 15px;
+}
+
+/* Tools List */
 .tools-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 10px;
 }
 
 .tool-tag {
   background: #eef2ff;
   color: #4f46e5;
-  padding: 6px 12px;
-  border-radius: 20px;
+  padding: 6px 14px;
+  border-radius: 30px;
   font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s;
 }
 
+.tool-tag:hover {
+  background: #e0e7ff;
+  transform: translateY(-1px);
+}
+
+/* Attachments List */
 .attachments-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
 .attachment-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   color: #4f46e5;
   text-decoration: none;
-  font-size: 13px;
+  font-size: 14px;
+  padding: 8px 12px;
+  background: #f8fafc;
+  border-radius: 10px;
+  transition: all 0.2s;
+  width: fit-content;
 }
 
-.comment {
+.attachment-link:hover {
+  background: #eef2ff;
+  text-decoration: underline;
+}
+
+/* Comment Section */
+.comment-section .comment {
   background: #f8fafc;
-  padding: 16px;
-  border-radius: 12px;
-  color: #475569;
+  padding: 18px;
+  border-radius: 16px;
+  color: #334155;
   line-height: 1.6;
   margin: 0;
+  font-size: 14px;
+  border-left: 3px solid #4f46e5;
 }
 
 /* Tasks Section */
 .tasks-section-wrapper {
-  margin-top: 24px;
-  padding-top: 24px;
+  margin-top: 40px;
+  padding-top: 32px;
   border-top: 1px solid #e2e8f0;
 }
 
-/* Loading */
-.loading-state {
-  text-align: center;
-  padding: 60px;
-}
+/* Responsive */
+@media (max-width: 768px) {
+  .milestone-detail-page {
+    padding: 16px;
+  }
 
-.spinner {
-  width: 40px;
-  height: 40px;
-  border: 3px solid #e2e8f0;
-  border-top-color: #4f46e5;
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-  margin: 0 auto 16px;
-}
+  .milestone-title {
+    font-size: 24px;
+  }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
+  .header-left {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .btn-back {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .due-date-section {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .due-date-section svg {
+    display: none;
+  }
+
+  .overdue-badge {
+    display: inline-block;
+    margin-left: 0;
+    margin-top: 8px;
+  }
+
+  h3 {
+    font-size: 16px;
+  }
+
+  .tool-tag {
+    font-size: 12px;
+    padding: 4px 12px;
+  }
+
+  .attachment-link {
+    font-size: 12px;
+    word-break: break-all;
+  }
 }
