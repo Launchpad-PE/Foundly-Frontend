@@ -1,7 +1,7 @@
-import { Component, inject, input, output, signal, OnInit } from '@angular/core';
+import { Component, inject, input, output, signal, OnInit, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MilestoneStore } from '../../application/MilestoneStore';
+import { MilestoneStore } from '../../application/milestone-store';
 import { ApplicationStatus } from '../../../applications/domain/enum/application-status.enum';
 import { ApplicationStore } from '../../../applications/application/application.store';
 
@@ -31,15 +31,15 @@ export class CreateMilestoneModalComponent implements OnInit {
   created = output<any>();
 
   // Form fields
-  title = '';
-  description = '';
-  dueDate = '';
-  tools: string[] = [];
-  attachments: string[] = [];
-  generalComment = '';
+  title = signal('');
+  description = signal('');
+  dueDate = signal('');
+  tools = signal<string[]>([]);
+  attachments = signal<string[]>([]);
+  generalComment = signal('');
 
   // Tareas del hito
-  tasks: TaskItem[] = [];
+  tasks = signal<TaskItem[]>([]);
 
   // Tarea temporal
   currentTask: TaskItem = {
@@ -60,8 +60,64 @@ export class CreateMilestoneModalComponent implements OnInit {
   loading = signal(false);
   collaborators = signal<Array<{ id: string; fullName: string }>>([]);
 
-  // Sin validaciones - siempre true
-  isValid = true;
+  // Validaciones individuales
+  isTitleValid = computed(() => this.title().trim().length > 0);
+  isDescriptionValid = computed(() => this.description().trim().length > 0);
+  isDueDateValid = computed(() => !!this.dueDate() && this.dueDate().trim().length > 0);
+  isToolsValid = computed(() => this.tools().length > 0);
+  isAttachmentsValid = computed(() => this.attachments().length > 0);
+  isGeneralCommentValid = computed(() => this.generalComment().trim().length > 0);
+  isTasksValid = computed(() => this.tasks().length > 0);
+
+  // Validación de cada tarea individual
+  areAllTasksValid = computed(() => {
+    if (this.tasks().length === 0) return false;
+
+    // Verificar que cada tarea tenga título y asignación
+    return this.tasks().every(task =>
+      task.title.trim().length > 0 &&
+      task.assigneeId.trim().length > 0
+    );
+  });
+
+  // Validación completa del formulario - TODOS los campos requeridos
+  isFormComplete = computed(() => {
+    const titleFilled = this.isTitleValid();
+    const descriptionFilled = this.isDescriptionValid();
+    const dateFilled = this.isDueDateValid();
+    const toolsFilled = this.isToolsValid();
+    const attachmentsFilled = this.isAttachmentsValid();
+    const generalCommentFilled = this.isGeneralCommentValid();
+    const tasksFilled = this.isTasksValid();
+    const allTasksValid = this.areAllTasksValid();
+
+    const complete = titleFilled &&
+      descriptionFilled &&
+      dateFilled &&
+      toolsFilled &&
+      attachmentsFilled &&
+      generalCommentFilled &&
+      tasksFilled &&
+      allTasksValid;
+
+    // Debug logs detallados
+    if (!complete) {
+      console.log('❌ Formulario INCOMPLETO:', {
+        'Título': titleFilled ? '✅' : '❌',
+        'Descripción': descriptionFilled ? '✅' : '❌',
+        'Fecha': dateFilled ? '✅' : '❌',
+        'Herramientas (mínimo 1)': toolsFilled ? '✅' : '❌',
+        'Adjuntos (mínimo 1)': attachmentsFilled ? '✅' : '❌',
+        'Comentario General': generalCommentFilled ? '✅' : '❌',
+        'Tareas (mínimo 1)': tasksFilled ? '✅' : '❌',
+        'Tareas válidas': allTasksValid ? '✅' : '❌'
+      });
+    } else {
+      console.log('✅ Formulario COMPLETO - Botón habilitado');
+    }
+
+    return complete;
+  });
 
   minDate = new Date().toISOString().split('T')[0];
 
@@ -79,28 +135,40 @@ export class CreateMilestoneModalComponent implements OnInit {
     })));
   }
 
+  updateTitle(value: string): void {
+    this.title.set(value);
+  }
+
+  updateDescription(value: string): void {
+    this.description.set(value);
+  }
+
+  updateDueDate(value: string): void {
+    this.dueDate.set(value);
+  }
+
   addTool(): void {
     const tool = this.currentTool.trim();
-    if (tool && !this.tools.includes(tool)) {
-      this.tools.push(tool);
+    if (tool && !this.tools().includes(tool)) {
+      this.tools.update(tools => [...tools, tool]);
       this.currentTool = '';
     }
   }
 
   removeTool(index: number): void {
-    this.tools.splice(index, 1);
+    this.tools.update(tools => tools.filter((_, i) => i !== index));
   }
 
   addAttachment(): void {
     const url = this.currentAttachmentUrl.trim();
-    if (url && !this.attachments.includes(url)) {
-      this.attachments.push(url);
+    if (url && !this.attachments().includes(url)) {
+      this.attachments.update(attachments => [...attachments, url]);
       this.currentAttachmentUrl = '';
     }
   }
 
   removeAttachment(index: number): void {
-    this.attachments.splice(index, 1);
+    this.attachments.update(attachments => attachments.filter((_, i) => i !== index));
   }
 
   openTaskForm(): void {
@@ -154,22 +222,26 @@ export class CreateMilestoneModalComponent implements OnInit {
     if (!this.currentTask.title.trim() || !this.currentTask.assigneeId) return;
 
     if (this.editingTaskIndex() !== null) {
-      this.tasks[this.editingTaskIndex()!] = { ...this.currentTask };
+      this.tasks.update(tasks => {
+        const updated = [...tasks];
+        updated[this.editingTaskIndex()!] = { ...this.currentTask };
+        return updated;
+      });
     } else {
-      this.tasks.push({ ...this.currentTask });
+      this.tasks.update(tasks => [...tasks, { ...this.currentTask }]);
     }
 
     this.closeTaskForm();
   }
 
   editTask(index: number): void {
-    this.currentTask = { ...this.tasks[index] };
+    this.currentTask = { ...this.tasks()[index] };
     this.editingTaskIndex.set(index);
     this.showTaskForm.set(true);
   }
 
   removeTask(index: number): void {
-    this.tasks.splice(index, 1);
+    this.tasks.update(tasks => tasks.filter((_, i) => i !== index));
   }
 
   truncateUrl(url: string): string {
@@ -183,18 +255,21 @@ export class CreateMilestoneModalComponent implements OnInit {
   }
 
   async onSubmit(): Promise<void> {
+    console.log('Intentando enviar, isFormComplete:', this.isFormComplete());
+    if (!this.isFormComplete()) return;
+
     this.loading.set(true);
     try {
       const milestone = await this.milestoneStore.createMilestone({
         projectId: this.projectId(),
         creatorId: this.creatorId(),
-        title: this.title.trim(),
-        description: this.description.trim(),
-        dueDate: this.dueDate ? new Date(this.dueDate) : new Date(),
-        tools: this.tools.length > 0 ? this.tools : undefined,
-        generalComment: this.generalComment.trim() || undefined,
-        attachments: this.attachments.length > 0 ? this.attachments : undefined,
-        tasks: this.tasks.map(task => ({
+        title: this.title().trim(),
+        description: this.description().trim(),
+        dueDate: this.dueDate() ? new Date(this.dueDate()) : new Date(),
+        tools: this.tools(),
+        generalComment: this.generalComment().trim(),
+        attachments: this.attachments(),
+        tasks: this.tasks().map(task => ({
           title: task.title,
           description: task.description,
           assigneeId: task.assigneeId,
@@ -205,6 +280,7 @@ export class CreateMilestoneModalComponent implements OnInit {
 
       this.created.emit(milestone);
       this.resetForm();
+      this.onClose();
     } catch (error) {
       console.error('Error creating milestone:', error);
     } finally {
@@ -213,13 +289,13 @@ export class CreateMilestoneModalComponent implements OnInit {
   }
 
   resetForm(): void {
-    this.title = '';
-    this.description = '';
-    this.dueDate = '';
-    this.tools = [];
-    this.attachments = [];
-    this.generalComment = '';
-    this.tasks = [];
+    this.title.set('');
+    this.description.set('');
+    this.dueDate.set('');
+    this.tools.set([]);
+    this.attachments.set([]);
+    this.generalComment.set('');
+    this.tasks.set([]);
     this.currentTool = '';
     this.currentAttachmentUrl = '';
     this.showTaskForm.set(false);

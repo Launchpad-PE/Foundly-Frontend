@@ -1,7 +1,7 @@
 import { Component, input, output, inject, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MilestoneStore } from '../../application/MilestoneStore';
+import { MilestoneStore } from '../../application/milestone-store';
 import { MilestoneTask } from '../../domain/entities/milestone-task.entity';
 
 @Component({
