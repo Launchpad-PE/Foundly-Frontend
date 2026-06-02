@@ -13,6 +13,15 @@ export class MilestoneId {
     return new MilestoneId(crypto.randomUUID());
   }
 
-  toString(): string { return this.value; }
-  getValue(): string { return this.value; }
+  toString(): string {
+    return this.value;
+  }
+
+  getValue(): string {
+    return this.value;
+  }
+
+  equals(other: MilestoneId): boolean {
+    return this.value === other.value;
+  }
 }
