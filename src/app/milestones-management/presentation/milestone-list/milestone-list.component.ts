@@ -81,4 +81,5 @@ export class MilestoneListComponent implements OnInit, OnDestroy {
   refresh(): void {
     this.loadMilestones();
   }
+
 }
