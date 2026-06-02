@@ -25,6 +25,10 @@ export class MilestoneProgressComponent {
     }
   }
 
+  get center(): number {
+    return this.containerSize / 2;
+  }
+
   get strokeWidth(): number {
     switch (this.size()) {
       case 'small': return 6;

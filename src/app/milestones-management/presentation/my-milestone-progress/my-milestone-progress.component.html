@@ -4,19 +4,21 @@
     <svg
       [attr.width]="containerSize"
       [attr.height]="containerSize"
-      viewBox="0 0 {{ containerSize }} {{ containerSize }}">
+      [attr.viewBox]="'0 0 ' + containerSize + ' ' + containerSize">
+
       <!-- Background circle -->
       <circle
-        [attr.cx]="containerSize / 2"
-        [attr.cy]="containerSize / 2"
+        [attr.cx]="center"
+        [attr.cy]="center"
         [attr.r]="radius"
         fill="none"
         stroke="#e2e8f0"
         [attr.stroke-width]="strokeWidth" />
+
       <!-- Progress circle -->
       <circle
-        [attr.cx]="containerSize / 2"
-        [attr.cy]="containerSize / 2"
+        [attr.cx]="center"
+        [attr.cy]="center"
         [attr.r]="radius"
         fill="none"
         [attr.stroke]="progressColor"
@@ -24,8 +26,9 @@
         stroke-linecap="round"
         [attr.stroke-dasharray]="circumference"
         [attr.stroke-dashoffset]="strokeDashoffset"
-        transform="rotate(-90 {{ containerSize / 2 }} {{ containerSize / 2 }})" />
+        [attr.transform]="'rotate(-90 ' + center + ' ' + center + ')'" />
     </svg>
+
     <div class="circle-label" *ngIf="showLabel()">
       <span class="percentage" *ngIf="showPercentage()">{{ percentageValue }}%</span>
       <span class="label" *ngIf="!showPercentage()">Completado</span>

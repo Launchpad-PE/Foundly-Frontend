@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MilestoneProgressComponent } from './my-milestone-progress.component';
 
-import { MyMilestoneProgressComponent } from './my-milestone-progress.component';
 
 describe('MyMilestoneProgressComponent', () => {
-  let component: MyMilestoneProgressComponent;
-  let fixture: ComponentFixture<MyMilestoneProgressComponent>;
+  let component: MilestoneProgressComponent;
+  let fixture: ComponentFixture<MilestoneProgressComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MyMilestoneProgressComponent],
+      imports: [MilestoneProgressComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(MyMilestoneProgressComponent);
+    fixture = TestBed.createComponent(MilestoneProgressComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
