@@ -90,8 +90,12 @@ export class DeliverTaskComponent implements OnInit {
     this.error.set(null);
 
     try {
-      // Usar updateTaskStatus en lugar de completeTaskWithDelivery
-      await this.milestoneStore.updateTaskStatus(this.taskId, true);
+      // ✅ USAR completeTaskWithDelivery en lugar de updateTaskStatus
+      await this.milestoneStore.completeTaskWithDelivery(
+        this.taskId,
+        this.deliveryUrl.trim(),
+        this.deliveryNotes.trim() || null
+      );
 
       // Recargar los datos
       await this.milestoneStore.loadMilestonesByProject(this.projectId);
@@ -107,6 +111,7 @@ export class DeliverTaskComponent implements OnInit {
       this.submitting.set(false);
     }
   }
+
   goBack(): void {
     this.router.navigate([`/projects/${this.projectId}/participating`], {
       queryParams: { tab: 'tareas' }
