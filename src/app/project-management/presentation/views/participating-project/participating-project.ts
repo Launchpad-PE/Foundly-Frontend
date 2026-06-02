@@ -7,6 +7,9 @@ import {Project} from '../../../domain/entities/project.entity';
 import { UserStore } from '../../../../iam/application/user.store';
 import {MyTasksCardComponent} from '../../../../task-management/presentation/components/my-tasks-card/my-tasks-card';
 import {MyTasksListComponent} from '../../../../task-management/presentation/components/my-tasks-list/my-tasks-list';
+import {
+  MyMilestoneTasksComponent
+} from '../../../../milestones-management/presentation/my-milestone-tasks/my-milestone-tasks.component';
 
 type ParticipatingTab = 'inicio' | 'tareas' | 'hitos';
 
@@ -18,7 +21,7 @@ type ParticipatingTab = 'inicio' | 'tareas' | 'hitos';
 @Component({
   selector: 'app-participating-project',
   standalone: true,
-  imports: [CommonModule, MyTasksCardComponent, MyTasksListComponent],
+  imports: [CommonModule, MyTasksCardComponent, MyTasksListComponent, MyMilestoneTasksComponent],
   templateUrl: './participating-project.html',
   styleUrls: ['./participating-project.css']
 })
@@ -61,5 +64,12 @@ export class ParticipatingProjectComponent implements OnInit {
 
   goBack(): void {
     this.router.navigate(['/projects']);
+  }
+
+  // Método para refrescar tareas cuando se actualiza una
+  async refreshTasks(): Promise<void> {
+    // Recargar el proyecto para actualizar los hitos
+    const p = await this.projectStore.loadProject(this.projectId);
+    this.project.set(p);
   }
 }

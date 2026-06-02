@@ -2,8 +2,8 @@ import { Component, inject, input, OnInit, output, signal } from '@angular/core'
 import { Milestone } from '../../domain/entities/milestone.entity';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MilestoneTasksComponent } from '../milestone-tasks/milestone-tasks.componente';
-import { MilestoneStore } from '../../application/MilestoneStore';
+import { MilestoneStore } from '../../application/milestone-store';
+import { MilestoneTasksComponent } from '../milestone-tasks/milestone-tasks.component';
 
 @Component({
   selector: 'app-milestone-detail',
