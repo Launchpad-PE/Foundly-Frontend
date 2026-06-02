@@ -21,7 +21,7 @@ export interface CreateMilestoneProps {
   status?: MilestoneStatus;
   createdAt?: Date;
   updatedAt?: Date;
-  tasks?: CreateMilestoneTaskProps[];
+  tasks?: Omit<CreateMilestoneTaskProps, 'milestoneId'>[];
 }
 
 export class Milestone {
@@ -63,11 +63,11 @@ export class Milestone {
       id,
       ProjectId.fromString(props.projectId),
       new UserId(props.creatorId),
-      new MilestoneTitle(props.title),
-      new MilestoneDescription(props.description),
+      new MilestoneTitle(props.title || ''),
+      new MilestoneDescription(props.description || ''),
       (props.tools ?? []).map(name => new Tool(name)),
       props.generalComment?.trim() || null,
-      props.dueDate,
+      props.dueDate || new Date(),
       (props.attachments ?? []).map(url => new Attachments(url)),
       [],
       props.status ?? MilestoneStatus.PENDING,
@@ -75,16 +75,18 @@ export class Milestone {
       props.updatedAt ?? now
     );
 
-    // Add tasks if provided
-    if (props.tasks) {
+    // Add tasks if provided (ahora sin milestoneId)
+    if (props.tasks && props.tasks.length > 0) {
       for (const taskProps of props.tasks) {
-        milestone.addTask(taskProps);
+        // Agregar el milestoneId aquí
+        milestone.addTask({
+          ...taskProps,
+          milestoneId: milestone.id  // <-- Usar el ID del milestone recién creado
+        });
       }
     }
 
-    // Update status based on tasks completion
     milestone._updateStatus();
-
     return milestone;
   }
 
