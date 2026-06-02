@@ -13,10 +13,10 @@ import { TaskStore } from '../../../../task-management/application/task.store';
 import { computed } from '@angular/core';
 import {
   MilestoneListComponent
-} from '../../../../milestones-management/presentation/milestone-list/milestone-list.component';
+} from '../../../../milestones-management/presentation/components/milestone-list/milestone-list.component';
 import {
   MilestoneDetailComponent
-} from '../../../../milestones-management/presentation/milestone-detail/milestone-detail.component';
+} from '../../../../milestones-management/presentation/components/milestone-detail/milestone-detail.component';
 import { UserStore } from '../../../../iam/application/user.store';
 import { Milestone } from '../../../../milestones-management/domain/entities/milestone.entity';
 

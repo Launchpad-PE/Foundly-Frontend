@@ -9,7 +9,7 @@ import {MyTasksCardComponent} from '../../../../task-management/presentation/com
 import {MyTasksListComponent} from '../../../../task-management/presentation/components/my-tasks-list/my-tasks-list';
 import {
   MyMilestoneTasksComponent
-} from '../../../../milestones-management/presentation/my-milestone-tasks/my-milestone-tasks.component';
+} from '../../../../milestones-management/presentation/components/my-milestone-tasks/my-milestone-tasks.component';
 
 type ParticipatingTab = 'inicio' | 'tareas' | 'hitos';
 
