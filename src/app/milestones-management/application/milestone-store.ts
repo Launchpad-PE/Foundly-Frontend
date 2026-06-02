@@ -62,17 +62,17 @@ export class MilestoneStore {
 
   /** Hitos pendientes */
   readonly pendingMilestones = computed(() =>
-    this.projectMilestones().filter(m => m.status === MilestoneStatus.PENDING)
+    this.projectMilestones().filter((m) => m.status === MilestoneStatus.PENDING),
   );
 
   /** Hitos completados */
   readonly completedMilestones = computed(() =>
-    this.projectMilestones().filter(m => m.status === MilestoneStatus.COMPLETED)
+    this.projectMilestones().filter((m) => m.status === MilestoneStatus.COMPLETED),
   );
 
   /** Hitos atrasados */
   readonly delayedMilestones = computed(() =>
-    this.projectMilestones().filter(m => m.status === MilestoneStatus.DELAYED)
+    this.projectMilestones().filter((m) => m.status === MilestoneStatus.DELAYED),
   );
 
   /** Porcentaje de completado general */
@@ -88,7 +88,7 @@ export class MilestoneStore {
     const milestones = this.projectMilestones();
     if (milestones.length === 0) return null;
     return milestones.reduce((latest, current) =>
-      current.updatedAt > latest.updatedAt ? current : latest
+      current.updatedAt > latest.updatedAt ? current : latest,
     );
   });
 
@@ -157,11 +157,36 @@ export class MilestoneStore {
   /**
    * Crear un nuevo hito
    */
-  async createMilestone(data: CreateMilestoneData): Promise<Milestone> {
+  async createMilestone(data: {
+    projectId: string;
+    creatorId: string;
+    title: string;
+    description: string;
+    dueDate: Date;
+    tools: string[] | undefined;
+    generalComment: string | undefined;
+    attachments: string[] | undefined;
+    tasks: {
+      title: string;
+      description: string;
+      assigneeId: string;
+      checklist: Array<{ description: string; done: boolean }>;
+      attachments: string[];
+    }[];
+  }): Promise<Milestone> {
     this.setLoading(true);
     this.clearError();
 
     try {
+      // Mapear las tareas sin milestoneId (se asigna dentro del milestone)
+      const taskProps = data.tasks?.map(task => ({
+        title: task.title,
+        description: task.description,
+        assigneeId: task.assigneeId,
+        checklist: task.checklist,
+        attachments: task.attachments
+      }));
+
       const milestone = Milestone.create({
         projectId: data.projectId,
         creatorId: data.creatorId,
@@ -170,13 +195,14 @@ export class MilestoneStore {
         dueDate: data.dueDate,
         tools: data.tools,
         generalComment: data.generalComment,
-        attachments: data.attachments
+        attachments: data.attachments,
+        tasks: taskProps
       });
 
       const saved = await firstValueFrom(this.milestoneApi.createMilestone(milestone));
 
       // Actualizar la lista de hitos
-      this.projectMilestones.update(list => [saved, ...list]);
+      this.projectMilestones.update((list) => [saved, ...list]);
 
       return saved;
     } catch (err: any) {
@@ -196,7 +222,7 @@ export class MilestoneStore {
     this.clearError();
 
     try {
-      const current = this.projectMilestones().find(m => m.id === milestoneId);
+      const current = this.projectMilestones().find((m) => m.id === milestoneId);
       if (!current) {
         throw new Error('Milestone not found');
       }
@@ -209,20 +235,18 @@ export class MilestoneStore {
         title: data.title ?? current.title.getValue(),
         description: data.description ?? current.description.getValue(),
         dueDate: data.dueDate ?? current.dueDate,
-        tools: data.tools ?? current.tools.map(t => t.getName()),
+        tools: data.tools ?? current.tools.map((t) => t.getName()),
         generalComment: data.generalComment ?? current.generalComment ?? undefined,
-        attachments: data.attachments ?? current.attachments.map(a => a.getValue()),
+        attachments: data.attachments ?? current.attachments.map((a) => a.getValue()),
         status: current.status,
         createdAt: current.createdAt,
-        updatedAt: new Date()
+        updatedAt: new Date(),
       });
 
       const saved = await firstValueFrom(this.milestoneApi.updateMilestone(updated));
 
       // Actualizar en la lista
-      this.projectMilestones.update(list =>
-        list.map(m => m.id === milestoneId ? saved : m)
-      );
+      this.projectMilestones.update((list) => list.map((m) => (m.id === milestoneId ? saved : m)));
 
       if (this.currentMilestone()?.id === milestoneId) {
         this.currentMilestone.set(saved);
@@ -249,7 +273,7 @@ export class MilestoneStore {
       await firstValueFrom(this.milestoneApi.deleteMilestone(milestoneId));
 
       // Remover de la lista
-      this.projectMilestones.update(list => list.filter(m => m.id !== milestoneId));
+      this.projectMilestones.update((list) => list.filter((m) => m.id !== milestoneId));
 
       if (this.currentMilestone()?.id === milestoneId) {
         this.currentMilestone.set(null);
@@ -269,7 +293,10 @@ export class MilestoneStore {
   /**
    * Agregar una tarea a un hito
    */
-  async addTaskToMilestone(milestoneId: string, taskData: CreateMilestoneTaskData): Promise<MilestoneTask> {
+  async addTaskToMilestone(
+    milestoneId: string,
+    taskData: CreateMilestoneTaskData,
+  ): Promise<MilestoneTask> {
     this.setLoading(true);
     this.clearError();
 
@@ -280,17 +307,19 @@ export class MilestoneStore {
         description: taskData.description,
         assigneeId: taskData.assigneeId,
         checklist: taskData.checklist,
-        attachments: taskData.attachments
+        attachments: taskData.attachments,
       });
 
-      const savedTask = await firstValueFrom(this.milestoneApi.addTaskToMilestone(milestoneId, task));
+      const savedTask = await firstValueFrom(
+        this.milestoneApi.addTaskToMilestone(milestoneId, task),
+      );
 
       // Actualizar el milestone en cache
       await this.refreshMilestone(milestoneId);
 
       // Actualizar tareas del hito actual si es necesario
       if (this.currentMilestone()?.id === milestoneId) {
-        this.currentMilestoneTasks.update(tasks => [...tasks, savedTask]);
+        this.currentMilestoneTasks.update((tasks) => [...tasks, savedTask]);
       }
 
       return savedTask;
@@ -312,20 +341,20 @@ export class MilestoneStore {
 
     try {
       const newStatus = completed ? MilestoneTaskStatus.COMPLETED : MilestoneTaskStatus.PENDING;
-      const updatedTask = await firstValueFrom(this.milestoneApi.updateTaskStatus(taskId, newStatus));
+      const updatedTask = await firstValueFrom(
+        this.milestoneApi.updateTaskStatus(taskId, newStatus),
+      );
 
       // Encontrar el milestone que contiene esta tarea y refrescarlo
-      const milestone = this.projectMilestones().find(m =>
-        m.tasks.some(t => t.id === taskId)
-      );
+      const milestone = this.projectMilestones().find((m) => m.tasks.some((t) => t.id === taskId));
 
       if (milestone) {
         await this.refreshMilestone(milestone.id);
       }
 
       // Actualizar tareas del hito actual
-      this.currentMilestoneTasks.update(tasks =>
-        tasks.map(t => t.id === taskId ? updatedTask : t)
+      this.currentMilestoneTasks.update((tasks) =>
+        tasks.map((t) => (t.id === taskId ? updatedTask : t)),
       );
 
       return updatedTask;
@@ -347,9 +376,7 @@ export class MilestoneStore {
 
     try {
       // Encontrar el milestone que contiene esta tarea
-      const milestone = this.projectMilestones().find(m =>
-        m.tasks.some(t => t.id === taskId)
-      );
+      const milestone = this.projectMilestones().find((m) => m.tasks.some((t) => t.id === taskId));
 
       await firstValueFrom(this.milestoneApi.deleteTask(taskId));
 
@@ -358,9 +385,7 @@ export class MilestoneStore {
       }
 
       // Actualizar tareas del hito actual
-      this.currentMilestoneTasks.update(tasks =>
-        tasks.filter(t => t.id !== taskId)
-      );
+      this.currentMilestoneTasks.update((tasks) => tasks.filter((t) => t.id !== taskId));
     } catch (err: any) {
       const message = err?.message || 'Error al eliminar la tarea';
       this.setError(message);
@@ -378,8 +403,8 @@ export class MilestoneStore {
       const refreshed = await firstValueFrom(this.milestoneApi.getMilestone(milestoneId));
 
       // Actualizar en la lista
-      this.projectMilestones.update(list =>
-        list.map(m => m.id === milestoneId ? refreshed : m)
+      this.projectMilestones.update((list) =>
+        list.map((m) => (m.id === milestoneId ? refreshed : m)),
       );
 
       if (this.currentMilestone()?.id === milestoneId) {
@@ -397,7 +422,7 @@ export class MilestoneStore {
    * Obtener un hito por ID de la cache
    */
   getMilestoneById(milestoneId: string): Milestone | undefined {
-    return this.projectMilestones().find(m => m.id === milestoneId);
+    return this.projectMilestones().find((m) => m.id === milestoneId);
   }
 
   /**
@@ -408,7 +433,7 @@ export class MilestoneStore {
     for (const milestone of this.projectMilestones()) {
       allTasks.push(...milestone.tasks);
     }
-    return allTasks.filter(task => task.assigneeId.toString() === assigneeId);
+    return allTasks.filter((task) => task.assigneeId.toString() === assigneeId);
   }
 
   /**
