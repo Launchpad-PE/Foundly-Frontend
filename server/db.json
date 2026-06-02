@@ -482,5 +482,50 @@
       "createdAt": "2026-05-25T18:58:46.792Z",
       "updatedAt": "2026-05-25T18:58:46.792Z"
     }
+  ],
+  "milestones": [
+    {
+      "id": "e10ab5ad-b239-45b7-abe9-483bb2806801",
+      "projectId": "04d5496e-e878-4056-95e1-e9e924067e4b",
+      "creatorId": "1",
+      "title": "askdkoadsnkoads",
+      "description": "asdkmakdskadspads",
+      "tools": [
+        "sxsasdads"
+      ],
+      "generalComment": "nasdnasdasioasdibadsbaudsaudsi",
+      "dueDate": "2026-06-05T00:00:00.000Z",
+      "attachments": [
+        "https://www.youtube.com/watch?v=dY4mwrE-UAQ"
+      ],
+      "tasks": [
+        {
+          "id": "c4422ec2-92b2-4e06-8dc1-19babcc7a349",
+          "milestoneId": "e10ab5ad-b239-45b7-abe9-483bb2806801",
+          "title": "ms dmkasd as",
+          "description": "asdaklsdmaskads",
+          "assigneeId": "1",
+          "checklist": [
+            {
+              "description": "asasd",
+              "done": false
+            },
+            {
+              "description": "sadasdasads",
+              "done": false
+            }
+          ],
+          "attachments": [
+            "https://www.youtube.com/watch?v=dY4mwrE-UAQ"
+          ],
+          "status": "pending",
+          "createdAt": "2026-06-02T15:17:19.635Z",
+          "updatedAt": "2026-06-02T15:17:19.635Z"
+        }
+      ],
+      "status": "pending",
+      "createdAt": "2026-06-02T15:17:19.635Z",
+      "updatedAt": "2026-06-02T15:17:19.635Z"
+    }
   ]
 }
