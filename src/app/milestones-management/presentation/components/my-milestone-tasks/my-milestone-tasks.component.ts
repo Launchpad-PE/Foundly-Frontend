@@ -4,6 +4,7 @@ import { MilestoneStore } from '../../../application/milestone-store';
 import { MilestoneTask } from '../../../domain/entities/milestone-task.entity';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-my-milestone-tasks',
@@ -14,6 +15,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class MyMilestoneTasksComponent implements OnInit {
   private milestoneStore = inject(MilestoneStore);
+  private router = inject(Router);
 
   projectId = input.required<string>();
   assigneeId = input.required<string>();
@@ -93,5 +95,11 @@ export class MyMilestoneTasksComponent implements OnInit {
 
   getCompletedChecklistCount(checklist: any[]): number {
     return checklist.filter(step => step.isDone()).length;
+  }
+
+  goToDeliverTask(taskId: string, milestoneId: string): void {
+    this.router.navigate([
+      `/projects/${this.projectId()}/hitos/${milestoneId}/tareas/${taskId}/entregar`
+    ]);
   }
 }

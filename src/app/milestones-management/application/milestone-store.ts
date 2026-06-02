@@ -196,7 +196,9 @@ export class MilestoneStore {
         tools: data.tools,
         generalComment: data.generalComment,
         attachments: data.attachments,
-        tasks: taskProps
+        tasks: taskProps,
+        deliveryUrl: null,
+        deliveryNotes: null
       });
 
       const saved = await firstValueFrom(this.milestoneApi.createMilestone(milestone));
@@ -239,6 +241,8 @@ export class MilestoneStore {
         generalComment: data.generalComment ?? current.generalComment ?? undefined,
         attachments: data.attachments ?? current.attachments.map((a) => a.getValue()),
         status: current.status,
+        deliveryUrl: null,
+        deliveryNotes: null,
         createdAt: current.createdAt,
         updatedAt: new Date(),
       });
@@ -342,7 +346,7 @@ export class MilestoneStore {
     try {
       const newStatus = completed ? MilestoneTaskStatus.COMPLETED : MilestoneTaskStatus.PENDING;
       const updatedTask = await firstValueFrom(
-        this.milestoneApi.updateTaskStatus(taskId, newStatus),
+        this.milestoneApi.updateTaskStatus(taskId, newStatus)
       );
 
       // Encontrar el milestone que contiene esta tarea y refrescarlo
@@ -354,7 +358,7 @@ export class MilestoneStore {
 
       // Actualizar tareas del hito actual
       this.currentMilestoneTasks.update((tasks) =>
-        tasks.map((t) => (t.id === taskId ? updatedTask : t)),
+        tasks.map((t) => (t.id === taskId ? updatedTask : t))
       );
 
       return updatedTask;
@@ -364,6 +368,20 @@ export class MilestoneStore {
       throw err;
     } finally {
       this.setLoading(false);
+    }
+  }
+
+  /**
+   * Actualizar un milestone en la caché
+   */
+  updateMilestoneInCache(updatedMilestone: any): void {
+    this.projectMilestones.update(list =>
+      list.map(m => m.id === updatedMilestone.id ? updatedMilestone : m)
+    );
+
+    if (this.currentMilestone()?.id === updatedMilestone.id) {
+      this.currentMilestone.set(updatedMilestone);
+      this.currentMilestoneTasks.set(updatedMilestone.tasks);
     }
   }
 
@@ -445,5 +463,36 @@ export class MilestoneStore {
     this.currentMilestoneTasks.set([]);
     this.loading.set(false);
     this.error.set(null);
+  }
+
+  /**
+   * Completar una tarea con enlace de entrega
+   */
+  async completeTaskWithDelivery(taskId: string, deliveryUrl: string, deliveryNotes: string | null): Promise<MilestoneTask> {
+    this.setLoading(true);
+    this.clearError();
+
+    try {
+      const updatedTask = await firstValueFrom(
+        this.milestoneApi.completeTask(taskId, deliveryUrl, deliveryNotes)
+      );
+
+      // Refrescar los datos
+      const milestone = this.projectMilestones().find(m =>
+        m.tasks.some(t => t.id === taskId)
+      );
+
+      if (milestone) {
+        await this.loadMilestonesByProject(milestone.projectId.toString());
+      }
+
+      return updatedTask;
+    } catch (err: any) {
+      const message = err?.message || 'Error al completar la tarea';
+      this.setError(message);
+      throw err;
+    } finally {
+      this.setLoading(false);
+    }
   }
 }
