@@ -1,9 +1,9 @@
 import { Component, inject, input, output, signal, OnInit, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MilestoneStore } from '../../application/milestone-store';
-import { ApplicationStatus } from '../../../applications/domain/enum/application-status.enum';
-import { ApplicationStore } from '../../../applications/application/application.store';
+import { MilestoneStore } from '../../../application/milestone-store';
+import { ApplicationStatus } from '../../../../applications/domain/enum/application-status.enum';
+import { ApplicationStore } from '../../../../applications/application/application.store';
 
 interface TaskItem {
   title: string;

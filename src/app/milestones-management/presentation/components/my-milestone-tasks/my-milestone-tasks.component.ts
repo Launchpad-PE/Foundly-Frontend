@@ -1,7 +1,7 @@
 import { Component, computed, inject, input, OnInit, output, signal } from '@angular/core';
-import { MilestoneTaskStatus } from '../../domain/enum/milestone-task-status.enum';
-import { MilestoneStore } from '../../application/milestone-store';
-import { MilestoneTask } from '../../domain/entities/milestone-task.entity';
+import { MilestoneTaskStatus } from '../../../domain/enum/milestone-task-status.enum';
+import { MilestoneStore } from '../../../application/milestone-store';
+import { MilestoneTask } from '../../../domain/entities/milestone-task.entity';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 

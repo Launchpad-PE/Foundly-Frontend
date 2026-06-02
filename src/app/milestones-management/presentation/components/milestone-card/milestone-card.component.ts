@@ -1,6 +1,6 @@
 import { Component, computed, input, output } from '@angular/core';
-import { Milestone } from '../../domain/entities/milestone.entity';
-import { MilestoneStatus } from '../../domain/enum/milestone-status.enum';
+import { Milestone } from '../../../domain/entities/milestone.entity';
+import { MilestoneStatus } from '../../../domain/enum/milestone-status.enum';
 import { CommonModule } from '@angular/common';
 
 @Component({
