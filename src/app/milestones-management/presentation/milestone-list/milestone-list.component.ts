@@ -1,5 +1,5 @@
 import { Component, computed, inject, input, OnDestroy, OnInit, output, signal } from '@angular/core';
-import { MilestoneStore } from '../../application/MilestoneStore';
+import { MilestoneStore } from '../../application/milestone-store';
 import { Milestone } from '../../domain/entities/milestone.entity';
 import { MilestoneCardComponent } from '../milestone-card/milestone-card.component';
 import { CommonModule } from '@angular/common';
