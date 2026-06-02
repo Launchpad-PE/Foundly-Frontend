@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MilestoneTasksComponent } from './milestone-tasks.component';
 
-import { MilestoneTasksComponent, MilestoneTasksComponente } from './milestone-tasks.componente';
 
 describe('MilestoneTasksComponent', () => {
   let component: MilestoneTasksComponent;
-  let fixture: ComponentFixture<MilestoneTasksComponente>;
+  let fixture: ComponentFixture<MilestoneTasksComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MilestoneTasksComponente],
+      imports: [MilestoneTasksComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(MilestoneTasksComponente);
+    fixture = TestBed.createComponent(MilestoneTasksComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
