@@ -1,0 +1,85 @@
+<div class="milestone-list-container">
+  <!-- Header -->
+  <div class="milestone-list-header">
+    <div class="header-left">
+      <h2 class="title">Hitos del Proyecto</h2>
+      <span class="count-badge" *ngIf="hasMilestones()">
+        {{ milestones().length }} total
+      </span>
+    </div>
+    <button class="btn-primary" (click)="openCreateModal()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 5v14M5 12h14"/>
+      </svg>
+      <span>Nuevo Hito</span>
+    </button>
+  </div>
+
+  <!-- Error state -->
+  <div class="error-state" *ngIf="error()">
+    <p>{{ error() }}</p>
+    <button class="btn-outline" (click)="refresh()">Reintentar</button>
+  </div>
+
+  <!-- Loading state -->
+  <div class="loading-state" *ngIf="loading() && !hasMilestones()">
+    <div class="spinner"></div>
+    <p>Cargando hitos...</p>
+  </div>
+
+  <!-- Progress Summary (solo si hay hitos) -->
+  <div class="progress-summary" *ngIf="hasMilestones() && !loading()">
+    <div class="stats-row">
+      <div class="stat">
+        <span class="stat-value">{{ completionPercentage() }}%</span>
+        <span class="stat-label">Completado</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value">{{ completedCount() }}</span>
+        <span class="stat-label">Completados</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value">{{ pendingCount() }}</span>
+        <span class="stat-label">Pendientes</span>
+      </div>
+      <div class="stat" *ngIf="delayedCount() > 0">
+        <span class="stat-value delayed">{{ delayedCount() }}</span>
+        <span class="stat-label">Atrasados</span>
+      </div>
+    </div>
+    <div class="progress-bar-container">
+      <div class="progress-bar" [style.width.%]="completionPercentage()"></div>
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div class="empty-state" *ngIf="!loading() && !hasMilestones()">
+    <div class="empty-icon">
+      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#9b8ff8" stroke-width="1.5">
+        <rect x="3" y="4" width="18" height="18" rx="2"/>
+        <path d="M16 2v4M8 2v4M3 10h18"/>
+      </svg>
+    </div>
+    <h3>No hay hitos creados</h3>
+    <p>Crea tu primer hito para organizar el trabajo del equipo</p>
+    <button class="btn-primary" (click)="openCreateModal()">+ Crear Primer Hito</button>
+  </div>
+
+  <!-- Milestones Grid -->
+  <div class="milestones-grid" *ngIf="hasMilestones() && !loading()">
+    <app-milestone-card
+      *ngFor="let milestone of milestones()"
+      [milestone]="milestone"
+      (viewDetails)="onMilestoneClick($event)"
+      (deleteMilestone)="onMilestoneDeleted($event)"
+    />
+  </div>
+
+  <!-- Create Milestone Modal -->
+  <app-create-milestone-modal
+    [isOpen]="showCreateModal()"
+    [projectId]="projectId()"
+    [creatorId]="creatorId()"
+    (close)="closeCreateModal()"
+    (created)="onMilestoneCreated($event)"></app-create-milestone-modal>
+</div>

@@ -1,0 +1,125 @@
+<div class="modal-overlay" (click)="close()">
+  <div class="detail-container" (click)="$event.stopPropagation()">
+
+    <!-- Header -->
+    <div class="detail-header">
+      <div class="header-left">
+        <button class="btn-back" (click)="close()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 12H5M12 5l-7 7 7 7"/>
+          </svg>
+        </button>
+        <div class="status-badge" [class]="statusClass">
+          {{ statusLabel }}
+        </div>
+      </div>
+      <div class="header-actions" *ngIf="canManage() && !milestone()?.isCompleted">
+        <button *ngIf="!isEditing()" class="btn-edit" (click)="startEditing()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M17 3l4 4-7 7H10v-4l7-7z"/>
+            <path d="M4 20h16"/>
+          </svg>
+          Editar
+        </button>
+        <button class="btn-delete" (click)="deleteMilestone()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+          </svg>
+          Eliminar
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div class="loading-state" *ngIf="loading()">
+      <div class="spinner"></div>
+      <p>Cargando hito...</p>
+    </div>
+
+    <!-- Content -->
+    <div class="detail-content" *ngIf="!loading() && milestone()">
+
+      <!-- Edit Mode -->
+      <div class="edit-mode" *ngIf="isEditing()">
+        <div class="form-group">
+          <label>Título</label>
+          <input type="text" [(ngModel)]="editTitle" maxlength="120">
+        </div>
+        <div class="form-group">
+          <label>Descripción</label>
+          <textarea [(ngModel)]="editDescription" rows="4" maxlength="2000"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Fecha de Entrega</label>
+          <input type="date" [(ngModel)]="editDueDate">
+        </div>
+        <div class="edit-actions">
+          <button class="btn-cancel" (click)="cancelEditing()">Cancelar</button>
+          <button class="btn-save" (click)="saveMilestone()">Guardar Cambios</button>
+        </div>
+      </div>
+
+      <!-- View Mode -->
+      <div class="view-mode" *ngIf="!isEditing()">
+        <h1 class="milestone-title">{{ milestone()?.title?.getValue() }}</h1>
+
+        <div class="due-date-section" [class.overdue]="isOverdue">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+          <div>
+            <span class="label">Fecha de entrega:</span>
+            <span class="date">{{ formattedDueDate }}</span>
+            <span class="overdue-badge" *ngIf="isOverdue">Atrasado</span>
+          </div>
+        </div>
+
+        <div class="description-section">
+          <h3>Descripción</h3>
+          <p>{{ milestone()?.description?.getValue() }}</p>
+        </div>
+
+        <!-- Tools -->
+        <div class="tools-section" *ngIf="milestone()?.tools?.length">
+          <h3>Herramientas</h3>
+          <div class="tools-list">
+            <span *ngFor="let tool of milestone()?.tools" class="tool-tag">
+              {{ tool.getName() }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Attachments -->
+        <div class="attachments-section" *ngIf="milestone()?.attachments?.length">
+          <h3>Adjuntos</h3>
+          <div class="attachments-list">
+            <a *ngFor="let att of milestone()?.attachments"
+               [href]="att.getValue()"
+               target="_blank"
+               rel="noopener"
+               class="attachment-link">
+              📎 {{ truncateUrl(att.getValue()) }}
+            </a>
+          </div>
+        </div>
+
+        <!-- General Comment -->
+        <div class="comment-section" *ngIf="milestone()?.generalComment">
+          <h3>Comentario General</h3>
+          <p class="comment">{{ milestone()?.generalComment }}</p>
+        </div>
+      </div>
+
+      <!-- Tasks Section (siempre visible) -->
+      <div class="tasks-section-wrapper">
+        <app-milestone-tasks
+          [milestoneId]="milestoneId()"
+          [assignees]="assignees()"
+          [canManage]="canManage()"
+          (onTaskUpdated)="onTaskUpdated()"
+        />
+      </div>
+    </div>
+  </div>
+</div>
