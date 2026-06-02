@@ -34,6 +34,8 @@ export class MilestoneAssembler implements BaseAssembler<Milestone, MilestoneRes
       generalComment: resource.generalComment || undefined,
       attachments: resource.attachments,
       status: resource.status,
+      deliveryUrl: resource.deliveryUrl || null,
+      deliveryNotes: resource.deliveryNotes || null,
       createdAt: new Date(resource.createdAt),
       updatedAt: new Date(resource.updatedAt),
       tasks: resource.tasks?.map(task => this.taskResourceToCreateProps(task))
@@ -54,6 +56,8 @@ export class MilestoneAssembler implements BaseAssembler<Milestone, MilestoneRes
       attachments: entity.attachments.map(att => att.getValue()),
       tasks: entity.tasks.map(task => this.taskToResource(task)),
       status: entity.status,
+      deliveryUrl: null,
+      deliveryNotes: null,
       createdAt: entity.createdAt.toISOString(),
       updatedAt: entity.updatedAt.toISOString()
     };
@@ -73,6 +77,8 @@ export class MilestoneAssembler implements BaseAssembler<Milestone, MilestoneRes
       })),
       attachments: task.attachments.map(att => att.getValue()),
       status: task.status,
+      deliveryUrl: null,
+      deliveryNotes: null,
       createdAt: task.createdAt.toISOString(),
       updatedAt: task.updatedAt.toISOString()
     };
@@ -89,11 +95,12 @@ export class MilestoneAssembler implements BaseAssembler<Milestone, MilestoneRes
       checklist: resource.checklist,
       attachments: resource.attachments,
       status: resource.status,
+      deliveryUrl: resource.deliveryUrl,
+      deliveryNotes: resource.deliveryNotes,
       createdAt: new Date(resource.createdAt),
       updatedAt: new Date(resource.updatedAt)
     };
   }
-
   // Convert Task to Create Request (para enviar a la API)
   taskToCreateRequest(task: MilestoneTask): CreateTaskRequest {
     return {

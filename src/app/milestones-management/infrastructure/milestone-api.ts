@@ -121,4 +121,27 @@ export class MilestoneApi extends BaseApi {
   deleteTask(taskId: string): Observable<void> {
     return this.milestoneEndpoint.deleteTask(taskId);
   }
+
+  /**
+   * Completar una tarea con enlace de entrega
+   */
+  completeTask(taskId: string, deliveryUrl: string, deliveryNotes: string | null): Observable<MilestoneTask> {
+    return this.milestoneEndpoint.completeTask(taskId, deliveryUrl, deliveryNotes).pipe(
+      map(response => {
+        const taskResource = response.task;
+        return MilestoneTask.create({
+          id: taskResource.id,
+          milestoneId: taskResource.milestoneId,
+          title: taskResource.title,
+          description: taskResource.description,
+          assigneeId: taskResource.assigneeId,
+          checklist: taskResource.checklist,
+          attachments: taskResource.attachments,
+          status: taskResource.status,
+          createdAt: new Date(taskResource.createdAt),
+          updatedAt: new Date(taskResource.updatedAt)
+        });
+      })
+    );
+  }
 }

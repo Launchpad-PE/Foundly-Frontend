@@ -22,10 +22,14 @@ export interface CreateMilestoneProps {
   createdAt?: Date;
   updatedAt?: Date;
   tasks?: Omit<CreateMilestoneTaskProps, 'milestoneId'>[];
+  deliveryUrl: string | null;
+  deliveryNotes: string | null;
 }
 
 export class Milestone {
   private _id: MilestoneId;
+  public readonly deliveryUrl: string | null;
+  public readonly deliveryNotes: string | null;
 
   private constructor(
     milestoneId: MilestoneId,
@@ -39,9 +43,13 @@ export class Milestone {
     private _attachments: Attachments[],
     private _tasks: MilestoneTask[],
     private _status: MilestoneStatus,
+    deliveryUrl: string | null,
+    deliveryNotes: string | null,
     public readonly createdAt: Date,
     private _updatedAt: Date
   ) {
+    this.deliveryUrl = deliveryUrl;
+    this.deliveryNotes = deliveryNotes;
     this._id = milestoneId;
   }
 
@@ -71,6 +79,8 @@ export class Milestone {
       (props.attachments ?? []).map(url => new Attachments(url)),
       [],
       props.status ?? MilestoneStatus.PENDING,
+      props.deliveryUrl || null,
+      props.deliveryNotes || null,
       props.createdAt ?? now,
       props.updatedAt ?? now
     );

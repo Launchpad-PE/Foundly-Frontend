@@ -18,10 +18,11 @@ export interface MilestoneTaskResource extends BaseResource {
   checklist: ChecklistStepResource[];
   attachments: string[];
   status: MilestoneTaskStatus;
+  deliveryUrl: string | null;      // ✅ AGREGAR
+  deliveryNotes: string | null;    // ✅ AGREGAR
   createdAt: string;
   updatedAt: string;
 }
-
 // Milestone Resource
 export interface MilestoneResource extends BaseResource {
   id: string;
@@ -35,6 +36,8 @@ export interface MilestoneResource extends BaseResource {
   attachments: string[];
   tasks: MilestoneTaskResource[];
   status: MilestoneStatus;
+  deliveryUrl: string | null;
+  deliveryNotes: string | null;
   createdAt: string;
   updatedAt: string;
 }
