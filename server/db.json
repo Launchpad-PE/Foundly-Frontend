@@ -485,47 +485,47 @@
   ],
   "milestones": [
     {
-      "id": "e10ab5ad-b239-45b7-abe9-483bb2806801",
+      "id": "f7317d4e-e9f0-4e0c-b66d-78c6b566f493",
       "projectId": "04d5496e-e878-4056-95e1-e9e924067e4b",
       "creatorId": "1",
-      "title": "askdkoadsnkoads",
-      "description": "asdkmakdskadspads",
+      "title": "asknadsnkdasn",
+      "description": "askldaskladsnklads",
       "tools": [
-        "sxsasdads"
+        "asdnkladsnkladsn"
       ],
-      "generalComment": "nasdnasdasioasdibadsbaudsaudsi",
-      "dueDate": "2026-06-05T00:00:00.000Z",
+      "generalComment": "asjkadskjdasbjk",
+      "dueDate": "2026-06-11T00:00:00.000Z",
       "attachments": [
-        "https://www.youtube.com/watch?v=dY4mwrE-UAQ"
+        "https://www.youtube.com/watch?v=Wbt59pmT26E&list=RDnPtxGC95LxE&index=2"
       ],
       "tasks": [
         {
-          "id": "c4422ec2-92b2-4e06-8dc1-19babcc7a349",
-          "milestoneId": "e10ab5ad-b239-45b7-abe9-483bb2806801",
-          "title": "ms dmkasd as",
-          "description": "asdaklsdmaskads",
+          "id": "66a2ee58-8242-43b4-8c48-b140ef70bffb",
+          "milestoneId": "f7317d4e-e9f0-4e0c-b66d-78c6b566f493",
+          "title": "asdsaads",
+          "description": "asddasnkdasnk",
           "assigneeId": "1",
           "checklist": [
             {
-              "description": "asasd",
-              "done": false
-            },
-            {
-              "description": "sadasdasads",
+              "description": "asnadsjdank",
               "done": false
             }
           ],
           "attachments": [
-            "https://www.youtube.com/watch?v=dY4mwrE-UAQ"
+            "https://www.youtube.com/watch?v=Wbt59pmT26E&list=RDnPtxGC95LxE&index=2"
           ],
-          "status": "pending",
-          "createdAt": "2026-06-02T15:17:19.635Z",
-          "updatedAt": "2026-06-02T15:17:19.635Z"
+          "status": "completed",
+          "deliveryUrl": "https://www.youtube.com/watch?v=kh_YCSW5lPc&list=RDnPtxGC95LxE&index=3",
+          "deliveryNotes": "asmasdladsmlaslmasdl",
+          "createdAt": "2026-06-02T22:24:55.544Z",
+          "updatedAt": "2026-06-02T22:29:15.046Z"
         }
       ],
       "status": "pending",
-      "createdAt": "2026-06-02T15:17:19.635Z",
-      "updatedAt": "2026-06-02T15:17:19.635Z"
+      "deliveryUrl": null,
+      "deliveryNotes": null,
+      "createdAt": "2026-06-02T22:24:55.543Z",
+      "updatedAt": "2026-06-02T22:24:55.544Z"
     }
   ]
 }
