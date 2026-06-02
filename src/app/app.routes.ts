@@ -22,7 +22,7 @@ const applyProject = () => import('./applications/presentation/views/apply-proje
   .then(m => m.ApplyProjectComponent);
 const postulantDetail = () => import('./applications/presentation/views/postulant-detail/postulant-detail')
   .then(m => m.PostulantDetailComponent);
-const participatingProject = () => import('./task-management/presentation/views/participating-project/participating-project')
+const participatingProject = () => import('./project-management/presentation/views/participating-project/participating-project')
   .then(m => m.ParticipatingProjectComponent);
 const taskDetail = () => import('./task-management/presentation/views/task-detail/task-detail')
   .then(m => m.TaskDetailComponent);
