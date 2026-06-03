@@ -223,6 +223,85 @@ export class ProfileStore {
   }
 
   /**
+   * Reemplaza el array completo de experiencias (usado para agregar/eliminar
+   * de forma segura, evitando el problema de ids nulos).
+   */
+  async setExperiences(experiences: Experience[]): Promise<void> {
+    const profile = this.currentProfile();
+    if (!profile || !profile.id) {
+      throw new Error('No profile loaded');
+    }
+
+    const data = experiences.map(e => this.experienceToData(e));
+    const updated = await firstValueFrom(this.profileApi.setExperiences(profile.id, data));
+    this.currentProfile.set(updated);
+  }
+
+  private experienceToData(exp: Experience): any {
+    return {
+      id: exp.id ?? this.generateId(),
+      title: exp.title,
+      company: exp.company,
+      period: exp.period,
+      description: exp.description ?? null,
+      current: exp.current,
+      startDate: exp.startDate ? exp.startDate.toISOString() : null,
+      endDate: exp.endDate ? exp.endDate.toISOString() : null,
+      createdAt: exp.createdAt ? exp.createdAt.toISOString() : new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+  }
+
+  private generateId(): string {
+    const c: any = (globalThis as any).crypto;
+    if (c && typeof c.randomUUID === 'function') {
+      return c.randomUUID();
+    }
+    return `exp_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+  }
+
+  /**
+   * Update basic info (username, role, bio) en un solo PATCH
+   */
+  async updateBasicInfo(data: { username?: string; role?: string; bio?: string }): Promise<void> {
+    const profile = this.currentProfile();
+    if (!profile || !profile.id) {
+      throw new Error('No profile loaded');
+    }
+
+    const updated = await firstValueFrom(this.profileApi.patchProfile(profile.id, data));
+    this.currentProfile.set(updated);
+  }
+
+  /**
+   * Check si un proyecto es favorito del perfil actual
+   */
+  isFavorite(projectId: string): boolean {
+    const profile = this.currentProfile();
+    return profile ? profile.isFavorite(projectId) : false;
+  }
+
+  /**
+   * Alterna un proyecto entre favoritos / no favoritos y persiste el cambio
+   */
+  async toggleFavorite(projectId: string): Promise<boolean> {
+    const profile = this.currentProfile();
+    if (!profile || !profile.id) {
+      throw new Error('No profile loaded');
+    }
+
+    const id = projectId.toString();
+    const willBeFavorite = !profile.isFavorite(id);
+
+    const updated = willBeFavorite
+      ? await firstValueFrom(this.profileApi.addFavorite(profile.id, id))
+      : await firstValueFrom(this.profileApi.removeFavorite(profile.id, id));
+
+    this.currentProfile.set(updated);
+    return willBeFavorite;
+  }
+
+  /**
    * Get profile completion percentage
    */
   getProfileCompletion(): number {

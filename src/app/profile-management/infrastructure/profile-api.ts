@@ -19,27 +19,27 @@ export class ProfileApi extends BaseApi {
   // ─── Profile CRUD ─────────────────────────────────────────────
 
   getProfile(id: string): Observable<Profile> {
-    return this.profileEndpoint.getProfileById(id).pipe(
-      map(response => this.assembler.toEntityFromResponse(response))
-    );
+    return this.profileEndpoint
+      .getProfileById(id)
+      .pipe(map((response) => this.assembler.toEntityFromResponse(response)));
   }
 
   getProfileByUserId(userId: string): Observable<Profile> {
-    return this.profileEndpoint.getByUserId(userId).pipe(
-      map(response => this.assembler.toEntityFromResponse(response))
-    );
+    return this.profileEndpoint
+      .getByUserId(userId)
+      .pipe(map((response) => this.assembler.toEntityFromResponse(response)));
   }
 
   createProfile(profile: Profile): Observable<Profile> {
-    return this.profileEndpoint.createProfile(profile).pipe(
-      map(response => this.assembler.toEntityFromResponse(response))
-    );
+    return this.profileEndpoint
+      .createProfile(profile)
+      .pipe(map((response) => this.assembler.toEntityFromResponse(response)));
   }
 
   updateProfile(profile: Profile): Observable<Profile> {
-    return this.profileEndpoint.updateProfile(profile.id!, profile).pipe(
-      map(response => this.assembler.toEntityFromResponse(response))
-    );
+    return this.profileEndpoint
+      .updateProfile(profile.id!, profile)
+      .pipe(map((response) => this.assembler.toEntityFromResponse(response)));
   }
 
   patchProfile(id: string, partialData: Partial<Profile>): Observable<Profile> {
@@ -49,11 +49,13 @@ export class ProfileApi extends BaseApi {
     if (partialData.bio !== undefined) resourcePartial.bio = partialData.bio;
     if (partialData.role !== undefined) resourcePartial.role = partialData.role;
     if (partialData.skills !== undefined) resourcePartial.skills = partialData.skills;
+    if ((partialData as any).favoriteProjectIds !== undefined)
+      resourcePartial.favoriteProjectIds = (partialData as any).favoriteProjectIds;
     if (partialData.isComplete !== undefined) resourcePartial.isComplete = partialData.isComplete;
 
-    return this.profileEndpoint.patchProfile(id, resourcePartial).pipe(
-      map(response => this.assembler.toEntityFromResponse(response))
-    );
+    return this.profileEndpoint
+      .patchProfile(id, resourcePartial)
+      .pipe(map((response) => this.assembler.toEntityFromResponse(response)));
   }
 
   deleteProfile(id: string): Observable<void> {
@@ -63,38 +65,57 @@ export class ProfileApi extends BaseApi {
   // ─── Skills ───────────────────────────────────────────────────
 
   addSkill(profileId: string, skill: string): Observable<Profile> {
-    return this.profileEndpoint.addSkill(profileId, skill).pipe(
-      map(response => this.assembler.toEntityFromResponse(response))
-    );
+    return this.profileEndpoint
+      .addSkill(profileId, skill)
+      .pipe(map((response) => this.assembler.toEntityFromResponse(response)));
   }
 
   removeSkill(profileId: string, skill: string): Observable<Profile> {
-    return this.profileEndpoint.removeSkill(profileId, skill).pipe(
-      map(response => this.assembler.toEntityFromResponse(response))
-    );
+    return this.profileEndpoint
+      .removeSkill(profileId, skill)
+      .pipe(map((response) => this.assembler.toEntityFromResponse(response)));
   }
 
   // ─── Experiences ──────────────────────────────────────────────
 
   addExperience(profileId: string, experience: any): Observable<Profile> {
-    return this.profileEndpoint.addExperience(profileId, experience).pipe(
-      map(response => this.assembler.toEntityFromResponse(response))
-    );
+    return this.profileEndpoint
+      .addExperience(profileId, experience)
+      .pipe(map((response) => this.assembler.toEntityFromResponse(response)));
   }
 
   removeExperience(profileId: string, experienceId: string): Observable<Profile> {
-    return this.profileEndpoint.removeExperience(profileId, experienceId).pipe(
-      map(response => this.assembler.toEntityFromResponse(response))
-    );
+    return this.profileEndpoint
+      .removeExperience(profileId, experienceId)
+      .pipe(map((response) => this.assembler.toEntityFromResponse(response)));
+  }
+
+  setExperiences(profileId: string, experiences: any[]): Observable<Profile> {
+    return this.profileEndpoint
+      .setExperiences(profileId, experiences)
+      .pipe(map((response) => this.assembler.toEntityFromResponse(response)));
+  }
+
+  // ─── Favorites ────────────────────────────────────────────────
+
+  addFavorite(profileId: string, projectId: string): Observable<Profile> {
+    return this.profileEndpoint
+      .addFavorite(profileId, projectId)
+      .pipe(map((response) => this.assembler.toEntityFromResponse(response)));
+  }
+
+  removeFavorite(profileId: string, projectId: string): Observable<Profile> {
+    return this.profileEndpoint
+      .removeFavorite(profileId, projectId)
+      .pipe(map((response) => this.assembler.toEntityFromResponse(response)));
   }
 
   /**
    * ✅ NUEVO: Get all profiles
    */
   getAllProfiles(): Observable<Profile[]> {
-    return this.profileEndpoint.getAllProfiles().pipe(
-      map(response => this.assembler.toEntitiesFromResponse(response))
-    );
+    return this.profileEndpoint
+      .getAllProfiles()
+      .pipe(map((response) => this.assembler.toEntitiesFromResponse(response)));
   }
-
 }
