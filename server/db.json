@@ -482,5 +482,50 @@
       "createdAt": "2026-05-25T18:58:46.792Z",
       "updatedAt": "2026-05-25T18:58:46.792Z"
     }
+  ],
+  "milestones": [
+    {
+      "id": "f7317d4e-e9f0-4e0c-b66d-78c6b566f493",
+      "projectId": "04d5496e-e878-4056-95e1-e9e924067e4b",
+      "creatorId": "1",
+      "title": "asknadsnkdasn",
+      "description": "askldaskladsnklads",
+      "tools": [
+        "asdnkladsnkladsn"
+      ],
+      "generalComment": "asjkadskjdasbjk",
+      "dueDate": "2026-06-11T00:00:00.000Z",
+      "attachments": [
+        "https://www.youtube.com/watch?v=Wbt59pmT26E&list=RDnPtxGC95LxE&index=2"
+      ],
+      "tasks": [
+        {
+          "id": "66a2ee58-8242-43b4-8c48-b140ef70bffb",
+          "milestoneId": "f7317d4e-e9f0-4e0c-b66d-78c6b566f493",
+          "title": "asdsaads",
+          "description": "asddasnkdasnk",
+          "assigneeId": "1",
+          "checklist": [
+            {
+              "description": "asnadsjdank",
+              "done": false
+            }
+          ],
+          "attachments": [
+            "https://www.youtube.com/watch?v=Wbt59pmT26E&list=RDnPtxGC95LxE&index=2"
+          ],
+          "status": "completed",
+          "deliveryUrl": "https://www.youtube.com/watch?v=kh_YCSW5lPc&list=RDnPtxGC95LxE&index=3",
+          "deliveryNotes": "asmasdladsmlaslmasdl",
+          "createdAt": "2026-06-02T22:24:55.544Z",
+          "updatedAt": "2026-06-02T22:29:15.046Z"
+        }
+      ],
+      "status": "pending",
+      "deliveryUrl": null,
+      "deliveryNotes": null,
+      "createdAt": "2026-06-02T22:24:55.543Z",
+      "updatedAt": "2026-06-02T22:24:55.544Z"
+    }
   ]
 }

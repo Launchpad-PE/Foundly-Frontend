@@ -11,6 +11,14 @@ import { ApplicationStore } from '../../../../applications/application/applicati
 import { ApplicationStatus } from '../../../../applications/domain/enum/application-status.enum';
 import { TaskStore } from '../../../../task-management/application/task.store';
 import { computed } from '@angular/core';
+import {
+  MilestoneListComponent
+} from '../../../../milestones-management/presentation/components/milestone-list/milestone-list.component';
+import {
+  MilestoneDetailComponent
+} from '../../../../milestones-management/presentation/components/milestone-detail/milestone-detail.component';
+import { UserStore } from '../../../../iam/application/user.store';
+import { Milestone } from '../../../../milestones-management/domain/entities/milestone.entity';
 
 
 type Tab = 'inicio' | 'tareas' | 'iot' | 'hitos' | 'postulantes';
@@ -18,7 +26,7 @@ type Tab = 'inicio' | 'tareas' | 'iot' | 'hitos' | 'postulantes';
 @Component({
   selector: 'app-project-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule, IotDashboardComponent, PostulantListComponent, TaskListComponent],
+  imports: [CommonModule, RouterModule, IotDashboardComponent, PostulantListComponent, TaskListComponent, MilestoneListComponent, MilestoneDetailComponent],
   templateUrl: './project-detail.html',
   styleUrls: ['./project-detail.css']
 })
@@ -28,10 +36,12 @@ export class ProjectDetailComponent implements OnInit {
   private projectStore = inject(ProjectStore);
   private applicationStore = inject(ApplicationStore);
   private taskStore = inject(TaskStore);
+  private userStore = inject(UserStore);
 
   project = signal<Project | null>(null);
   activeTab = signal<Tab>('inicio');
   loading = signal(true);
+  selectedMilestoneId = signal<string | null>(null);
 
   get projectName(): string {
     return this.project()?.name.getValue() ?? '';
@@ -53,7 +63,7 @@ export class ProjectDetailComponent implements OnInit {
     return this.project()?.roles.map(r => r.name.getValue()) ?? [];
   }
 
-  /** Colaboradores aceptados del proyecto — alimentan los dropdowns de tareas. */
+  /** Colaboradores aceptados del proyecto — alimentan los dropdowns de tareas y hitos */
   get taskAssignees(): AssigneeOption[] {
     const apps = this.applicationStore.projectApplications();
     return apps
@@ -62,7 +72,7 @@ export class ProjectDetailComponent implements OnInit {
   }
 
 
-  /** Colaboradores aceptados del proyecto (signal computed). */
+  /** Colaboradores aceptados del proyecto (signal computed) */
   readonly acceptedCollaborators = computed(() =>
     this.applicationStore.projectApplications()
       .filter(a => a.status === ApplicationStatus.ACCEPTED)
@@ -115,9 +125,31 @@ export class ProjectDetailComponent implements OnInit {
 
   setTab(tab: Tab): void {
     this.activeTab.set(tab);
+    // Resetear selección de hito cuando cambiamos de pestaña
+    if (tab !== 'hitos') {
+      this.selectedMilestoneId.set(null);
+    }
+  }
+
+  get currentUserId(): string {
+    return this.userStore.currentUser()?.id ?? '';
   }
 
   goBack(): void {
     this.router.navigate(['/projects']);
+  }
+
+  // Métodos para manejo de hitos
+  onMilestoneSelected(milestone: Milestone): void {
+    this.selectedMilestoneId.set(milestone.id);
+  }
+
+  closeMilestoneDetail(): void {
+    this.selectedMilestoneId.set(null);
+  }
+
+  onMilestoneUpdated(milestone: Milestone): void {
+    console.log('Milestone updated:', milestone);
+    // Puedes recargar datos si es necesario
   }
 }

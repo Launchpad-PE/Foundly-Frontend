@@ -1,0 +1,52 @@
+<div class="progress-container" [class]="size()">
+  <!-- Circular Progress -->
+  <div *ngIf="type() === 'circle'" class="circle-progress">
+    <svg
+      [attr.width]="containerSize"
+      [attr.height]="containerSize"
+      [attr.viewBox]="'0 0 ' + containerSize + ' ' + containerSize">
+
+      <!-- Background circle -->
+      <circle
+        [attr.cx]="center"
+        [attr.cy]="center"
+        [attr.r]="radius"
+        fill="none"
+        stroke="#e2e8f0"
+        [attr.stroke-width]="strokeWidth" />
+
+      <!-- Progress circle -->
+      <circle
+        [attr.cx]="center"
+        [attr.cy]="center"
+        [attr.r]="radius"
+        fill="none"
+        [attr.stroke]="progressColor"
+        [attr.stroke-width]="strokeWidth"
+        stroke-linecap="round"
+        [attr.stroke-dasharray]="circumference"
+        [attr.stroke-dashoffset]="strokeDashoffset"
+        [attr.transform]="'rotate(-90 ' + center + ' ' + center + ')'" />
+    </svg>
+
+    <div class="circle-label" *ngIf="showLabel()">
+      <span class="percentage" *ngIf="showPercentage()">{{ percentageValue }}%</span>
+      <span class="label" *ngIf="!showPercentage()">Completado</span>
+    </div>
+  </div>
+
+  <!-- Bar Progress -->
+  <div *ngIf="type() === 'bar'" class="bar-progress">
+    <div class="bar-container" [style.height]="barHeight">
+      <div
+        class="bar-fill"
+        [style.width.%]="percentageValue"
+        [style.backgroundColor]="progressColor">
+      </div>
+    </div>
+    <div class="bar-label" *ngIf="showLabel()">
+      <span class="percentage" *ngIf="showPercentage()">{{ percentageValue }}% completado</span>
+      <span class="label" *ngIf="!showPercentage()">Progreso</span>
+    </div>
+  </div>
+</div>

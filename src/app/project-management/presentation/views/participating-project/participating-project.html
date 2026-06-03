@@ -86,9 +86,13 @@
     </div>
 
     <!-- ══════════ OTRAS TABS (placeholder) ══════════ -->
-    <div *ngIf="activeTab() === 'hitos' || activeTab() === 'feedback'" class="coming-soon">
-      <p class="coming-title">Próximamente</p>
-      <p class="coming-sub">Esta sección estará disponible en la siguiente versión.</p>
+    <div *ngIf="activeTab() === 'hitos'" class="hitos-tab-wrapper">
+      <!-- El colaborador solo ve sus tareas asignadas -->
+      <app-my-milestone-tasks
+        [projectId]="projectId"
+        [assigneeId]="currentUserId"
+        (onTaskUpdated)="refreshTasks()"
+      />
     </div>
 
   </div>

@@ -22,7 +22,7 @@ const applyProject = () => import('./applications/presentation/views/apply-proje
   .then(m => m.ApplyProjectComponent);
 const postulantDetail = () => import('./applications/presentation/views/postulant-detail/postulant-detail')
   .then(m => m.PostulantDetailComponent);
-const participatingProject = () => import('./task-management/presentation/views/participating-project/participating-project')
+const participatingProject = () => import('./project-management/presentation/views/participating-project/participating-project')
   .then(m => m.ParticipatingProjectComponent);
 const taskDetail = () => import('./task-management/presentation/views/task-detail/task-detail')
   .then(m => m.TaskDetailComponent);
@@ -32,6 +32,9 @@ const publicProfile = () => import('./profile-management/presentation/views/publ
   .then(m => m.PublicProfileComponent);
 const ranking = () => import('./shared/presentation/collaborators/views/ranking/ranking')
   .then(m => m.RankingComponent);
+const deliverTask = () => import('./milestones-management/presentation/views/deliver-task/deliver-task.component')
+  .then(m => m.DeliverTaskComponent);
+
 export const routes: Routes = [
   {
     path: 'login',
@@ -119,6 +122,12 @@ export const routes: Routes = [
     loadComponent: taskDetail,
     canActivate: [AuthGuard],
     title: `${baseTitle} - Detalle de Tarea`
+  },
+  {
+    path: 'projects/:id/hitos/:milestoneId/tareas/:taskId/entregar',
+    loadComponent: deliverTask,
+    canActivate: [AuthGuard],
+    title: `${baseTitle} - Entregar Tarea`
   },
   {
     path: 'profile',

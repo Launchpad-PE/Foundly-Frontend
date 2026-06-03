@@ -1,0 +1,180 @@
+<div class="milestone-tasks-container">
+  <!-- Header -->
+  <div class="tasks-header">
+    <div class="header-left">
+      <h3 class="tasks-title">Tareas del Hito</h3>
+      <span class="tasks-count-badge">{{ totalTasks() }}</span>
+    </div>
+    <button
+      *ngIf="canManage()"
+      class="btn-add-task"
+      (click)="openCreateModal()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 5v14M5 12h14"/>
+      </svg>
+      Agregar Tarea
+    </button>
+  </div>
+
+  <!-- Progress Stats -->
+  <div class="tasks-progress-stats" *ngIf="totalTasks() > 0">
+    <div class="stats-row">
+      <div class="stat">
+        <span class="stat-value">{{ completionPercentage() }}%</span>
+        <span class="stat-label">Completado</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value">{{ completedTasks() }}</span>
+        <span class="stat-label">Completadas</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value">{{ pendingTasks() }}</span>
+        <span class="stat-label">Pendientes</span>
+      </div>
+      <div class="stat" *ngIf="delayedTasks() > 0">
+        <span class="stat-value delayed">{{ delayedTasks() }}</span>
+        <span class="stat-label">Atrasadas</span>
+      </div>
+    </div>
+    <div class="progress-bar-container">
+      <div class="progress-bar" [style.width.%]="completionPercentage()"></div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-tasks" *ngIf="!loading() && totalTasks() === 0">
+    <div class="empty-icon">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#9b8ff8" stroke-width="1.5">
+        <path d="M9 11l3 3L22 4"/>
+        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+      </svg>
+    </div>
+    <p>No hay tareas aún</p>
+    <p class="empty-hint" *ngIf="canManage()">Agrega tareas para este hito</p>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-tasks" *ngIf="loading()">
+    <div class="spinner-small"></div>
+    <span>Cargando tareas...</span>
+  </div>
+
+  <!-- Tasks List -->
+  <div class="tasks-list" *ngIf="totalTasks() > 0 && !loading()">
+    <div
+      *ngFor="let task of tasks()"
+      class="task-item"
+      [class]="getStatusClass(task.status)">
+
+      <!-- Task Content -->
+      <div class="task-content">
+        <div class="task-header">
+          <span class="task-title" [class.completed]="task.isCompleted">
+            {{ task.title }}
+          </span>
+          <span class="task-status-badge" [class]="getStatusClass(task.status)">
+            {{ task.status }}
+          </span>
+        </div>
+
+        <p class="task-description" [class.completed]="task.isCompleted">
+          {{ task.description.getValue() }}
+        </p>
+
+        <div class="task-meta">
+          <div class="task-assignee">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+            <span>{{ getAssigneeName(task.assigneeId.toString()) }}</span>
+          </div>
+
+          <div class="task-checklist-info" *ngIf="task.checklist.length > 0">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M9 11l3 3L22 4"/>
+              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+            </svg>
+            <span>{{ getCompletedChecklistCount(task.checklist) }}/{{ task.checklist.length }}</span>
+          </div>
+        </div>
+
+        <!-- Checklist (si tiene) -->
+        <div class="task-checklist" *ngIf="task.checklist.length > 0">
+          <div *ngFor="let step of task.checklist; let i = index" class="checklist-step">
+            <input
+              type="checkbox"
+              [checked]="step.isDone()"
+              (change)="toggleChecklistStep(task, i)"
+              [disabled]="task.isCompleted">
+            <span [class.completed]="step.isDone()">{{ step.getDescription() }}</span>
+          </div>
+        </div>
+
+        <!-- Attachments -->
+        <div class="task-attachments" *ngIf="task.attachments.length > 0">
+          <span class="attachments-label">Adjuntos:</span>
+          <a
+            *ngFor="let att of task.attachments"
+            [href]="att.getValue()"
+            target="_blank"
+            rel="noopener">
+            📎 {{ getShortUrl(att.getValue()) }}
+          </a>
+        </div>
+
+        <!-- ✅ INFORMACIÓN DE ENTREGA (NUEVO) -->
+        <div class="delivery-info" *ngIf="task.isCompleted && task.deliveryUrl">
+          <div class="delivery-header">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+            <span>📦 Entrega del colaborador</span>
+          </div>
+
+          <div class="delivery-url">
+            <span class="label">🔗 Enlace entregado:</span>
+            <a [href]="task.deliveryUrl" target="_blank" rel="noopener noreferrer">
+              {{ truncateUrl(task.deliveryUrl) }}
+            </a>
+          </div>
+
+          <div class="delivery-notes" *ngIf="task.deliveryNotes">
+            <span class="label">💬 Comentario:</span>
+            <p>{{ task.deliveryNotes }}</p>
+          </div>
+
+          <div class="delivery-date">
+            <span class="label">📅 Entregado el:</span>
+            <span>{{ task.updatedAt | date:'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="task-actions" *ngIf="canManage()">
+        <button class="btn-edit" (click)="editTask(task)" title="Editar tarea">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 3l4 4-7 7H10v-4l7-7z"/>
+            <path d="M4 20h16"/>
+          </svg>
+        </button>
+        <button class="btn-delete" (click)="deleteTask(task.id)" title="Eliminar tarea">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create/Edit Task Modal -->
+  <app-create-task-modal
+    [isOpen]="showCreateModal()"
+    [milestoneId]="milestoneId()"
+    [assignees]="assignees()"
+    [taskToEdit]="editingTask()"
+    (close)="closeCreateModal()"
+    (saved)="onTaskSaved()"></app-create-task-modal>
+</div>

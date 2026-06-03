@@ -1,0 +1,190 @@
+<div class="modal-overlay" *ngIf="isOpen()" (click)="onBackdropClick($event)">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h2>Crear Nuevo Hito</h2>
+      <button class="btn-close" (click)="onClose()">×</button>
+    </div>
+
+    <div class="modal-body">
+      <!-- Título -->
+      <div class="form-group">
+        <label class="required">Título *</label>
+        <input
+          type="text"
+          [ngModel]="title()"
+          (ngModelChange)="updateTitle($event)"
+          placeholder="Ej: Fase 1 - Investigación">
+        <div class="form-help" *ngIf="!isTitleValid() && title()">
+          <span class="error">El título es requerido</span>
+        </div>
+      </div>
+
+      <!-- Descripción -->
+      <div class="form-group">
+        <label class="required">Descripción *</label>
+        <textarea
+          [ngModel]="description()"
+          (ngModelChange)="updateDescription($event)"
+          rows="4"
+          placeholder="Describe los objetivos de este hito..."></textarea>
+        <div class="form-help" *ngIf="!isDescriptionValid() && description()">
+          <span class="error">La descripción es requerida</span>
+        </div>
+      </div>
+
+      <!-- Fecha -->
+      <div class="form-group">
+        <label class="required">Fecha de Entrega *</label>
+        <input
+          type="date"
+          [ngModel]="dueDate()"
+          (ngModelChange)="updateDueDate($event)"
+          [min]="minDate">
+        <div class="form-help" *ngIf="!isDueDateValid() && dueDate()">
+          <span class="error">La fecha de entrega es requerida</span>
+        </div>
+      </div>
+
+      <!-- Herramientas - Ahora requerido -->
+      <div class="form-group">
+        <label class="required">Herramientas * (Agrega al menos una)</label>
+        <div class="input-with-button">
+          <input type="text" [(ngModel)]="currentTool" placeholder="Ej: Figma, GitHub" (keyup.enter)="addTool()">
+          <button type="button" (click)="addTool()" [disabled]="!currentTool.trim()">Agregar</button>
+        </div>
+        <div class="form-help" *ngIf="!isToolsValid()">
+          <span class="error">Debes agregar al menos una herramienta</span>
+        </div>
+        <div class="tags-list" *ngIf="tools().length > 0">
+          <span *ngFor="let tool of tools(); let i = index" class="tag">
+            {{ tool }} <button type="button" (click)="removeTool(i)">×</button>
+          </span>
+        </div>
+      </div>
+
+      <!-- Adjuntos del Hito - Ahora requerido -->
+      <div class="form-group">
+        <label class="required">Adjuntos del Hito * (Agrega al menos una URL)</label>
+        <div class="input-with-button">
+          <input type="url" [(ngModel)]="currentAttachmentUrl" placeholder="https://..." (keyup.enter)="addAttachment()">
+          <button type="button" (click)="addAttachment()" [disabled]="!currentAttachmentUrl.trim()">Agregar</button>
+        </div>
+        <div class="form-help" *ngIf="!isAttachmentsValid()">
+          <span class="error">Debes agregar al menos un adjunto</span>
+        </div>
+        <div class="attachments-list" *ngIf="attachments().length > 0">
+          <div *ngFor="let url of attachments(); let i = index" class="attachment-item">
+            <a [href]="url" target="_blank" rel="noopener noreferrer">{{ truncateUrl(url) }}</a>
+            <button type="button" (click)="removeAttachment(i)">×</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tareas del Hito - Ahora requerido -->
+      <div class="form-group tasks-section">
+        <div class="section-header">
+          <label class="required">Tareas del Hito * (Agrega al menos una tarea)</label>
+          <button type="button" class="btn-add-task" (click)="openTaskForm()">+ Agregar Tarea</button>
+        </div>
+
+        <div class="form-help" *ngIf="!isTasksValid()">
+          <span class="error">Debes agregar al menos una tarea</span>
+        </div>
+        <div class="form-help" *ngIf="isTasksValid() && !areAllTasksValid()">
+          <span class="error">Todas las tareas deben tener título y asignatario</span>
+        </div>
+
+        <div class="tasks-list" *ngIf="tasks().length > 0">
+          <div *ngFor="let task of tasks(); let i = index" class="task-preview" [class.task-invalid]="!task.title.trim() || !task.assigneeId">
+            <div class="task-info">
+              <strong>{{ task.title || 'Sin título' }}</strong>
+              <span class="assignee">→ {{ getAssigneeName(task.assigneeId) || 'Sin asignar' }}</span>
+              <span *ngIf="task.checklist.length > 0" class="badge">✓ Checklist: {{ task.checklist.length }}</span>
+              <span *ngIf="task.attachments.length > 0" class="badge">📎 {{ task.attachments.length }}</span>
+              <span *ngIf="!task.title.trim() || !task.assigneeId" class="badge error-badge">⚠️ Incompleta</span>
+            </div>
+            <div class="task-actions">
+              <button type="button" class="btn-edit-small" (click)="editTask(i)">✎</button>
+              <button type="button" class="btn-delete-small" (click)="removeTask(i)">×</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Formulario de tarea completo -->
+        <div class="task-form" *ngIf="showTaskForm()">
+          <div class="task-form-header">
+            <h4>{{ editingTaskIndex() !== null ? 'Editar Tarea' : 'Nueva Tarea' }}</h4>
+            <button type="button" class="btn-close-small" (click)="closeTaskForm()">×</button>
+          </div>
+
+          <div class="form-group">
+            <input type="text" [(ngModel)]="currentTask.title" placeholder="Título de la tarea *">
+          </div>
+
+          <div class="form-group">
+            <textarea [(ngModel)]="currentTask.description" rows="2" placeholder="Descripción de la tarea"></textarea>
+          </div>
+
+          <div class="form-group">
+            <select [(ngModel)]="currentTask.assigneeId">
+              <option value="">Selecciona un colaborador *</option>
+              <option *ngFor="let collab of collaborators()" [value]="collab.id">{{ collab.fullName }}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Checklist de la tarea</label>
+            <div class="input-with-button small">
+              <input type="text" [(ngModel)]="currentChecklistItem" placeholder="Ej: Revisar documentación" (keyup.enter)="addTaskChecklistItem()">
+              <button type="button" (click)="addTaskChecklistItem()" [disabled]="!currentChecklistItem.trim()">+</button>
+            </div>
+            <div class="checklist-items" *ngIf="currentTask.checklist.length > 0">
+              <div *ngFor="let item of currentTask.checklist; let j = index" class="checklist-item">
+                <span>☐ {{ item.description }}</span>
+                <button type="button" (click)="removeTaskChecklistItem(j)">×</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Adjuntos de la tarea (URLs)</label>
+            <div class="input-with-button small">
+              <input type="url" [(ngModel)]="currentAttachment" placeholder="https://..." (keyup.enter)="addTaskAttachment()">
+              <button type="button" (click)="addTaskAttachment()" [disabled]="!currentAttachment.trim()">+</button>
+            </div>
+            <div class="attachments-list small" *ngIf="currentTask.attachments.length > 0">
+              <div *ngFor="let url of currentTask.attachments; let j = index" class="attachment-item">
+                <span>{{ truncateUrl(url) }}</span>
+                <button type="button" (click)="removeTaskAttachment(j)">×</button>
+              </div>
+            </div>
+          </div>
+
+          <button type="button" class="btn-save-task" (click)="saveTask()" [disabled]="!currentTask.title.trim() || !currentTask.assigneeId">
+            {{ editingTaskIndex() !== null ? 'Actualizar' : 'Agregar' }} Tarea
+          </button>
+        </div>
+      </div>
+
+      <!-- Comentario General - Ahora requerido -->
+      <div class="form-group">
+        <label class="required">Comentario General *</label>
+        <textarea
+          [ngModel]="generalComment()"
+          (ngModelChange)="generalComment.set($event)"
+          rows="3"
+          placeholder="Instrucciones adicionales..."></textarea>
+        <div class="form-help" *ngIf="!isGeneralCommentValid() && generalComment()">
+          <span class="error">El comentario general es requerido</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn-cancel" (click)="onClose()">Cancelar</button>
+      <button type="button" class="btn-create" (click)="onSubmit()" [disabled]="!isFormComplete() || loading()">
+        {{ loading() ? 'Creando...' : 'Crear Hito' }}
+      </button>
+    </div>
+  </div>
+</div>

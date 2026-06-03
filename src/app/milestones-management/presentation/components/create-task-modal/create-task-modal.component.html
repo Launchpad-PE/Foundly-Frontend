@@ -1,0 +1,107 @@
+<div class="modal-overlay" *ngIf="isOpen()" (click)="onBackdropClick($event)">
+  <div class="modal-container">
+    <!-- Header -->
+    <div class="modal-header">
+      <h2>{{ isEditMode() ? 'Editar Tarea' : 'Crear Nueva Tarea' }}</h2>
+      <button class="btn-close" (click)="onClose()">×</button>
+    </div>
+
+    <!-- Body -->
+    <div class="modal-body">
+      <!-- Title -->
+      <div class="form-group">
+        <label>Título *</label>
+        <input
+          type="text"
+          [(ngModel)]="title"
+          placeholder="Ej: Diseñar la interfaz"
+          maxlength="200">
+        <div class="form-help">
+          <span class="error" *ngIf="title && !isTitleValid()">Mínimo 1 carácter</span>
+          <span class="counter">{{ title.length }}/200</span>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="form-group">
+        <label>Descripción *</label>
+        <textarea
+          [(ngModel)]="description"
+          rows="4"
+          placeholder="Describe detalladamente la tarea..."
+          maxlength="2000"></textarea>
+        <div class="form-help">
+          <span class="error" *ngIf="description && !isDescriptionValid()">Mínimo 5 caracteres</span>
+          <span class="counter">{{ description.length }}/2000</span>
+        </div>
+      </div>
+
+      <!-- Assignee -->
+      <div class="form-group">
+        <label>Asignar a *</label>
+        <select [(ngModel)]="assigneeId">
+          <option value="">Selecciona un colaborador</option>
+          <option *ngFor="let assignee of assignees()" [value]="assignee.id">
+            {{ assignee.fullName }}
+          </option>
+        </select>
+        <div class="form-help error" *ngIf="assigneeId && !isAssigneeValid()">
+          Selecciona un colaborador
+        </div>
+      </div>
+
+      <!-- Checklist -->
+      <div class="form-group">
+        <label>Checklist (opcional)</label>
+        <div class="input-with-button">
+          <input
+            type="text"
+            [(ngModel)]="currentChecklistItem"
+            placeholder="Ej: Revisar diseño"
+            (keyup.enter)="addChecklistItem()">
+          <button type="button" (click)="addChecklistItem()" [disabled]="!currentChecklistItem.trim()">
+            Agregar
+          </button>
+        </div>
+        <div class="checklist-list" *ngIf="checklistItems.length > 0">
+          <div *ngFor="let item of checklistItems; let i = index" class="checklist-item">
+            <span>{{ item.description }}</span>
+            <button (click)="removeChecklistItem(i)">×</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Attachments -->
+      <div class="form-group">
+        <label>Adjuntos (URLs)</label>
+        <div class="input-with-button">
+          <input
+            type="url"
+            [(ngModel)]="currentAttachment"
+            placeholder="https://..."
+            (keyup.enter)="addAttachment()">
+          <button type="button" (click)="addAttachment()" [disabled]="!currentAttachment.trim()">
+            Agregar
+          </button>
+        </div>
+        <div class="attachments-list" *ngIf="attachments.length > 0">
+          <div *ngFor="let url of attachments; let i = index" class="attachment-item">
+            <a [href]="url" target="_blank" rel="noopener">{{ getShortUrl(url) }}</a>
+            <button (click)="removeAttachment(i)">×</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="onClose()">Cancelar</button>
+      <button
+        class="btn-save"
+        (click)="onSubmit()"
+        [disabled]="!isValid() || loading()">
+        {{ loading() ? 'Guardando...' : (isEditMode() ? 'Actualizar' : 'Crear') }}
+      </button>
+    </div>
+  </div>
+</div>

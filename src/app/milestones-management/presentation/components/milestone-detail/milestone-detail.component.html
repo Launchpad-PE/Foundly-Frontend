@@ -1,0 +1,91 @@
+<div class="milestone-detail-page">
+  <!-- Header con botón volver -->
+  <div class="detail-header">
+    <div class="header-left">
+      <button class="btn-back" (click)="goBack()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5M12 5l-7 7 7 7"/>
+        </svg>
+        Volver a hitos
+      </button>
+      <div class="status-badge" [class]="statusClass">
+        {{ statusLabel }}
+      </div>
+    </div>
+    <!-- Sin botones de editar/eliminar -->
+  </div>
+
+  <!-- Mostrar skeleton mientras carga -->
+  <div class="detail-content">
+    <div *ngIf="loading()" class="skeleton">
+      <div class="skeleton-title"></div>
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line"></div>
+    </div>
+
+    <!-- Contenido real cuando hay datos -->
+    <ng-container *ngIf="!loading() && milestone()">
+      <!-- View Mode - Solo lectura -->
+      <div class="view-mode">
+        <h1 class="milestone-title">{{ milestone()?.title?.getValue() || 'Sin título' }}</h1>
+
+        <div class="due-date-section" [class.overdue]="isOverdue">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+          <div>
+            <span class="label">Fecha de entrega:</span>
+            <span class="date">{{ formattedDueDate || 'No definida' }}</span>
+            <span class="overdue-badge" *ngIf="isOverdue">Atrasado</span>
+          </div>
+        </div>
+
+        <div class="description-section">
+          <h3>Descripción</h3>
+          <p>{{ milestone()?.description?.getValue() || 'Sin descripción' }}</p>
+        </div>
+
+        <!-- Tools -->
+        <div class="tools-section" *ngIf="milestone()?.tools?.length">
+          <h3>Herramientas</h3>
+          <div class="tools-list">
+            <span *ngFor="let tool of milestone()?.tools" class="tool-tag">
+              {{ tool.getName() }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Attachments -->
+        <div class="attachments-section" *ngIf="milestone()?.attachments?.length">
+          <h3>Adjuntos</h3>
+          <div class="attachments-list">
+            <a *ngFor="let att of milestone()?.attachments"
+               [href]="att.getValue()"
+               target="_blank"
+               rel="noopener"
+               class="attachment-link">
+              📎 {{ truncateUrl(att.getValue()) }}
+            </a>
+          </div>
+        </div>
+
+        <!-- General Comment -->
+        <div class="comment-section" *ngIf="milestone()?.generalComment">
+          <h3>Comentario General</h3>
+          <p class="comment">{{ milestone()?.generalComment }}</p>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- Tasks Section -->
+    <div class="tasks-section-wrapper" *ngIf="milestone()">
+      <app-milestone-tasks
+        [milestoneId]="milestoneId()"
+        [assignees]="assignees()"
+        [canManage]="false"
+        (onTaskUpdated)="onTaskUpdated()"
+      />
+    </div>
+  </div>
+</div>

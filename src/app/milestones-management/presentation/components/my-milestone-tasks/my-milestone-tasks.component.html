@@ -1,0 +1,126 @@
+<div class="my-tasks-container">
+  <!-- Header -->
+  <div class="tasks-header">
+    <div class="header-left">
+      <h3 class="tasks-title">Mis Tareas en Hitos</h3>
+      <span class="tasks-count-badge">{{ totalTasks() }}</span>
+    </div>
+  </div>
+
+  <!-- Progress Stats -->
+  <div class="tasks-progress-stats" *ngIf="totalTasks() > 0">
+    <div class="stats-row">
+      <div class="stat">
+        <span class="stat-value">{{ completionPercentage() }}%</span>
+        <span class="stat-label">Completado</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value">{{ completedTasks() }}</span>
+        <span class="stat-label">Completadas</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value">{{ pendingTasks() }}</span>
+        <span class="stat-label">Pendientes</span>
+      </div>
+      <div class="stat" *ngIf="delayedTasks() > 0">
+        <span class="stat-value delayed">{{ delayedTasks() }}</span>
+        <span class="stat-label">Atrasadas</span>
+      </div>
+    </div>
+    <div class="progress-bar-container">
+      <div class="progress-bar" [style.width.%]="completionPercentage()"></div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-tasks" *ngIf="!loading() && totalTasks() === 0">
+    <div class="empty-icon">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#9b8ff8" stroke-width="1.5">
+        <path d="M9 11l3 3L22 4"/>
+        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+      </svg>
+    </div>
+    <p>No tienes tareas asignadas</p>
+    <p class="empty-hint">Las tareas que te asignen aparecerán aquí</p>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-tasks" *ngIf="loading()">
+    <div class="spinner-small"></div>
+    <span>Cargando mis tareas...</span>
+  </div>
+
+  <!-- Tasks List -->
+  <div class="tasks-list" *ngIf="totalTasks() > 0 && !loading()">
+    <div
+      *ngFor="let item of myTasks()"
+      class="task-item"
+      [class]="getStatusClass(item.task.status)">
+
+      <!-- Task Content -->
+      <div class="task-content">
+        <div class="task-header">
+          <span class="milestone-badge">{{ item.milestoneTitle }}</span>
+          <span class="task-title" [class.completed]="item.task.isCompleted">
+            {{ item.task.title }}
+          </span>
+          <span class="task-status-badge" [class]="getStatusClass(item.task.status)">
+            {{ item.task.status }}
+          </span>
+        </div>
+
+        <p class="task-description" [class.completed]="item.task.isCompleted">
+          {{ item.task.description.getValue() }}
+        </p>
+
+        <div class="task-meta">
+          <div class="task-checklist-info" *ngIf="item.task.checklist.length > 0">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M9 11l3 3L22 4"/>
+              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+            </svg>
+            <span>{{ getCompletedChecklistCount(item.task.checklist) }}/{{ item.task.checklist.length }}</span>
+          </div>
+        </div>
+
+        <!-- Checklist (si tiene) -->
+        <div class="task-checklist" *ngIf="item.task.checklist.length > 0">
+          <div *ngFor="let step of item.task.checklist; let i = index" class="checklist-step">
+            <input
+              type="checkbox"
+              [checked]="step.isDone()"
+              [disabled]="true">
+            <span [class.completed]="step.isDone()">{{ step.getDescription() }}</span>
+          </div>
+        </div>
+
+        <!-- Attachments -->
+        <div class="task-attachments" *ngIf="item.task.attachments.length > 0">
+          <span class="attachments-label">Adjuntos:</span>
+          <a
+            *ngFor="let att of item.task.attachments"
+            [href]="att.getValue()"
+            target="_blank"
+            rel="noopener">
+            📎 {{ getShortUrl(att.getValue()) }}
+          </a>
+        </div>
+
+      </div>
+
+      <!-- Actions -->
+      <div class="task-actions" *ngIf="!item.task.isCompleted">
+        <button
+          class="btn-deliver"
+          (click)="goToDeliverTask(item.task.id, item.milestoneId)"
+          title="Entregar tarea">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+          Entregar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

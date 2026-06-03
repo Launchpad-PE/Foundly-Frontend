@@ -1,0 +1,324 @@
+.milestone-detail-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px;
+  background: #ffffff;
+  min-height: 100vh;
+}
+
+/* Header */
+.detail-header {
+  margin-bottom: 32px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* Botón Volver */
+.btn-back {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f1f5f9;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1e293b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-back:hover {
+  background: #e2e8f0;
+  transform: translateX(-2px);
+}
+
+.btn-back svg {
+  stroke: #4f46e5;
+}
+
+/* Status Badge */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-pending {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.status-completed {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.status-delayed {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* Skeleton Loading */
+.skeleton {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.skeleton-title {
+  width: 60%;
+  height: 32px;
+  background: #e2e8f0;
+  border-radius: 8px;
+  margin-bottom: 24px;
+}
+
+.skeleton-line {
+  width: 100%;
+  height: 16px;
+  background: #e2e8f0;
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+
+.skeleton-line:last-child {
+  width: 80%;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* View Mode */
+.view-mode {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Título */
+.milestone-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 24px 0;
+  line-height: 1.3;
+}
+
+/* Due Date Section */
+.due-date-section {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #f8fafc;
+  padding: 16px 20px;
+  border-radius: 16px;
+  margin-bottom: 28px;
+  border: 1px solid #e2e8f0;
+}
+
+.due-date-section svg {
+  flex-shrink: 0;
+  stroke: #64748b;
+}
+
+.due-date-section .label {
+  font-size: 13px;
+  color: #64748b;
+  margin-right: 8px;
+}
+
+.due-date-section .date {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.due-date-section.overdue {
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
+.due-date-section.overdue svg {
+  stroke: #dc2626;
+}
+
+.due-date-section.overdue .date {
+  color: #dc2626;
+}
+
+.overdue-badge {
+  background: #dc2626;
+  color: white;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-left: 12px;
+}
+
+/* Sections comunes */
+.description-section,
+.tools-section,
+.attachments-section,
+.comment-section {
+  margin-bottom: 32px;
+}
+
+h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0 0 14px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+h3::before {
+  content: '';
+  width: 4px;
+  height: 20px;
+  background: #4f46e5;
+  border-radius: 2px;
+}
+
+/* Descripción */
+.description-section p {
+  color: #334155;
+  line-height: 1.6;
+  margin: 0;
+  font-size: 15px;
+}
+
+/* Tools List */
+.tools-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.tool-tag {
+  background: #eef2ff;
+  color: #4f46e5;
+  padding: 6px 14px;
+  border-radius: 30px;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.tool-tag:hover {
+  background: #e0e7ff;
+  transform: translateY(-1px);
+}
+
+/* Attachments List */
+.attachments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.attachment-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #4f46e5;
+  text-decoration: none;
+  font-size: 14px;
+  padding: 8px 12px;
+  background: #f8fafc;
+  border-radius: 10px;
+  transition: all 0.2s;
+  width: fit-content;
+}
+
+.attachment-link:hover {
+  background: #eef2ff;
+  text-decoration: underline;
+}
+
+/* Comment Section */
+.comment-section .comment {
+  background: #f8fafc;
+  padding: 18px;
+  border-radius: 16px;
+  color: #334155;
+  line-height: 1.6;
+  margin: 0;
+  font-size: 14px;
+  border-left: 3px solid #4f46e5;
+}
+
+/* Tasks Section */
+.tasks-section-wrapper {
+  margin-top: 40px;
+  padding-top: 32px;
+  border-top: 1px solid #e2e8f0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .milestone-detail-page {
+    padding: 16px;
+  }
+
+  .milestone-title {
+    font-size: 24px;
+  }
+
+  .header-left {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .btn-back {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .due-date-section {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .due-date-section svg {
+    display: none;
+  }
+
+  .overdue-badge {
+    display: inline-block;
+    margin-left: 0;
+    margin-top: 8px;
+  }
+
+  h3 {
+    font-size: 16px;
+  }
+
+  .tool-tag {
+    font-size: 12px;
+    padding: 4px 12px;
+  }
+
+  .attachment-link {
+    font-size: 12px;
+    word-break: break-all;
+  }
+}

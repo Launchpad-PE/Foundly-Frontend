@@ -1,7 +1,7 @@
 <div class="detail-wrapper">
 
   <!-- ── Header ── -->
-  <header class="detail-header">
+  <header class="detail-header" *ngIf="!selectedMilestoneId()">
     <div class="header-brand">
       <button class="btn-back" (click)="goBack()">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -206,17 +206,27 @@
       </app-task-list>
     </div>
 
-    <!-- ════════════════ PLACEHOLDER (hitos) ════════════════ -->
-    <div *ngIf="activeTab() === 'hitos'"
-         class="coming-soon">
-      <div class="coming-visual">
-        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#d0d4f0" stroke-width="1.2" stroke-linecap="round">
-          <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
-        </svg>
+    <!-- ════════════════ HITOS ════════════════ -->
+    <div *ngIf="activeTab() === 'hitos'" class="hitos-tab-wrapper">
+      <!-- Lista de hitos -->
+      <app-milestone-list
+        *ngIf="!selectedMilestoneId()"
+        [projectId]="projectId"
+        [creatorId]="currentUserId"
+        (milestoneSelected)="onMilestoneSelected($event)"
+      />
+
+      <!-- Detalle del hito seleccionado -->
+      <div *ngIf="selectedMilestoneId()" class="milestone-fullscreen">
+        <app-milestone-detail
+          [milestoneId]="selectedMilestoneId()!"
+          [assignees]="taskAssignees"
+          [canManage]="true"
+          (closed)="closeMilestoneDetail()"
+          (updated)="onMilestoneUpdated($event)"
+        />
       </div>
-      <p class="coming-title">Próximamente</p>
-      <p class="coming-sub">Esta sección estará disponible en la siguiente versión.</p>
-    </div>
 
   </div>
+</div>
 </div>

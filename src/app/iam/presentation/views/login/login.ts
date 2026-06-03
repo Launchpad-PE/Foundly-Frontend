@@ -23,7 +23,7 @@ export class LoginComponent {
   constructor(public userStore: UserStore, private router: Router) {}
 
   goBack(): void {
-    window.location.href = environment.landingPafeRedirection;
+    window.location.href = environment.landingPageRedirection;
   }
 
   openForgotPasswordModal(): void {
