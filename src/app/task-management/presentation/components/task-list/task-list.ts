@@ -37,17 +37,23 @@ export class TaskListComponent implements OnInit, OnChanges {
   error = this.taskStore.error;
 
   selectedAssignee = signal<string>('');
+  selectedStatus = signal<string>('');
   searchInput = signal<string>('');
   showModal = signal<boolean>(false);
 
-  // Filtro reactivo, sincroniza con el store
   readonly filteredTasks = computed(() => {
-    // Trigger reactivo manual
     const assignee = this.selectedAssignee();
+    const status = this.selectedStatus();
     const term = this.searchInput().trim().toLowerCase();
     return this.taskStore.projectTasks().filter(t => {
       if (assignee && t.assigneeId.toString() !== assignee) return false;
       if (term && !t.title.getValue().toLowerCase().includes(term)) return false;
+      if (status) {
+        const ds = t.getDisplayStatus();
+        if (status === 'pendiente' && ds !== TaskStatus.PENDING) return false;
+        if (status === 'atrasado' && ds !== TaskStatus.DELAYED) return false;
+        if (status === 'completado' && ds !== TaskStatus.COMPLETED) return false;
+      }
       return true;
     });
   });

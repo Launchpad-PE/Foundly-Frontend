@@ -7,14 +7,14 @@
 
     <select
       class="filter-select"
-      [ngModel]="selectedAssignee()"
-      (ngModelChange)="selectedAssignee.set($event)"
-      name="assigneeFilter"
-      aria-label="Filtrar por colaborador">
-      <option value="">Por Colaborador</option>
-      @for (a of assignees; track a.id) {
-        <option [value]="a.id">{{ a.fullName }}</option>
-      }
+      [ngModel]="selectedStatus()"
+      (ngModelChange)="selectedStatus.set($event)"
+      name="statusFilter"
+      aria-label="Filtrar por estado">
+      <option value="">Por Estado</option>
+      <option value="pendiente">Pendiente</option>
+      <option value="atrasado">Atrasada</option>
+      <option value="completado">Completado</option>
     </select>
 
     <input
