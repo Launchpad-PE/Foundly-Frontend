@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ProjectStore } from '../../../application/project-store';
 import { UserStore } from '../../../../iam/application/user.store';
+import { ProfileStore } from '../../../../profile-management/application/profile.store';
 import { Project } from '../../../domain/entities/project.entity';
 import { ProjectStatus } from '../../../domain/enum/project-status.enum';
 
@@ -20,15 +21,17 @@ export class ProjectInfo implements OnInit {
   private router = inject(Router);
   private projectStore = inject(ProjectStore);
   private userStore = inject(UserStore);
+  private profileStore = inject(ProfileStore);
   private fb = inject(FormBuilder);
 
   project: Project | null = null;
-  loading = true;  // ✅ Inicia en true para mostrar spinner
+  loading = true; // ✅ Inicia en true para mostrar spinner
   error: string | null = null;
   isAuthor = false;
   showApplyForm = false;
   showRoleModal = false;
   selectedRole: any = null;
+  favoriteBusy = false;
 
   applyForm: FormGroup;
   ProjectStatus = ProjectStatus;
@@ -37,13 +40,19 @@ export class ProjectInfo implements OnInit {
     this.applyForm = this.fb.group({
       message: ['', [Validators.required, Validators.minLength(10)]],
       experience: ['', [Validators.required, Validators.minLength(20)]],
-      availability: ['', Validators.required]
+      availability: ['', Validators.required],
     });
   }
 
   async ngOnInit(): Promise<void> {
     const projectId = this.route.snapshot.params['id'];
     console.log('🔍 ProjectInfo - ID recibido:', projectId);
+
+    // Aseguramos que el perfil esté cargado para saber qué proyectos son favoritos
+    const userId = this.userStore.currentUser()?.id;
+    if (userId && !this.profileStore.currentProfile()) {
+      await this.profileStore.loadProfile(userId.toString());
+    }
 
     if (projectId) {
       await this.loadProject(projectId);
@@ -71,7 +80,7 @@ export class ProjectInfo implements OnInit {
 
       // 2. Buscar en allProjects (si ya están cargados)
       const allProjects = this.projectStore.allProjects();
-      project = allProjects.find(p => p.id === projectId) || null;
+      project = allProjects.find((p) => p.id === projectId) || null;
 
       if (project) {
         console.log('✅ Proyecto encontrado en allProjects');
@@ -86,7 +95,7 @@ export class ProjectInfo implements OnInit {
       const loadedProjects = await this.projectStore.loadAllProjects();
       console.log('📡 Proyectos cargados:', loadedProjects.length);
 
-      project = loadedProjects.find(p => p.id === projectId) || null;
+      project = loadedProjects.find((p) => p.id === projectId) || null;
 
       if (project) {
         console.log('✅ Proyecto encontrado después de carga:', project.name.getValue());
@@ -96,7 +105,6 @@ export class ProjectInfo implements OnInit {
         this.error = `No se encontró el proyecto con ID: ${projectId}`;
         console.error('❌ Proyecto no encontrado');
       }
-
     } catch (err: any) {
       console.error('❌ Error cargando proyecto:', err);
       this.error = err.message || 'Error al cargar el proyecto';
@@ -108,7 +116,11 @@ export class ProjectInfo implements OnInit {
 
   private checkAuthor(): void {
     const currentUser = this.userStore.currentUser();
-    if (currentUser && this.project && this.project.authorId.toString() === currentUser.id?.toString()) {
+    if (
+      currentUser &&
+      this.project &&
+      this.project.authorId.toString() === currentUser.id?.toString()
+    ) {
       this.isAuthor = true;
     }
   }
@@ -119,7 +131,7 @@ export class ProjectInfo implements OnInit {
       [ProjectStatus.PUBLISHED]: 'status-published',
       [ProjectStatus.IN_PROGRESS]: 'status-progress',
       [ProjectStatus.COMPLETED]: 'status-completed',
-      [ProjectStatus.CANCELLED]: 'status-cancelled'
+      [ProjectStatus.CANCELLED]: 'status-cancelled',
     };
     return classes[status] || 'status-default';
   }
@@ -130,7 +142,7 @@ export class ProjectInfo implements OnInit {
       [ProjectStatus.PUBLISHED]: 'Publicado',
       [ProjectStatus.IN_PROGRESS]: 'En Curso',
       [ProjectStatus.COMPLETED]: 'Completado',
-      [ProjectStatus.CANCELLED]: 'Cancelado'
+      [ProjectStatus.CANCELLED]: 'Cancelado',
     };
     return labels[status] || status;
   }
@@ -173,11 +185,39 @@ export class ProjectInfo implements OnInit {
     return new Date(date).toLocaleDateString('es-ES', {
       year: 'numeric',
       month: 'long',
-      day: 'numeric'
+      day: 'numeric',
     });
   }
 
   goBack(): void {
     this.router.navigate(['/home']);
+  }
+
+  // ── Favoritos ──────────────────────────────────────────────
+  get hasProfile(): boolean {
+    return !!this.profileStore.currentProfile();
+  }
+
+  get isFavorite(): boolean {
+    return this.project ? this.profileStore.isFavorite(this.project.id) : false;
+  }
+
+  async toggleFavorite(): Promise<void> {
+    if (!this.project || this.favoriteBusy) return;
+
+    if (!this.profileStore.currentProfile()) {
+      this.error = 'Debes completar tu perfil para guardar favoritos';
+      return;
+    }
+
+    this.favoriteBusy = true;
+    try {
+      await this.profileStore.toggleFavorite(this.project.id);
+    } catch (err: any) {
+      console.error('❌ Error al actualizar favorito:', err);
+      this.error = err?.message || 'No se pudo actualizar el favorito';
+    } finally {
+      this.favoriteBusy = false;
+    }
   }
 }

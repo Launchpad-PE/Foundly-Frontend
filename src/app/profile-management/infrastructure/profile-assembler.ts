@@ -4,8 +4,11 @@ import { Experience } from '../domain/entities/experience.entity';
 import { ProfileResource, ProfileResponse, ProfilesResponse } from './profile-response';
 import { ExperienceResource } from './experience-response';
 
-export class ProfileAssembler implements BaseAssembler<Profile, ProfileResource, ProfileResponse | ProfilesResponse> {
-
+export class ProfileAssembler implements BaseAssembler<
+  Profile,
+  ProfileResource,
+  ProfileResponse | ProfilesResponse
+> {
   /**
    * Convert response to entity (for single profile)
    */
@@ -17,16 +20,14 @@ export class ProfileAssembler implements BaseAssembler<Profile, ProfileResource,
    * Convert response to entities (for multiple profiles)
    */
   toEntitiesFromResponse(response: ProfilesResponse): Profile[] {
-    return response.profiles.map(resource => this.toEntityFromResource(resource));
+    return response.profiles.map((resource) => this.toEntityFromResource(resource));
   }
 
   /**
    * Convert resource to entity
    */
   toEntityFromResource(resource: ProfileResource): Profile {
-    const experiences = (resource.experiences || []).map(exp =>
-      this.experienceFromResource(exp)
-    );
+    const experiences = (resource.experiences || []).map((exp) => this.experienceFromResource(exp));
 
     return new Profile({
       id: resource.id,
@@ -37,6 +38,7 @@ export class ProfileAssembler implements BaseAssembler<Profile, ProfileResource,
       role: resource.role,
       skills: resource.skills || [],
       experiences: experiences,
+      favoriteProjectIds: resource.favoriteProjectIds || [],
       isComplete: resource.isComplete,
       createdAt: resource.createdAt,
       updatedAt: resource.updatedAt,
@@ -55,7 +57,8 @@ export class ProfileAssembler implements BaseAssembler<Profile, ProfileResource,
       bio: entity.bio,
       role: entity.role,
       skills: entity.skills,
-      experiences: entity.experiences.map(exp => this.experienceToResource(exp)),
+      experiences: entity.experiences.map((exp) => this.experienceToResource(exp)),
+      favoriteProjectIds: entity.favoriteProjectIds || [],
       isComplete: entity.isComplete,
       createdAt: entity.createdAt.toISOString(),
       updatedAt: entity.updatedAt.toISOString(),

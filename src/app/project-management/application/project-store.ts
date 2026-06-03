@@ -8,7 +8,7 @@ import { ApplicationStatus } from '../../applications/domain/enum/application-st
 import { ProjectStatus } from '../domain/enum/project-status.enum';
 import { EnvironmentalMetric } from '../domain/value-objects/environmental-impact.vo';
 import { DurationType } from '../domain/value-objects/duration.vo';
-import {ProfileApi} from '../../profile-management/infrastructure/profile-api';
+import { ProfileApi } from '../../profile-management/infrastructure/profile-api';
 
 export interface CreateProjectData {
   name: string;
@@ -46,6 +46,7 @@ export class ProjectStore {
   readonly selectedStatus = signal<ProjectStatus | 'all'>('all');
   readonly selectedArea = signal<string | null>(null);
   readonly participatedProjects = signal<Project[]>([]);
+  readonly favoriteProjects = signal<Project[]>([]);
 
   // Active tab para búsqueda (no es signal reactiva, solo para filtro)
   private currentActiveTab: 'my-projects' | 'participated' = 'my-projects';
@@ -61,12 +62,12 @@ export class ProjectStore {
 
     // Filter by status
     if (this.selectedStatus() !== 'all') {
-      projects = projects.filter(p => p.status === this.selectedStatus());
+      projects = projects.filter((p) => p.status === this.selectedStatus());
     }
 
     // Filter by area
     if (this.selectedArea()) {
-      projects = projects.filter(p => p.area.getValue() === this.selectedArea());
+      projects = projects.filter((p) => p.area.getValue() === this.selectedArea());
     }
 
     return projects;
@@ -75,10 +76,10 @@ export class ProjectStore {
   readonly hasProjects = computed(() => this.userProjects().length > 0);
   readonly projectsCount = computed(() => this.userProjects().length);
   readonly draftProjects = computed(() =>
-    this.userProjects().filter(p => p.status === ProjectStatus.DRAFT)
+    this.userProjects().filter((p) => p.status === ProjectStatus.DRAFT),
   );
   readonly publishedProjects = computed(() =>
-    this.userProjects().filter(p => p.status === ProjectStatus.PUBLISHED)
+    this.userProjects().filter((p) => p.status === ProjectStatus.PUBLISHED),
   );
 
   // ── Private helpers ─────────────────────────────────────────────
@@ -125,7 +126,7 @@ export class ProjectStore {
       const project = Project.create({
         ...projectData,
         authorId: authorId,
-        authorName: authorName,  // ✅ Incluir el authorName
+        authorName: authorName, // ✅ Incluir el authorName
       });
 
       const savedProject = await firstValueFrom(this.projectApi.createProject(project));
@@ -133,38 +134,38 @@ export class ProjectStore {
       // ✅ Enriquecer el proyecto guardado con el authorName si es necesario
       const enrichedProject = authorName
         ? Project.create({
-          id: savedProject.id,
-          name: savedProject.name.getValue(),
-          area: savedProject.area.getValue(),
-          tags: savedProject.tags.map(t => t.getValue()),
-          summary: savedProject.summary.getValue(),
-          environmentalImpact: savedProject.environmentalImpact?.getMetrics(),
-          academicLevel: savedProject.academicLevel?.getValue(),
-          benefits: savedProject.benefits.map(b => b.getDescription()),
-          requiredSkills: savedProject.requiredSkills.map(s => s.getValue()),
-          duration: {
-            amount: savedProject.duration.getAmount(),
-            type: savedProject.duration.getType()
-          },
-          roles: savedProject.roles.map(r => ({
-            name: r.name.getValue(),
-            cardInfo: {
-              title: r.cardInfo.title.getValue(),
-              items: r.cardInfo.items.map(i => i.getDescription())
-            }
-          })),
-          authorId: savedProject.authorId.toString(),
-          authorName: authorName,
-          status: savedProject.status,
-          createdAt: savedProject.createdAt.toISOString(),
-          updatedAt: savedProject.updatedAt.toISOString()
-        })
+            id: savedProject.id,
+            name: savedProject.name.getValue(),
+            area: savedProject.area.getValue(),
+            tags: savedProject.tags.map((t) => t.getValue()),
+            summary: savedProject.summary.getValue(),
+            environmentalImpact: savedProject.environmentalImpact?.getMetrics(),
+            academicLevel: savedProject.academicLevel?.getValue(),
+            benefits: savedProject.benefits.map((b) => b.getDescription()),
+            requiredSkills: savedProject.requiredSkills.map((s) => s.getValue()),
+            duration: {
+              amount: savedProject.duration.getAmount(),
+              type: savedProject.duration.getType(),
+            },
+            roles: savedProject.roles.map((r) => ({
+              name: r.name.getValue(),
+              cardInfo: {
+                title: r.cardInfo.title.getValue(),
+                items: r.cardInfo.items.map((i) => i.getDescription()),
+              },
+            })),
+            authorId: savedProject.authorId.toString(),
+            authorName: authorName,
+            status: savedProject.status,
+            createdAt: savedProject.createdAt.toISOString(),
+            updatedAt: savedProject.updatedAt.toISOString(),
+          })
         : savedProject;
 
       // Update stores
       this.currentProject.set(enrichedProject);
-      this.userProjects.update(projects => [enrichedProject, ...projects]);
-      this.allProjects.update(projects => [enrichedProject, ...projects]); // ✅ También actualizar allProjects
+      this.userProjects.update((projects) => [enrichedProject, ...projects]);
+      this.allProjects.update((projects) => [enrichedProject, ...projects]); // ✅ También actualizar allProjects
 
       console.log('✅ Project created successfully', enrichedProject);
       return enrichedProject;
@@ -227,7 +228,9 @@ export class ProjectStore {
     this.clearError();
 
     try {
-      const projects = await firstValueFrom(this.projectApi.getProjectsByStatus(ProjectStatus.PUBLISHED));
+      const projects = await firstValueFrom(
+        this.projectApi.getProjectsByStatus(ProjectStatus.PUBLISHED),
+      );
       this.allProjects.set(projects);
       return projects;
     } catch (err: any) {
@@ -268,12 +271,12 @@ export class ProjectStore {
 
       // Crear un mapa de userId -> username
       const userNames = new Map<string, string>();
-      profiles.forEach(profile => {
+      profiles.forEach((profile) => {
         userNames.set(profile.userId.toString(), profile.username);
       });
 
       // Enriquecer cada proyecto
-      return projects.map(project => {
+      return projects.map((project) => {
         const authorName = userNames.get(project.authorId.toString()) || 'Usuario';
         // Crear un nuevo proyecto con el authorName (necesitarías un método updateName)
         // O clonar el proyecto y asignar el nombre
@@ -292,28 +295,28 @@ export class ProjectStore {
       id: project.id,
       name: project.name.getValue(),
       area: project.area.getValue(),
-      tags: project.tags.map(t => t.getValue()),
+      tags: project.tags.map((t) => t.getValue()),
       summary: project.summary.getValue(),
       environmentalImpact: project.environmentalImpact?.getMetrics(),
       academicLevel: project.academicLevel?.getValue(),
-      benefits: project.benefits.map(b => b.getDescription()),
-      requiredSkills: project.requiredSkills.map(s => s.getValue()),
+      benefits: project.benefits.map((b) => b.getDescription()),
+      requiredSkills: project.requiredSkills.map((s) => s.getValue()),
       duration: {
         amount: project.duration.getAmount(),
-        type: project.duration.getType()
+        type: project.duration.getType(),
       },
-      roles: project.roles.map(r => ({
+      roles: project.roles.map((r) => ({
         name: r.name.getValue(),
         cardInfo: {
           title: r.cardInfo.title.getValue(),
-          items: r.cardInfo.items.map(i => i.getDescription())
-        }
+          items: r.cardInfo.items.map((i) => i.getDescription()),
+        },
       })),
       authorId: project.authorId.toString(),
       authorName: authorName,
       status: project.status,
       createdAt: project.createdAt.toISOString(),
-      updatedAt: project.updatedAt.toISOString()
+      updatedAt: project.updatedAt.toISOString(),
     });
   }
 
@@ -349,18 +352,18 @@ export class ProjectStore {
       }
 
       const updatedProject = await firstValueFrom(
-        this.projectApi.patchProject(projectId, updateData)
+        this.projectApi.patchProject(projectId, updateData),
       );
 
       // Update in stores
       this.currentProject.set(updatedProject);
 
-      this.userProjects.update(projects =>
-        projects.map(p => p.id === projectId ? updatedProject : p)
+      this.userProjects.update((projects) =>
+        projects.map((p) => (p.id === projectId ? updatedProject : p)),
       );
 
-      this.allProjects.update(projects =>
-        projects.map(p => p.id === projectId ? updatedProject : p)
+      this.allProjects.update((projects) =>
+        projects.map((p) => (p.id === projectId ? updatedProject : p)),
       );
 
       console.log('✅ Project updated successfully', updatedProject);
@@ -382,19 +385,17 @@ export class ProjectStore {
     this.clearError();
 
     try {
-      const publishedProject = await firstValueFrom(
-        this.projectApi.publishProject(projectId)
-      );
+      const publishedProject = await firstValueFrom(this.projectApi.publishProject(projectId));
 
       // Update in stores
       this.currentProject.set(publishedProject);
 
-      this.userProjects.update(projects =>
-        projects.map(p => p.id === projectId ? publishedProject : p)
+      this.userProjects.update((projects) =>
+        projects.map((p) => (p.id === projectId ? publishedProject : p)),
       );
 
-      this.allProjects.update(projects =>
-        projects.map(p => p.id === projectId ? publishedProject : p)
+      this.allProjects.update((projects) =>
+        projects.map((p) => (p.id === projectId ? publishedProject : p)),
       );
 
       console.log('✅ Project published successfully', publishedProject);
@@ -423,13 +424,9 @@ export class ProjectStore {
         this.currentProject.set(null);
       }
 
-      this.userProjects.update(projects =>
-        projects.filter(p => p.id !== projectId)
-      );
+      this.userProjects.update((projects) => projects.filter((p) => p.id !== projectId));
 
-      this.allProjects.update(projects =>
-        projects.filter(p => p.id !== projectId)
-      );
+      this.allProjects.update((projects) => projects.filter((p) => p.id !== projectId));
 
       console.log('✅ Project deleted successfully');
     } catch (err: any) {
@@ -444,23 +441,24 @@ export class ProjectStore {
   /**
    * Add role to project
    */
-  async addRoleToProject(projectId: string, role: {
-    name: string;
-    cardInfo: { title: string; items: string[] };
-  }): Promise<Project> {
+  async addRoleToProject(
+    projectId: string,
+    role: {
+      name: string;
+      cardInfo: { title: string; items: string[] };
+    },
+  ): Promise<Project> {
     this.setLoading(true);
     this.clearError();
 
     try {
-      const updatedProject = await firstValueFrom(
-        this.projectApi.addRole(projectId, role)
-      );
+      const updatedProject = await firstValueFrom(this.projectApi.addRole(projectId, role));
 
       // Update in stores
       this.currentProject.set(updatedProject);
 
-      this.userProjects.update(projects =>
-        projects.map(p => p.id === projectId ? updatedProject : p)
+      this.userProjects.update((projects) =>
+        projects.map((p) => (p.id === projectId ? updatedProject : p)),
       );
 
       console.log('✅ Role added successfully');
@@ -482,15 +480,13 @@ export class ProjectStore {
     this.clearError();
 
     try {
-      const updatedProject = await firstValueFrom(
-        this.projectApi.removeRole(projectId, roleId)
-      );
+      const updatedProject = await firstValueFrom(this.projectApi.removeRole(projectId, roleId));
 
       // Update in stores
       this.currentProject.set(updatedProject);
 
-      this.userProjects.update(projects =>
-        projects.map(p => p.id === projectId ? updatedProject : p)
+      this.userProjects.update((projects) =>
+        projects.map((p) => (p.id === projectId ? updatedProject : p)),
       );
 
       console.log('✅ Role removed successfully');
@@ -527,6 +523,45 @@ export class ProjectStore {
   }
 
   /**
+   * Load favorite projects por sus IDs (no toca currentProject)
+   */
+  async loadFavoriteProjects(ids: string[]): Promise<Project[]> {
+    if (!ids || ids.length === 0) {
+      this.favoriteProjects.set([]);
+      return [];
+    }
+
+    this.setLoading(true);
+    this.clearError();
+
+    try {
+      const uniqueIds = Array.from(new Set(ids.map((i) => i.toString())));
+      const results = await Promise.all(
+        uniqueIds.map((id) => firstValueFrom(this.projectApi.getProject(id)).catch(() => null)),
+      );
+      let projects = results.filter((p): p is Project => p !== null);
+      projects = await this.enrichProjectsWithAuthorNames(projects);
+
+      this.favoriteProjects.set(projects);
+      return projects;
+    } catch (err: any) {
+      this.setError(err?.message || 'Error al cargar proyectos favoritos');
+      return [];
+    } finally {
+      this.setLoading(false);
+    }
+  }
+
+  /**
+   * Quita un proyecto de la lista local de favoritos (tras togglearlo)
+   */
+  removeFavoriteLocal(projectId: string): void {
+    this.favoriteProjects.update((projects) =>
+      projects.filter((p) => p.id !== projectId.toString()),
+    );
+  }
+
+  /**
    * Load participated projects (where user has applied)
    */
   async loadParticipatedProjects(userId: string): Promise<Project[]> {
@@ -535,21 +570,21 @@ export class ProjectStore {
 
     try {
       // 1. Traer las Applications del usuario y filtrar las aceptadas.
-      const applications = await firstValueFrom(
-        this.applicationApi.getApplicationsByUser(userId)
+      const applications = await firstValueFrom(this.applicationApi.getApplicationsByUser(userId));
+      const acceptedProjectIds = Array.from(
+        new Set(
+          applications
+            .filter((a) => a.status === ApplicationStatus.ACCEPTED)
+            .map((a) => a.projectId.toString()),
+        ),
       );
-      const acceptedProjectIds = Array.from(new Set(
-        applications
-          .filter(a => a.status === ApplicationStatus.ACCEPTED)
-          .map(a => a.projectId.toString())
-      ));
 
       // 2. Cargar los Projects correspondientes. Ignoramos los que fallen
       //    (ej. proyecto borrado) para no romper la pantalla entera.
       const results = await Promise.all(
-        acceptedProjectIds.map(id =>
-          firstValueFrom(this.projectApi.getProject(id)).catch(() => null)
-        )
+        acceptedProjectIds.map((id) =>
+          firstValueFrom(this.projectApi.getProject(id)).catch(() => null),
+        ),
       );
       const projects = results.filter((p): p is Project => p !== null);
 
@@ -578,16 +613,15 @@ export class ProjectStore {
     }
 
     // Filtrar según el tab activo
-    const projectsToSearch = this.currentActiveTab === 'my-projects'
-      ? this.userProjects()
-      : this.participatedProjects();
+    const projectsToSearch =
+      this.currentActiveTab === 'my-projects' ? this.userProjects() : this.participatedProjects();
 
-    const filtered = projectsToSearch.filter(project => {
+    const filtered = projectsToSearch.filter((project) => {
       return (
         project.name.getValue().toLowerCase().includes(term) ||
         project.summary.getValue().toLowerCase().includes(term) ||
-        project.tags.some(tag => tag.getValue().toLowerCase().includes(term)) ||
-        project.requiredSkills.some(skill => skill.getValue().toLowerCase().includes(term))
+        project.tags.some((tag) => tag.getValue().toLowerCase().includes(term)) ||
+        project.requiredSkills.some((skill) => skill.getValue().toLowerCase().includes(term))
       );
     });
 
@@ -617,6 +651,7 @@ export class ProjectStore {
     this.userProjects.set([]);
     this.allProjects.set([]);
     this.participatedProjects.set([]);
+    this.favoriteProjects.set([]);
     this.loading.set(false);
     this.error.set(null);
     this.selectedStatus.set('all');

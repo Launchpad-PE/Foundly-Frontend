@@ -7,12 +7,33 @@
       <h1>Mi Perfil</h1>
       <p>Gestiona tu información y proyectos</p>
     </div>
-    <button class="btn-logout" (click)="logout()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="logout-icon">
-        <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1"/>
-      </svg>
-      Cerrar Sesión
-    </button>
+    <div class="banner-actions">
+      <button class="btn-edit" *ngIf="!editMode" (click)="enterEditMode()" [disabled]="!profile()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="edit-icon">
+          <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+          <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+        </svg>
+        Editar perfil
+      </button>
+      <button class="btn-edit done" *ngIf="editMode" (click)="cancelEditMode()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="edit-icon">
+          <path d="M5 13l4 4L19 7"/>
+        </svg>
+        Listo
+      </button>
+      <button class="btn-logout" (click)="logout()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="logout-icon">
+          <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1"/>
+        </svg>
+        Cerrar Sesión
+      </button>
+    </div>
+  </div>
+
+  <!-- Edit error banner -->
+  <div class="edit-error" *ngIf="editError">
+    {{ editError }}
+    <button (click)="editError = null">✕</button>
   </div>
 
   <!-- Main Profile Card -->
@@ -21,15 +42,43 @@
     <!-- Left Column -->
     <aside class="profile-left">
       <div class="avatar-card">
-        <div class="avatar-circle">
+        <div class="avatar-circle" [class.editable]="editMode">
           <svg *ngIf="!profile()?.avatar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="avatar-icon">
             <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
             <circle cx="12" cy="7" r="4"/>
           </svg>
           <img *ngIf="profile()?.avatar" [src]="profile()!.avatar!" alt="avatar" class="avatar-img"/>
+
+          <!-- Overlay para subir foto en modo edición -->
+          <label class="avatar-upload" *ngIf="editMode" title="Subir foto">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="camera-icon">
+              <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/>
+              <circle cx="12" cy="13" r="4"/>
+            </svg>
+            <input type="file" accept="image/*" (change)="onAvatarSelected($event)" hidden/>
+          </label>
         </div>
-        <h2 class="profile-name">{{ profile()?.username || 'Sin nombre' }}</h2>
-        <p class="profile-role">{{ profile()?.role || 'Sin rol' }}</p>
+
+        <button class="avatar-remove" *ngIf="editMode && profile()?.avatar" (click)="removeAvatar()">
+          Quitar foto
+        </button>
+
+        <!-- Username / Role -->
+        <ng-container *ngIf="!editMode">
+          <h2 class="profile-name">{{ profile()?.username || 'Sin nombre' }}</h2>
+          <p class="profile-role">{{ profile()?.role || 'Sin rol' }}</p>
+        </ng-container>
+
+        <ng-container *ngIf="editMode">
+          <div class="edit-field">
+            <label>Nombre de usuario</label>
+            <input type="text" [(ngModel)]="editUsername" maxlength="30" placeholder="Tu nombre de usuario"/>
+          </div>
+          <div class="edit-field">
+            <label>Rol</label>
+            <input type="text" [(ngModel)]="editRole" maxlength="40" placeholder="Ej: Desarrollador Frontend"/>
+          </div>
+        </ng-container>
       </div>
 
       <button class="btn-outline">See CV</button>
@@ -54,15 +103,26 @@
       <!-- Personal Description -->
       <div class="info-card">
         <h3 class="info-title">Personal Description</h3>
-        <p class="info-body">{{ profile()?.bio || 'Sin descripción' }}</p>
+        <p class="info-body" *ngIf="!editMode">{{ profile()?.bio || 'Sin descripción' }}</p>
+        <textarea *ngIf="editMode" class="edit-textarea" [(ngModel)]="editBio" rows="3"
+                  maxlength="280" placeholder="Cuéntanos sobre ti..."></textarea>
       </div>
 
       <!-- Skills -->
       <div class="info-card">
         <h3 class="info-title">Skills</h3>
         <div class="skills-list">
-          <span *ngFor="let skill of profile()?.skills" class="skill-chip">{{ skill }}</span>
-          <span *ngIf="!profile()?.skills?.length" class="no-data">Sin habilidades registradas</span>
+          <span *ngFor="let skill of profile()?.skills" class="skill-chip" [class.removable]="editMode">
+            {{ skill }}
+            <button *ngIf="editMode" class="chip-remove" (click)="removeSkill(skill)" aria-label="Quitar">✕</button>
+          </span>
+          <span *ngIf="!profile()?.skills?.length && !editMode" class="no-data">Sin habilidades registradas</span>
+        </div>
+
+        <div class="skill-add-row" *ngIf="editMode">
+          <input type="text" [(ngModel)]="newSkill" placeholder="Agregar habilidad"
+                 (keyup.enter)="addSkill()" maxlength="30"/>
+          <button class="btn-add-sm" (click)="addSkill()" [disabled]="!newSkill.trim() || saving">+ Agregar</button>
         </div>
       </div>
 
@@ -75,14 +135,55 @@
           </svg>
         </button>
         <div class="accordion-body" *ngIf="showExperiences">
-          <div *ngFor="let exp of profile()?.experiences" class="experience-item">
+          <div *ngFor="let exp of profile()?.experiences; let i = index" class="experience-item">
+            <button class="exp-remove" *ngIf="editMode" (click)="removeExperienceAt(i)" aria-label="Eliminar">✕</button>
             <div class="exp-title">{{ exp.title }}</div>
             <div class="exp-company">{{ exp.company }}</div>
             <div class="exp-period">{{ exp.period }}</div>
             <p *ngIf="exp.description" class="exp-desc">{{ exp.description }}</p>
           </div>
           <p *ngIf="!profile()?.experiences?.length" class="no-data">Sin experiencias registradas</p>
+
+          <!-- Agregar experiencia -->
+          <ng-container *ngIf="editMode">
+            <button class="btn-add-exp" *ngIf="!showExpForm" (click)="openExpForm()">+ Agregar experiencia</button>
+
+            <div class="exp-form" *ngIf="showExpForm">
+              <div class="edit-field">
+                <label>Cargo / Puesto *</label>
+                <input type="text" [(ngModel)]="expDraft.title" placeholder="Ej: Desarrollador Backend"/>
+              </div>
+              <div class="edit-field">
+                <label>Empresa / Institución *</label>
+                <input type="text" [(ngModel)]="expDraft.company" placeholder="Ej: Acme Corp"/>
+              </div>
+              <div class="edit-field">
+                <label>Periodo</label>
+                <input type="text" [(ngModel)]="expDraft.period" placeholder="Ej: Ene 2023 - Presente"/>
+              </div>
+              <div class="edit-field">
+                <label>Descripción</label>
+                <textarea [(ngModel)]="expDraft.description" rows="2" placeholder="Opcional"></textarea>
+              </div>
+              <label class="checkbox-row">
+                <input type="checkbox" [(ngModel)]="expDraft.current"/>
+                Trabajo actual
+              </label>
+              <div class="exp-form-actions">
+                <button class="btn-ghost-sm" (click)="cancelExpForm()">Cancelar</button>
+                <button class="btn-add-sm" (click)="saveExperience()" [disabled]="saving">Guardar</button>
+              </div>
+            </div>
+          </ng-container>
         </div>
+      </div>
+
+      <!-- Guardar cambios básicos -->
+      <div class="edit-save-bar" *ngIf="editMode">
+        <button class="btn-ghost-sm" (click)="cancelEditMode()">Cancelar</button>
+        <button class="btn-save" (click)="saveBasicInfo()" [disabled]="saving">
+          {{ saving ? 'Guardando...' : 'Guardar cambios' }}
+        </button>
       </div>
 
     </div>
@@ -98,8 +199,8 @@
     <!-- Projects Sub-section -->
     <div *ngIf="activeSection === 'projects'">
       <div class="sub-tabs">
-        <button class="sub-tab" [class.active]="activeProjectTab === 'mine'" (click)="activeProjectTab = 'mine'">Mis Proyectos</button>
-        <button class="sub-tab" [class.active]="activeProjectTab === 'favorites'" (click)="activeProjectTab = 'favorites'">Favoritos</button>
+        <button class="sub-tab" [class.active]="activeProjectTab === 'mine'" (click)="setProjectTab('mine')">Mis Proyectos</button>
+        <button class="sub-tab" [class.active]="activeProjectTab === 'favorites'" (click)="setProjectTab('favorites')">Favoritos</button>
       </div>
 
       <div class="projects-list-card">
@@ -118,7 +219,19 @@
         </ng-container>
 
         <ng-container *ngIf="activeProjectTab === 'favorites'">
-          <div class="no-data center">No tienes proyectos favoritos</div>
+          <div *ngFor="let project of favoriteProjects()" class="project-row" (click)="viewProjectInfo(project.id)">
+            <div class="project-row-info">
+              <span class="project-row-name">{{ project.name.getValue() }}</span>
+              <span class="project-row-meta">{{ project.authorName || ('Usuario ' + project.authorId) }}</span>
+              <span class="project-row-date">{{ formatDate(project.createdAt) }}</span>
+            </div>
+            <button class="fav-remove-btn" (click)="removeFavorite(project.id, $event)" title="Quitar de favoritos" aria-label="Quitar de favoritos">
+              <svg viewBox="0 0 24 24" fill="currentColor" class="fav-heart">
+                <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 10-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"/>
+              </svg>
+            </button>
+          </div>
+          <div *ngIf="favoriteProjects().length === 0" class="no-data center">No tienes proyectos favoritos</div>
         </ng-container>
       </div>
     </div>

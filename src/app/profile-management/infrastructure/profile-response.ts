@@ -10,6 +10,7 @@ export interface ProfileResource extends BaseResource {
   role: string;
   skills: string[];
   experiences: ExperienceResource[];
+  favoriteProjectIds?: string[];
   isComplete: boolean;
   createdAt: string;
   updatedAt: string;
