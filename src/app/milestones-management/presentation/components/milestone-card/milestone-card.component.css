@@ -178,3 +178,45 @@
   background: #eef2ff;
   border-color: #4f46e5;
 }
+
+/* Añade estos estilos */
+
+.card-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-reschedule {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  color: #4f46e5;
+}
+
+.btn-reschedule:hover {
+  background: #eef2ff;
+}
+
+.btn-delete {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  color: #94a3b8;
+}
+
+.btn-delete:hover {
+  background: #fee2e2;
+  color: #ef4444;
+}

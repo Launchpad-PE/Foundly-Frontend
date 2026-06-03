@@ -27,7 +27,7 @@
     <p>Cargando hitos...</p>
   </div>
 
-  <!-- Progress Summary (solo si hay hitos) -->
+  <!-- Progress Summary -->
   <div class="progress-summary" *ngIf="hasMilestones() && !loading()">
     <div class="stats-row">
       <div class="stat">
@@ -70,7 +70,8 @@
       *ngFor="let milestone of milestones()"
       [milestone]="milestone"
       (viewDetails)="onMilestoneClick($event)"
-      (deleteMilestone)="onMilestoneDeleted($event)"
+      (deleteMilestone)="onMilestoneDelete($event)"
+      (rescheduleMilestone)="onMilestoneReschedule($event)"
     />
   </div>
 
@@ -80,5 +81,24 @@
     [projectId]="projectId()"
     [creatorId]="creatorId()"
     (close)="closeCreateModal()"
-    (created)="onMilestoneCreated($event)"></app-create-milestone-modal>
+    (created)="onMilestoneCreated($event)">
+  </app-create-milestone-modal>
+
+  <!-- Reschedule Milestone Modal -->
+  <app-reschedule-milestone-modal
+    *ngIf="showRescheduleModal() && selectedMilestoneForReschedule()"
+    [isOpen]="showRescheduleModal()"
+    [milestone]="selectedMilestoneForReschedule()!"
+    (close)="closeRescheduleModal()"
+    (rescheduled)="onMilestoneRescheduled($event)">
+  </app-reschedule-milestone-modal>
+
+  <!-- NUEVO: Delete Milestone Modal -->
+  <app-delete-milestone-modal
+    *ngIf="showDeleteModal() && selectedMilestoneForDelete()"
+    [isOpen]="showDeleteModal()"
+    [milestone]="selectedMilestoneForDelete()!"
+    (close)="closeDeleteModal()"
+    (confirmed)="confirmDelete()">
+  </app-delete-milestone-modal>
 </div>

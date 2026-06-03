@@ -23,12 +23,6 @@ export class MilestoneDetailComponent implements OnInit {
 
   milestone = signal<Milestone | null>(null);
   loading = this.milestoneStore.loading;
-  isEditing = signal(false);
-
-  // Edit form
-  editTitle = '';
-  editDescription = '';
-  editDueDate = '';
 
   ngOnInit(): void {
     this.loadMilestone();
@@ -37,11 +31,6 @@ export class MilestoneDetailComponent implements OnInit {
   async loadMilestone(): Promise<void> {
     const m = await this.milestoneStore.loadMilestone(this.milestoneId());
     this.milestone.set(m);
-    if (m) {
-      this.editTitle = m.title.getValue();
-      this.editDescription = m.description.getValue();
-      this.editDueDate = m.dueDate.toISOString().split('T')[0];
-    }
   }
 
   get statusLabel(): string {
@@ -76,61 +65,8 @@ export class MilestoneDetailComponent implements OnInit {
     return new Date() > m.dueDate;
   }
 
-  get tasksCompletion(): number {
-    const m = this.milestone();
-    if (!m) return 0;
-    return m.tasksCompletionPercentage;
-  }
 
-  // Método para truncar URLs largas
-  truncateUrl(url: string): string {
-    if (url.length <= 40) return url;
-    return url.substring(0, 40) + '...';
-  }
-
-  startEditing(): void {
-    const m = this.milestone();
-    if (m && !m.isCompleted) {
-      this.isEditing.set(true);
-    }
-  }
-
-  cancelEditing(): void {
-    this.isEditing.set(false);
-    const m = this.milestone();
-    if (m) {
-      this.editTitle = m.title.getValue();
-      this.editDescription = m.description.getValue();
-      this.editDueDate = m.dueDate.toISOString().split('T')[0];
-    }
-  }
-
-  async saveMilestone(): Promise<void> {
-    const m = this.milestone();
-    if (!m) return;
-
-    await this.milestoneStore.updateMilestone(m.id, {
-      title: this.editTitle,
-      description: this.editDescription,
-      dueDate: new Date(this.editDueDate)
-    });
-
-    await this.loadMilestone();
-    this.isEditing.set(false);
-    this.updated.emit(this.milestone()!);
-  }
-
-  async deleteMilestone(): Promise<void> {
-    if (!confirm('¿Eliminar este hito? Se perderán todas las tareas asociadas.')) return;
-
-    const m = this.milestone();
-    if (m) {
-      await this.milestoneStore.deleteMilestone(m.id);
-      this.closed.emit();
-    }
-  }
-
-  close(): void {
+  goBack(): void {
     this.closed.emit();
   }
 
@@ -139,7 +75,9 @@ export class MilestoneDetailComponent implements OnInit {
     this.updated.emit(this.milestone()!);
   }
 
-  goBack(): void {
-    this.closed.emit();
+  truncateUrl(url: string): string {
+    if (!url) return '';
+    if (url.length <= 40) return url;
+    return url.substring(0, 40) + '...';
   }
 }

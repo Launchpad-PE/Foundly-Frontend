@@ -13,7 +13,8 @@ import { CommonModule } from '@angular/common';
 export class MilestoneCardComponent {
   milestone = input.required<Milestone>();
   viewDetails = output<Milestone>();
-  deleteMilestone = output<string>();
+  deleteMilestone = output<Milestone>();
+  rescheduleMilestone = output<Milestone>(); // 👈 Nuevo output para reprogramar
 
   // Computed values
   statusLabel = computed(() => {
@@ -53,7 +54,9 @@ export class MilestoneCardComponent {
     return new Date() > new Date(this.milestone().dueDate);
   });
 
-  canDelete = computed(() => !this.milestone().isCompleted);
+  // 👈 MODIFICADO: Solo mostrar botones cuando está DELAYED (atrasado)
+  canDelete = computed(() => this.milestone().isDelayed);
+  canReschedule = computed(() => this.milestone().isDelayed);
 
   formattedDueDate = computed(() => {
     const date = this.milestone().dueDate;
@@ -75,6 +78,11 @@ export class MilestoneCardComponent {
   }
 
   onDelete(): void {
-    this.deleteMilestone.emit(this.milestone().id);
+    this.deleteMilestone.emit(this.milestone());
+  }
+
+  // 👈 Nuevo método para reprogramar
+  onReschedule(): void {
+    this.rescheduleMilestone.emit(this.milestone());
   }
 }
