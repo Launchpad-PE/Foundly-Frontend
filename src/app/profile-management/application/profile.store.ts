@@ -32,7 +32,7 @@ export class ProfileStore {
     this.error.set(null);
 
     try {
-      // ✅ Usar el constructor directamente en lugar de Profile.create()
+      //  Usar el constructor directamente en lugar de Profile.create()
       const profile = new Profile({
         userId: userId,
         username: data.username,

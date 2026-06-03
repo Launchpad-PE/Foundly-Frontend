@@ -84,7 +84,7 @@ export class ProfileApiEndpoint extends BaseApiEndpoint<
   }
 
   /**
-   * Add skill to profile - ✅ CORREGIDO con switchMap
+   * Add skill to profile -  CORREGIDO con switchMap
    */
   addSkill(profileId: string, skill: string): Observable<ProfileResponse> {
     return this.http.get<ProfileResource>(`${this.profilesUrl}/${profileId}`).pipe(
@@ -97,7 +97,7 @@ export class ProfileApiEndpoint extends BaseApiEndpoint<
   }
 
   /**
-   * Remove skill from profile - ✅ CORREGIDO con switchMap
+   * Remove skill from profile -  CORREGIDO con switchMap
    */
   removeSkill(profileId: string, skill: string): Observable<ProfileResponse> {
     return this.http.get<ProfileResource>(`${this.profilesUrl}/${profileId}`).pipe(
@@ -110,7 +110,7 @@ export class ProfileApiEndpoint extends BaseApiEndpoint<
   }
 
   /**
-   * Add experience to profile - ✅ CORREGIDO con switchMap
+   * Add experience to profile -  CORREGIDO con switchMap
    */
   addExperience(profileId: string, experience: any): Observable<ProfileResponse> {
     return this.http.get<ProfileResource>(`${this.profilesUrl}/${profileId}`).pipe(
@@ -125,7 +125,7 @@ export class ProfileApiEndpoint extends BaseApiEndpoint<
   }
 
   /**
-   * Remove experience from profile - ✅ CORREGIDO con switchMap
+   * Remove experience from profile -  CORREGIDO con switchMap
    */
   removeExperience(profileId: string, experienceId: string): Observable<ProfileResponse> {
     return this.http.get<ProfileResource>(`${this.profilesUrl}/${profileId}`).pipe(
@@ -149,7 +149,7 @@ export class ProfileApiEndpoint extends BaseApiEndpoint<
   }
 
   /**
-   * ✅ NUEVO: Get all profiles
+   *  NUEVO: Get all profiles
    */
   getAllProfiles(): Observable<ProfilesResponse> {
     return this.http

@@ -41,19 +41,19 @@ export class OnboardingComponent implements OnInit {
 
     // Verificar autenticación
     if (!this.userStore.isAuthenticated()) {
-      console.log('❌ Not authenticated in onboarding, redirecting to login');
+      console.log(' Not authenticated in onboarding, redirecting to login');
       this.router.navigate(['/login']);
       return;
     }
 
     // Si ya completó onboarding, redirigir a home
     if (!this.userStore.needsOnboarding()) {
-      console.log('✅ Onboarding already completed, redirecting to home');
+      console.log(' Onboarding already completed, redirecting to home');
       this.router.navigate(['/home']);
       return;
     }
 
-    console.log('📝 Starting onboarding process for user:', this.userStore.currentUser()?.email);
+    console.log(' Starting onboarding process for user:', this.userStore.currentUser()?.email);
   }
 
   nextStep(): void {

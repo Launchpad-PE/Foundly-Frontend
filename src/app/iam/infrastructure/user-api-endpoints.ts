@@ -26,7 +26,7 @@ export class UsersApi {
   authenticate(email: string, password: string): Observable<any> {
     return this.http
       .post(`${BASE_URL}/authentication/sign-in`, { email, password }, { headers: this.getHeaders() })
-      .pipe(tap((res) => console.log('✅ API Response:', res)));
+      .pipe(tap((res) => console.log(' API Response:', res)));
   }
 
   /**
@@ -35,7 +35,7 @@ export class UsersApi {
   register(userData: UserApiData): Observable<any> {
     return this.http
       .post(`${BASE_URL}${this.endpointPath}`, userData, { headers: this.getHeaders() })
-      .pipe(tap((res) => console.log('✅ Register Response:', res)));
+      .pipe(tap((res) => console.log(' Register Response:', res)));
   }
 
   /**

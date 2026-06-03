@@ -111,7 +111,7 @@ export class ProfileApi extends BaseApi {
   }
 
   /**
-   * ✅ NUEVO: Get all profiles
+   *  NUEVO: Get all profiles
    */
   getAllProfiles(): Observable<Profile[]> {
     return this.profileEndpoint
