@@ -38,6 +38,22 @@
 
     <!-- Hero -->
     <div class="pi-hero">
+      <button
+        class="pi-fav-btn"
+        [class.active]="isFavorite"
+        [disabled]="favoriteBusy || !hasProfile"
+        (click)="toggleFavorite()"
+        [attr.aria-pressed]="isFavorite"
+        [attr.aria-label]="isFavorite ? 'Quitar de favoritos' : 'Guardar en favoritos'"
+        [title]="hasProfile ? (isFavorite ? 'Quitar de favoritos' : 'Guardar en favoritos') : 'Completa tu perfil para guardar favoritos'">
+        <svg viewBox="0 0 24 24" class="pi-fav-icon"
+             [attr.fill]="isFavorite ? 'currentColor' : 'none'"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 10-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"/>
+        </svg>
+        <span class="pi-fav-label">{{ isFavorite ? 'En favoritos' : 'Favorito' }}</span>
+      </button>
+
       <div class="pi-hero-meta">
         <span class="pi-status" [class]="getStatusClass(project.status)">
           {{ getStatusLabel(project.status) }}
@@ -102,8 +118,8 @@
               <div class="pi-role-actions">
                 <button class="pi-btn-ghost" (click)="openRoleModal(role)">Ver detalles</button>
                 <button class="pi-btn-primary"
-                  *ngIf="!isAuthor && project.status === ProjectStatus.PUBLISHED"
-                  (click)="openApplyForm(role)">
+                        *ngIf="!isAuthor && project.status === ProjectStatus.PUBLISHED"
+                        (click)="openApplyForm(role)">
                   Postular
                 </button>
               </div>
