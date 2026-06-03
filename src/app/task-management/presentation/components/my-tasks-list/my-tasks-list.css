@@ -100,6 +100,123 @@
 .state-msg.error { color: #b91c1c; }
 .state-msg.empty { color: #6b7280; }
 
+/* ══ Modal de entrega ══ */
+.deliver-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(30, 35, 80, 0.45);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.deliver-modal {
+  background: white;
+  border-radius: 20px;
+  padding: 2rem 2.25rem;
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  box-shadow: 0 20px 60px rgba(30, 35, 80, 0.2);
+  animation: modal-in 0.2s ease;
+}
+
+@keyframes modal-in {
+  from { opacity: 0; transform: scale(0.95) translateY(8px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.deliver-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #3d4166;
+}
+
+.deliver-task-name {
+  margin: 0;
+  font-size: 0.88rem;
+  color: #6C63FF;
+  font-weight: 600;
+}
+
+.deliver-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.deliver-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #7a7f9a;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.required { color: #ef4444; }
+
+.deliver-input {
+  padding: 0.6rem 0.9rem;
+  border: 1.5px solid #e0e4f8;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  color: #3d4166;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.18s, box-shadow 0.18s;
+}
+.deliver-input:focus {
+  border-color: #6C63FF;
+  box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.12);
+}
+.deliver-textarea { resize: vertical; min-height: 80px; }
+
+.deliver-error {
+  margin: 0;
+  color: #dc2626;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.deliver-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.btn-entregar {
+  padding: 0.55rem 1.4rem;
+  background: #6C63FF;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.18s;
+}
+.btn-entregar:hover { opacity: 0.9; }
+.btn-entregar:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.btn-cancelar {
+  padding: 0.55rem 1.2rem;
+  background: #f0f2ff;
+  color: #6C63FF;
+  border: none;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.18s;
+}
+.btn-cancelar:hover { background: #e2e6ff; }
+
 @media (max-width: 640px) {
   .task-card {
     flex-direction: column;
