@@ -139,44 +139,121 @@
   ],
   "tasks": [
     {
-      "id": "t1",
-      "projectId": "04d5496e-e878-4056-95e1-e9e924067e4b",
-      "collaborator": "Juan Pérez",
-      "title": "prueba 1",
-      "dueDate": "2028-05-30",
-      "status": "atrasado"
+      "id": "task-juan-001",
+      "projectId": "59ea3261-e1f4-4ad0-8007-44222a69d619",
+      "assigneeId": "1",
+      "creatorId": "3",
+      "title": "Implementar módulo de login",
+      "description": "Desarrollar la pantalla de login con validaciones",
+      "dueDate": "2026-06-25T00:00:00.000Z",
+      "checklist": [],
+      "attachments": [],
+      "tools": [],
+      "comment": null,
+      "status": "completed",
+      "deliveryUrl": "http://localhost:4200/",
+      "deliveryNotes": "adkjasdjkasjdhawieiquwieuqiwueiquewiuqweiuqw",
+      "createdAt": "2026-06-03T10:00:00.000Z",
+      "updatedAt": "2026-06-03T07:16:13.417Z"
     },
     {
-      "id": "t2",
-      "projectId": "04d5496e-e878-4056-95e1-e9e924067e4b",
-      "collaborator": "Juan Pérez",
+      "id": "task-ef-001",
+      "projectId": "59ea3261-e1f4-4ad0-8007-44222a69d619",
+      "assigneeId": "3",
+      "creatorId": "3",
+      "title": "Diseñar pantalla principal",
+      "description": "Crear el mockup de la pantalla principal del proyecto",
+      "dueDate": "2026-06-20T00:00:00.000Z",
+      "checklist": [],
+      "attachments": [],
+      "tools": [],
+      "comment": null,
+      "status": "pending",
+      "deliveryUrl": null,
+      "deliveryNotes": null,
+      "createdAt": "2026-06-01T10:00:00.000Z",
+      "updatedAt": "2026-06-01T10:00:00.000Z"
+    },
+    {
+      "id": "task-ef-002",
+      "projectId": "59ea3261-e1f4-4ad0-8007-44222a69d619",
+      "assigneeId": "3",
+      "creatorId": "3",
+      "title": "Conectar API de usuarios",
+      "description": "Integrar el endpoint de usuarios con el frontend",
+      "dueDate": "2026-05-01T00:00:00.000Z",
+      "checklist": [],
+      "attachments": [],
+      "tools": [],
+      "comment": null,
+      "status": "pending",
+      "deliveryUrl": null,
+      "deliveryNotes": null,
+      "createdAt": "2026-05-01T10:00:00.000Z",
+      "updatedAt": "2026-05-01T10:00:00.000Z"
+    },
+    {
+      "id": "task-ef-003",
+      "projectId": "59ea3261-e1f4-4ad0-8007-44222a69d619",
+      "assigneeId": "3",
+      "creatorId": "3",
+      "title": "Documentar el proyecto",
+      "description": "Escribir la documentación técnica",
+      "dueDate": "2026-04-15T00:00:00.000Z",
+      "checklist": [],
+      "attachments": [],
+      "tools": [],
+      "comment": null,
+      "status": "completed",
+      "deliveryUrl": null,
+      "deliveryNotes": null,
+      "createdAt": "2026-04-01T10:00:00.000Z",
+      "updatedAt": "2026-04-15T10:00:00.000Z"
+    },
+    {
+      "id": "task-maria-001",
+      "projectId": "ba96b0d6-54bf-48ed-b026-29eb8636963a",
+      "assigneeId": "2",
+      "creatorId": "1",
+      "title": "Revisar diseño de interfaz",
+      "description": "Revisar y dar feedback sobre los mockups del proyecto",
+      "dueDate": "2026-06-25T00:00:00.000Z",
+      "checklist": [],
+      "attachments": [],
+      "tools": [],
+      "comment": null,
+      "status": "pending",
+      "deliveryUrl": null,
+      "deliveryNotes": null,
+      "createdAt": "2026-06-03T10:00:00.000Z",
+      "updatedAt": "2026-06-03T10:00:00.000Z"
+    },
+    {
+      "id": "452ee36f-aaa6-4979-97a7-736674baa08d",
+      "projectId": "ba96b0d6-54bf-48ed-b026-29eb8636963a",
+      "assigneeId": "2",
+      "creatorId": "1",
       "title": "ayudar a algo",
-      "dueDate": "2025-02-10",
-      "status": "completado"
-    },
-    {
-      "projectId": "187dbdf6-2f3c-4772-8097-38837def4f3d",
-      "collaborator": "juan perez",
-      "title": "revisar documentacion",
-      "dueDate": "2026-06-02",
-      "status": "pendiente",
-      "id": "c11a32ee-09b6-4f24-8629-c2ccd1008c61"
-    },
-    {
-      "projectId": "187dbdf6-2f3c-4772-8097-38837def4f3d",
-      "collaborator": "juan perez",
-      "title": "mirar",
-      "dueDate": "2026-06-10",
-      "status": "pendiente",
-      "id": "36a004de-a4cb-4288-893d-4013dbbfcebb"
-    },
-    {
-      "projectId": "187dbdf6-2f3c-4772-8097-38837def4f3d",
-      "collaborator": "juan perez",
-      "title": "leer",
-      "dueDate": "2026-06-04",
-      "status": "pendiente",
-      "id": "b4110f43-d6b1-4a65-9706-15580719b8a2"
+      "description": "holagolaholalalalalallla",
+      "dueDate": "2026-05-15T00:00:00.000Z",
+      "checklist": [
+        {
+          "description": "ayudar",
+          "done": false
+        }
+      ],
+      "attachments": [
+        "https://www.figma.com/design/5w3Mgz6F3KzoDXQeX93wxn/Mockup-Open-Source?node-id=0-1&p=f&t=HenMNF3feONWxICs-0"
+      ],
+      "tools": [
+        "hola"
+      ],
+      "comment": "holaholohola",
+      "status": "completed",
+      "deliveryUrl": null,
+      "deliveryNotes": null,
+      "createdAt": "2026-05-25T18:58:46.792Z",
+      "updatedAt": "2026-05-25T18:58:46.792Z"
     }
   ],
   "projects": [
@@ -236,9 +313,62 @@
       "createdAt": "2026-06-03T04:36:02.689Z",
       "updatedAt": "2026-06-03T04:36:02.689Z",
       "authorId": "1"
+    },
+    {
+      "id": "59ea3261-e1f4-4ad0-8007-44222a69d619",
+      "name": "examen final",
+      "area": "Educación",
+      "tags": [
+        "remoto"
+      ],
+      "summary": "ajjajsjasjajsjajasjjasjasjajsjasjajsjajsa",
+      "environmentalImpact": [
+        "Humedad ambiental"
+      ],
+      "academicLevel": "Postgrado",
+      "benefits": [
+        "ajajajajajjajaa"
+      ],
+      "requiredSkills": [
+        "ajajajjajajaja"
+      ],
+      "duration": {
+        "amount": 1,
+        "type": "meses"
+      },
+      "roles": [
+        {
+          "id": "ec6245ad-3d2e-491c-9f3e-ef42dc78aa57",
+          "name": "asjajsjasas",
+          "cardInfo": {
+            "title": "ajksjaksas",
+            "items": []
+          }
+        }
+      ],
+      "status": "borrador",
+      "createdAt": "2026-06-03T06:57:17.527Z",
+      "updatedAt": "2026-06-03T06:57:17.527Z",
+      "authorId": "3"
     }
   ],
   "applications": [
+    {
+      "id": "app-juan-examen",
+      "projectId": "59ea3261-e1f4-4ad0-8007-44222a69d619",
+      "userId": "1",
+      "roleId": "asjajsjasas",
+      "fullName": "Juan Pérez",
+      "email": "juan@example.com",
+      "portfolioUrl": "https://github.com",
+      "phone": "999999999",
+      "cvUrl": "https://github.com",
+      "message": "Quiero participar en el proyecto",
+      "acceptedTerms": true,
+      "status": "accepted",
+      "createdAt": "2026-06-01T10:00:00.000Z",
+      "updatedAt": "2026-06-01T10:00:00.000Z"
+    },
     {
       "id": "8eb79645-1211-406a-882d-5beb0ab02950",
       "projectId": "ba96b0d6-54bf-48ed-b026-29eb8636963a",
@@ -270,35 +400,6 @@
       "status": "accepted",
       "createdAt": "2026-06-03T04:37:44.511Z",
       "updatedAt": "2026-06-03T04:38:01.005Z"
-    }
-  ],
-  "tasks": [
-    {
-      "id": "452ee36f-aaa6-4979-97a7-736674baa08d",
-      "projectId": "ba96b0d6-54bf-48ed-b026-29eb8636963a",
-      "assigneeId": "2",
-      "creatorId": "1",
-      "title": "ayudar a algo",
-      "description": "holagolaholalalalalallla",
-      "dueDate": "2026-05-15T00:00:00.000Z",
-      "checklist": [
-        {
-          "description": "ayudar",
-          "done": false
-        }
-      ],
-      "attachments": [
-        "https://www.figma.com/design/5w3Mgz6F3KzoDXQeX93wxn/Mockup-Open-Source?node-id=0-1&p=f&t=HenMNF3feONWxICs-0"
-      ],
-      "tools": [
-        "hola"
-      ],
-      "comment": "holaholohola",
-      "status": "completed",
-      "deliveryUrl": null,
-      "deliveryNotes": null,
-      "createdAt": "2026-05-25T18:58:46.792Z",
-      "updatedAt": "2026-05-25T18:58:46.792Z"
     }
   ],
   "milestones": [
