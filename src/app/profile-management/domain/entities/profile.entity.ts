@@ -11,25 +11,27 @@ export class Profile {
   avatar: string | null;
   bio: string;
   role: string;
-  skills: string[];  // Array de strings con las habilidades
-  experiences: Experience[];  // Array de experiencias
+  skills: string[]; // Array de strings con las habilidades
+  experiences: Experience[]; // Array de experiencias
+  favoriteProjectIds: string[]; // IDs de proyectos marcados como favoritos
   isComplete: boolean;
   createdAt: Date;
   updatedAt: Date;
 
   constructor({
-                id = null as string | null,
-                userId = '',
-                username = '',
-                avatar = null as string | null,
-                bio = '',
-                role = '',
-                skills = [] as string[],
-                experiences = [] as Experience[],
-                isComplete = false,
-                createdAt = null as string | null,
-                updatedAt = null as string | null,
-              } = {}) {
+    id = null as string | null,
+    userId = '',
+    username = '',
+    avatar = null as string | null,
+    bio = '',
+    role = '',
+    skills = [] as string[],
+    experiences = [] as Experience[],
+    favoriteProjectIds = [] as string[],
+    isComplete = false,
+    createdAt = null as string | null,
+    updatedAt = null as string | null,
+  } = {}) {
     this.id = id;
     this.userId = userId;
     this.username = username;
@@ -38,6 +40,7 @@ export class Profile {
     this.role = role;
     this.skills = skills;
     this.experiences = experiences;
+    this.favoriteProjectIds = favoriteProjectIds ?? [];
     this.isComplete = isComplete;
     this.createdAt = createdAt ? new Date(createdAt) : new Date();
     this.updatedAt = updatedAt ? new Date(updatedAt) : new Date();
@@ -96,7 +99,7 @@ export class Profile {
   }
 
   removeSkill(skill: string): void {
-    this.skills = this.skills.filter(s => s !== skill);
+    this.skills = this.skills.filter((s) => s !== skill);
     this.updatedAt = new Date();
   }
 
@@ -106,7 +109,26 @@ export class Profile {
   }
 
   removeExperience(experienceId: string): void {
-    this.experiences = this.experiences.filter(e => e.id !== experienceId);
+    this.experiences = this.experiences.filter((e) => e.id !== experienceId);
+    this.updatedAt = new Date();
+  }
+
+  // ── Favorites ─────────────────────────────────────────────
+  isFavorite(projectId: string): boolean {
+    return this.favoriteProjectIds.includes(projectId.toString());
+  }
+
+  addFavorite(projectId: string): void {
+    const id = projectId.toString();
+    if (!this.favoriteProjectIds.includes(id)) {
+      this.favoriteProjectIds.push(id);
+      this.updatedAt = new Date();
+    }
+  }
+
+  removeFavorite(projectId: string): void {
+    const id = projectId.toString();
+    this.favoriteProjectIds = this.favoriteProjectIds.filter((f) => f !== id);
     this.updatedAt = new Date();
   }
 
