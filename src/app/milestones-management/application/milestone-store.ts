@@ -322,7 +322,6 @@ export class MilestoneStore {
     }
   }
 
-  // ============= Task Management =============
 
   /**
    * Agregar una tarea a un hito
@@ -379,10 +378,11 @@ export class MilestoneStore {
         this.milestoneApi.updateTaskStatus(taskId, newStatus)
       );
 
-      // Encontrar el milestone que contiene esta tarea y refrescarlo
+      // Encontrar el milestone que contiene esta tarea
       const milestone = this.projectMilestones().find((m) => m.tasks.some((t) => t.id === taskId));
 
       if (milestone) {
+        // 👈 REFRESCAR el milestone completo para actualizar su estado
         await this.refreshMilestone(milestone.id);
       }
 
@@ -450,6 +450,17 @@ export class MilestoneStore {
     try {
       const refreshed = await firstValueFrom(this.milestoneApi.getMilestone(milestoneId));
 
+      // Actualizar estados basado en fecha actual
+      refreshed.updateTasksStatusBasedOnDate(new Date());
+
+      // 👈 NUEVO: Si el estado cambió, guardarlo en la API
+      const currentMilestone = this.projectMilestones().find(m => m.id === milestoneId);
+      if (currentMilestone && currentMilestone.status !== refreshed.status) {
+        // El estado cambió (ej: de pending a completed), guardar en la API
+        await firstValueFrom(this.milestoneApi.updateMilestone(refreshed));
+        console.log(`✅ Milestone ${milestoneId} status updated from ${currentMilestone.status} to ${refreshed.status}`);
+      }
+
       // Actualizar en la lista
       this.projectMilestones.update((list) =>
         list.map((m) => (m.id === milestoneId ? refreshed : m)),
@@ -513,6 +524,9 @@ export class MilestoneStore {
       );
 
       if (milestone) {
+        // 👈 REFRESCAR el milestone completo
+        await this.refreshMilestone(milestone.id);
+        // También recargar la lista del proyecto
         await this.loadMilestonesByProject(milestone.projectId.toString());
       }
 
