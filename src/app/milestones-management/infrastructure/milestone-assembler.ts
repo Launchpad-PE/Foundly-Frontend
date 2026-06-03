@@ -78,8 +78,8 @@ export class MilestoneAssembler implements BaseAssembler<Milestone, MilestoneRes
       })),
       attachments: task.attachments.map(att => att.getValue()),
       status: task.status,
-      deliveryUrl: null,
-      deliveryNotes: null,
+      deliveryUrl: task.deliveryUrl,
+      deliveryNotes:  task.deliveryNotes,
       createdAt: task.createdAt.toISOString(),
       updatedAt: task.updatedAt.toISOString()
     };
@@ -97,9 +97,8 @@ export class MilestoneAssembler implements BaseAssembler<Milestone, MilestoneRes
       checklist: resource.checklist,
       attachments: resource.attachments,
       status: resource.status,
-      deliveryUrl: resource.deliveryUrl,
-      deliveryNotes: resource.deliveryNotes,
-      createdAt: new Date(resource.createdAt),
+      deliveryUrl: resource.deliveryUrl ?? null,
+      deliveryNotes: resource.deliveryNotes ?? null,       createdAt: new Date(resource.createdAt),
       updatedAt: new Date(resource.updatedAt)
     };
   }

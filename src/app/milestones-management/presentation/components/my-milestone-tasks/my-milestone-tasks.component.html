@@ -109,7 +109,7 @@
       </div>
 
       <!-- Actions -->
-      <div class="task-actions" *ngIf="!item.task.isCompleted">
+      <div class="task-actions" *ngIf="item.task.isPending">
         <button
           class="btn-deliver"
           (click)="goToDeliverTask(item.task.id, item.milestoneId)"
