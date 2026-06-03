@@ -12,6 +12,7 @@ export interface CreateMilestoneTaskProps {
   title: string;
   description: string;
   assigneeId: string;
+  dueDate?: Date;  // 👈 AGREGAR dueDate (opcional, puede heredar del milestone)
   checklist?: Array<{ description: string; done?: boolean }>;
   attachments?: string[];
   status?: MilestoneTaskStatus;
@@ -34,8 +35,9 @@ export class MilestoneTask {
     private _checklist: ChecklistStep[],
     public readonly attachments: Attachments[],
     private _status: MilestoneTaskStatus,
-    public readonly deliveryUrl: string | null,      // ✅ AGREGADO
-    public readonly deliveryNotes: string | null,    // ✅ AGREGADO
+    public readonly dueDate: Date,  // 👈 AGREGAR dueDate
+    public readonly deliveryUrl: string | null,
+    public readonly deliveryNotes: string | null,
     public readonly createdAt: Date,
     private _updatedAt: Date
   ) {
@@ -72,8 +74,9 @@ export class MilestoneTask {
       (props.checklist ?? []).map(step => new ChecklistStep(step.description, step.done ?? false)),
       (props.attachments ?? []).map(url => new Attachments(url)),
       props.status ?? MilestoneTaskStatus.PENDING,
-      props.deliveryUrl ?? null,      // ✅ AGREGADO
-      props.deliveryNotes ?? null,    // ✅ AGREGADO
+      props.dueDate ?? new Date(),  // 👈 Si no tiene dueDate, usar fecha actual
+      props.deliveryUrl ?? null,
+      props.deliveryNotes ?? null,
       props.createdAt ?? now,
       props.updatedAt ?? now
     );
@@ -101,6 +104,23 @@ export class MilestoneTask {
 
   get isDelayed(): boolean {
     return this._status === MilestoneTaskStatus.DELAYED;
+  }
+
+  updateStatusBasedOnDate(currentDate: Date = new Date()): void {
+    // Si ya está completado, no cambiamos
+    if (this.isCompleted) {
+      return;
+    }
+
+    // Si la fecha de entrega pasó y no está completada, marcar como delayed
+    if (currentDate > this.dueDate) {
+      this._status = MilestoneTaskStatus.DELAYED;
+      this._updatedAt = new Date();
+    } else if (this.isDelayed && currentDate <= this.dueDate) {
+      // Si estaba atrasada pero ya no, volver a pending
+      this._status = MilestoneTaskStatus.PENDING;
+      this._updatedAt = new Date();
+    }
   }
 
   complete(deliveryUrl?: string, deliveryNotes?: string | null): void {
@@ -151,4 +171,13 @@ export class MilestoneTask {
   equals(other: MilestoneTask): boolean {
     return this._id.equals(other._id);
   }
+  updateDueDate(newDueDate: Date): void {
+    if (this.isCompleted) {
+      throw new Error('Cannot update due date of a completed task');
+    }
+    (this as any).dueDate = newDueDate;
+    this.updateStatusBasedOnDate();  // Re-evaluar estado
+    this._updatedAt = new Date();
+  }
+
 }

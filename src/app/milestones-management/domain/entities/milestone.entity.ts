@@ -7,6 +7,7 @@ import { Tool } from '../value-objects/tool.vo';
 import { Attachments } from '../value-objects/attachments.vo';
 import { MilestoneStatus } from '../enum/milestone-status.enum';
 import { MilestoneTask, CreateMilestoneTaskProps } from './milestone-task.entity';
+import { MilestoneTaskStatus } from '../enum/milestone-task-status.enum';
 
 export interface CreateMilestoneProps {
   id?: string;
@@ -53,12 +54,10 @@ export class Milestone {
     this._id = milestoneId;
   }
 
-  // Exponer id como string para cumplir con BaseEntity
   get id(): string {
     return this._id.toString();
   }
 
-  // Método para obtener el value object cuando sea necesario
   get milestoneId(): MilestoneId {
     return this._id;
   }
@@ -85,14 +84,15 @@ export class Milestone {
       props.updatedAt ?? now
     );
 
-    // ✅ CAMBIO IMPORTANTE: Usar asignación directa en lugar de addTask
+    // ✅ MODIFICADO: Asignar el dueDate del milestone a cada tarea
     if (props.tasks && props.tasks.length > 0) {
       for (const taskProps of props.tasks) {
         const task = MilestoneTask.create({
           ...taskProps,
-          milestoneId: milestone.id
+          milestoneId: milestone.id,
+          dueDate: props.dueDate  // 👈 Heredar la fecha del milestone
         });
-        milestone._tasks.push(task);  // Asignación directa, NO usar addTask
+        milestone._tasks.push(task);
       }
     }
 
@@ -155,7 +155,8 @@ export class Milestone {
 
     const task = MilestoneTask.create({
       ...taskProps,
-      milestoneId: this.id
+      milestoneId: this.id,
+      dueDate: this._dueDate  // 👈 Usar la fecha del milestone
     });
 
     this._tasks.push(task);
@@ -233,6 +234,23 @@ export class Milestone {
     this._updatedAt = new Date();
   }
 
+  updateTasksStatusBasedOnDate(currentDate: Date = new Date()): void {
+    let anyTaskUpdated = false;
+
+    for (const task of this._tasks) {
+      const oldStatus = task.status;
+      task.updateStatusBasedOnDate(currentDate);
+      if (oldStatus !== task.status) {
+        anyTaskUpdated = true;
+      }
+    }
+
+    if (anyTaskUpdated) {
+      this._updateStatus();  // Recalcular estado del milestone
+      this._updatedAt = new Date();
+    }
+  }
+
   reschedule(newDueDate: Date): void {
     if (this.isCompleted) {
       throw new Error('Cannot reschedule a completed milestone');
@@ -243,6 +261,12 @@ export class Milestone {
     }
 
     this._dueDate = newDueDate;
+
+    // Actualizar la fecha de todas las tareas existentes
+    for (const task of this._tasks) {
+      task.updateDueDate(newDueDate);
+    }
+
     this._updatedAt = new Date();
     this._updateStatus();
   }
