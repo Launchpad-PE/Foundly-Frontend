@@ -85,14 +85,14 @@ export class Milestone {
       props.updatedAt ?? now
     );
 
-    // Add tasks if provided (ahora sin milestoneId)
+    // ✅ CAMBIO IMPORTANTE: Usar asignación directa en lugar de addTask
     if (props.tasks && props.tasks.length > 0) {
       for (const taskProps of props.tasks) {
-        // Agregar el milestoneId aquí
-        milestone.addTask({
+        const task = MilestoneTask.create({
           ...taskProps,
-          milestoneId: milestone.id  // <-- Usar el ID del milestone recién creado
+          milestoneId: milestone.id
         });
+        milestone._tasks.push(task);  // Asignación directa, NO usar addTask
       }
     }
 
@@ -149,7 +149,7 @@ export class Milestone {
 
   // Task management
   addTask(taskProps: CreateMilestoneTaskProps): MilestoneTask {
-    if (this.isCompleted) {
+    if (this.isCompleted && this._tasks.length > 0) {
       throw new Error('Cannot add tasks to a completed milestone');
     }
 

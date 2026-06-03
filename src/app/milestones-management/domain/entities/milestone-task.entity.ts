@@ -15,6 +15,8 @@ export interface CreateMilestoneTaskProps {
   checklist?: Array<{ description: string; done?: boolean }>;
   attachments?: string[];
   status?: MilestoneTaskStatus;
+  deliveryUrl?: string | null;
+  deliveryNotes?: string | null;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -32,6 +34,8 @@ export class MilestoneTask {
     private _checklist: ChecklistStep[],
     public readonly attachments: Attachments[],
     private _status: MilestoneTaskStatus,
+    public readonly deliveryUrl: string | null,      // ✅ AGREGADO
+    public readonly deliveryNotes: string | null,    // ✅ AGREGADO
     public readonly createdAt: Date,
     private _updatedAt: Date
   ) {
@@ -39,17 +43,14 @@ export class MilestoneTask {
     this._milestoneId = milestoneId;
   }
 
-  // Exponer id como string para cumplir con BaseEntity
   get id(): string {
     return this._id.toString();
   }
 
-  // Exponer milestoneId como string
   get milestoneId(): string {
     return this._milestoneId.toString();
   }
 
-  // Métodos para obtener los value objects cuando sea necesario
   get taskIdValue(): MilestoneTaskId {
     return this._id;
   }
@@ -71,12 +72,13 @@ export class MilestoneTask {
       (props.checklist ?? []).map(step => new ChecklistStep(step.description, step.done ?? false)),
       (props.attachments ?? []).map(url => new Attachments(url)),
       props.status ?? MilestoneTaskStatus.PENDING,
+      props.deliveryUrl ?? null,      // ✅ AGREGADO
+      props.deliveryNotes ?? null,    // ✅ AGREGADO
       props.createdAt ?? now,
       props.updatedAt ?? now
     );
   }
 
-  // Getters
   get checklist(): ChecklistStep[] {
     return [...this._checklist];
   }
@@ -101,12 +103,17 @@ export class MilestoneTask {
     return this._status === MilestoneTaskStatus.DELAYED;
   }
 
-  // Business methods
-  complete(): void {
+  complete(deliveryUrl?: string, deliveryNotes?: string | null): void {
     if (this.isCompleted) {
       throw new Error('Task is already completed');
     }
     this._status = MilestoneTaskStatus.COMPLETED;
+    if (deliveryUrl !== undefined) {
+      (this as any).deliveryUrl = deliveryUrl;
+    }
+    if (deliveryNotes !== undefined) {
+      (this as any).deliveryNotes = deliveryNotes;
+    }
     this._updatedAt = new Date();
   }
 
