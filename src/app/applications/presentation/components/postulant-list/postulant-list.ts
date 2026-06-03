@@ -111,7 +111,4 @@ export class PostulantListComponent implements OnInit, OnChanges {
     }
   }
 
-  invite(): void {
-    alert('Función "Invitar" próximamente.');
-  }
 }
