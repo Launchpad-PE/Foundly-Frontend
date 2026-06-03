@@ -131,6 +131,34 @@
             📎 {{ getShortUrl(att.getValue()) }}
           </a>
         </div>
+
+        <!-- ✅ INFORMACIÓN DE ENTREGA (NUEVO) -->
+        <div class="delivery-info" *ngIf="task.isCompleted && task.deliveryUrl">
+          <div class="delivery-header">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+            <span>📦 Entrega del colaborador</span>
+          </div>
+
+          <div class="delivery-url">
+            <span class="label">🔗 Enlace entregado:</span>
+            <a [href]="task.deliveryUrl" target="_blank" rel="noopener noreferrer">
+              {{ truncateUrl(task.deliveryUrl) }}
+            </a>
+          </div>
+
+          <div class="delivery-notes" *ngIf="task.deliveryNotes">
+            <span class="label">💬 Comentario:</span>
+            <p>{{ task.deliveryNotes }}</p>
+          </div>
+
+          <div class="delivery-date">
+            <span class="label">📅 Entregado el:</span>
+            <span>{{ task.updatedAt | date:'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+        </div>
       </div>
 
       <!-- Actions -->

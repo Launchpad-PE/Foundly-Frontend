@@ -140,4 +140,11 @@ export class MilestoneTasksComponent implements OnInit {
     await this.loadTasks();
     this.onTaskUpdated.emit();
   }
+
+  // Agrega este método
+  truncateUrl(url: string): string {
+    if (!url) return '';
+    if (url.length <= 50) return url;
+    return url.substring(0, 50) + '...';
+  }
 }
