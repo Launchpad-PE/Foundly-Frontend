@@ -1,5 +1,6 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 
@@ -26,7 +27,7 @@ import { ApplicationApi } from '../../../../applications/infrastructure/applicat
 @Component({
   selector: 'app-task-detail',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './task-detail.html',
   styleUrls: ['./task-detail.css']
 })
@@ -103,6 +104,34 @@ export class TaskDetailComponent implements OnInit {
     }
 
     this.loading.set(false);
+  }
+
+  // ── Entregar tarea ────────────────────────────────────
+  deliveryUrl: string = '';
+  deliveryNotes: string = '';
+  deliveryComment: string = '';
+  delivering = signal<boolean>(false);
+  deliverError = signal<string>('');
+
+  async submitDelivery(): Promise<void> {
+    if (!this.deliveryUrl.trim()) {
+      this.deliverError.set('El enlace de entrega es obligatorio.');
+      return;
+    }
+    const task = this.task();
+    if (!task) return;
+    this.delivering.set(true);
+    this.deliverError.set('');
+    try {
+      await this.taskStore.completeTask(task.id, this.deliveryUrl.trim(), this.deliveryNotes.trim() || null);
+      // Recargar tarea para mostrar vista de completada
+      const updated = await this.taskStore.loadTask(task.id);
+      this.task.set(updated);
+    } catch (err: any) {
+      this.deliverError.set(err?.message ?? 'Error al entregar la tarea.');
+    } finally {
+      this.delivering.set(false);
+    }
   }
 
   goBack(): void {
