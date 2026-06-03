@@ -139,13 +139,14 @@
   ],
   "projects": [
     {
-      "id": "187dbdf6-2f3c-4772-8097-38837def4f3d",
-      "name": "AAAAAAAAAAAAAAA",
-      "area": "Tecnología",
+      "id": "ba96b0d6-54bf-48ed-b026-29eb8636963a",
+      "name": "asdsasddsa",
+      "area": "Educación",
       "tags": [
-        "AAAAAAAAAAAAAAAAAA"
+        "asdsdsadsa",
+        "dsdasdasdasdas"
       ],
-      "summary": "SAD ASD ASD ASD ASD ASDA SASD ASD ASD ASDASD ASDASDASD",
+      "summary": "saddsadsasadsadsadsdasadsdadsasaddsa dsadadassadsasdadas",
       "environmentalImpact": [
         "Calidad del aire",
         "Humedad ambiental",
@@ -154,304 +155,79 @@
       ],
       "academicLevel": "Pregrado",
       "benefits": [
-        "SADASDDASDASDAS"
+        "asdadssadadssa",
+        "dsasadsdadsaaasd"
       ],
       "requiredSkills": [
-        "SADSDADSADASDASDAS"
+        "saddsadsadsasadsad",
+        "sasadsaddsaads"
       ],
       "duration": {
-        "amount": 1,
+        "amount": 2,
         "type": "meses"
       },
       "roles": [
         {
-          "id": "6c525fb6-e6f0-4e8e-94e8-a596a549da39",
-          "name": "SAASDASDASDASD",
+          "id": "40c397af-583c-4f9b-872b-a4ff2c58378c",
+          "name": "saddsadsasdadsa1",
           "cardInfo": {
-            "title": "ASDASDASDASD",
+            "title": "sdsadasdsdsadsdsdsadas",
             "items": [
-              "ASDADSADSASD",
-              "SADDASADSDAS"
+              "adsadsd",
+              "sddasdasdasdas"
             ]
           }
         },
         {
-          "id": "a0951870-ee01-40aa-aea9-64f8a5470e43",
-          "name": "ASDDASASDASD",
+          "id": "5aece4ae-9de3-40b5-81e5-8c3c2346c678",
+          "name": "saddsasadads2",
           "cardInfo": {
-            "title": "ASDASDADSADS",
+            "title": "asdsasaddassdasd",
             "items": [
-              "ASDDASADSADWS",
-              "ASSDAADSDAS"
+              "asdsdadsadsa",
+              "sdsasad"
             ]
           }
         }
       ],
       "status": "borrador",
-      "createdAt": "2026-05-11T14:55:48.005Z",
-      "updatedAt": "2026-05-11T14:55:48.005Z",
-      "authorId": "3"
-    },
-    {
-      "id": "04d5496e-e878-4056-95e1-e9e924067e4b",
-      "name": "ASDASD",
-      "area": "Tecnología",
-      "tags": [
-        "SADASDASDADS"
-      ],
-      "summary": "ASDASDASDASDASDASDAS DASDASDASD",
-      "environmentalImpact": [
-        "Calidad del aire",
-        "Humedad ambiental"
-      ],
-      "academicLevel": null,
-      "benefits": [
-        "ASDASDDSAASD"
-      ],
-      "requiredSkills": [
-        "ASDDASASDDAS"
-      ],
-      "duration": {
-        "amount": 1,
-        "type": "meses"
-      },
-      "roles": [
-        {
-          "id": "b31ef12b-dcc8-4f72-9415-bfe33bccb492",
-          "name": "SAADSASD",
-          "cardInfo": {
-            "title": "ASDSDAASDDAS",
-            "items": [
-              "ASDADSDASASD"
-            ]
-          }
-        },
-        {
-          "id": "25f76369-2ac5-4d0b-a687-c6a6e7f9d32f",
-          "name": "SADASDASD",
-          "cardInfo": {
-            "title": "ASDASASDADS",
-            "items": []
-          }
-        }
-      ],
-      "status": "borrador",
-      "createdAt": "2026-05-11T14:59:48.340Z",
-      "updatedAt": "2026-05-11T14:59:48.340Z",
+      "createdAt": "2026-06-03T04:36:02.689Z",
+      "updatedAt": "2026-06-03T04:36:02.689Z",
       "authorId": "1"
-    },
-    {
-      "id": "ebbd2490-4be0-49bf-81bf-73b3869aa305",
-      "name": "sadassad",
-      "area": "Tecnología",
-      "tags": [
-        "asdasddsa"
-      ],
-      "summary": "sadsasdaasdsad sasadsadsadsadasdsadsadsadsadasd asd asasdasasdas",
-      "environmentalImpact": [
-        "Calidad del aire",
-        "Humedad ambiental"
-      ],
-      "academicLevel": "Pregrado",
-      "benefits": [
-        "sdasddas",
-        "sdaasdasd"
-      ],
-      "requiredSkills": [
-        "asdasdads",
-        "sdaasdsad"
-      ],
-      "duration": {
-        "amount": 1,
-        "type": "meses"
-      },
-      "roles": [
-        {
-          "id": "4f420742-5b22-49a0-a1f3-eebd4b7a4633",
-          "name": "asdads",
-          "cardInfo": {
-            "title": "sadasdasd",
-            "items": [
-              "asdasd"
-            ]
-          }
-        },
-        {
-          "id": "d27adaa5-88ff-4604-9aaa-8472416d1453",
-          "name": "sdaadsasd",
-          "cardInfo": {
-            "title": "saasddsa",
-            "items": [
-              "sdaasdsdads"
-            ]
-          }
-        }
-      ],
-      "status": "borrador",
-      "createdAt": "2026-06-01T13:15:05.124Z",
-      "updatedAt": "2026-06-01T13:15:05.124Z",
-      "authorId": "2"
-    },
-    {
-      "id": "d82afed9-6cf6-4474-b63f-4feefca5f2b6",
-      "name": "sadassad",
-      "area": "Ciencia",
-      "tags": [
-        "asdsddsaasdasdasd"
-      ],
-      "summary": "dsassssssssssssssssss  asasasasasasasasasasasasasasasasasasas",
-      "environmentalImpact": [
-        "Humedad ambiental",
-        "Calidad del aire",
-        "Temperatura",
-        "Participación ciudadana"
-      ],
-      "academicLevel": "Postgrado",
-      "benefits": [
-        "sadasdasdasdasd"
-      ],
-      "requiredSkills": [
-        "sdaasdads",
-        "sdaasdsad"
-      ],
-      "duration": {
-        "amount": 6,
-        "type": "meses"
-      },
-      "roles": [
-        {
-          "id": "ac4e460e-44ea-47fc-b19f-076005bcc96f",
-          "name": "sadsad",
-          "cardInfo": {
-            "title": "sadsdaasd",
-            "items": [
-              "sadasd"
-            ]
-          }
-        }
-      ],
-      "status": "borrador",
-      "createdAt": "2026-06-01T13:23:35.644Z",
-      "updatedAt": "2026-06-01T13:23:35.644Z",
-      "authorId": "2"
-    },
-    {
-      "id": "b4a367d5-4f63-4f05-b223-bd70975ef145",
-      "name": "Plataforma Impacto Ambiental",
-      "area": "Ciencia",
-      "tags": [
-        "sadsadsa"
-      ],
-      "summary": "sdsdadsa asd asdasdas dd asd asd asdsad asd sadasdas asd",
-      "environmentalImpact": [
-        "Humedad ambiental",
-        "Calidad del aire",
-        "Participación ciudadana"
-      ],
-      "academicLevel": "Doctorado",
-      "benefits": [
-        "sadasdasdasd"
-      ],
-      "requiredSkills": [
-        "sdsdsad",
-        "sadasdasd"
-      ],
-      "duration": {
-        "amount": 1,
-        "type": "meses"
-      },
-      "roles": [
-        {
-          "id": "1691c111-0fe7-4469-bd36-0634c965be34",
-          "name": "saasd",
-          "cardInfo": {
-            "title": "sadasdasdasd",
-            "items": [
-              "asdasdasd"
-            ]
-          }
-        }
-      ],
-      "status": "borrador",
-      "createdAt": "2026-06-01T13:25:01.972Z",
-      "updatedAt": "2026-06-01T13:25:01.972Z",
-      "authorId": "2"
-    },
-    {
-      "id": "5aa91b74-79c5-470e-b4af-4b8c708531d8",
-      "name": "Prueba",
-      "area": "Tecnología",
-      "tags": [
-        "sadasddas"
-      ],
-      "summary": "sadasdasasdasd asd asdd ",
-      "environmentalImpact": [
-        "Humedad ambiental",
-        "Calidad del aire",
-        "Participación ciudadana",
-        "Temperatura"
-      ],
-      "academicLevel": "Pregrado",
-      "benefits": [
-        "sdsdaasdasd"
-      ],
-      "requiredSkills": [
-        "asddasadsasd"
-      ],
-      "duration": {
-        "amount": 1,
-        "type": "meses"
-      },
-      "roles": [
-        {
-          "id": "ff09b676-978d-449a-b419-31775d522848",
-          "name": "saddas",
-          "cardInfo": {
-            "title": "sadasdasdasd",
-            "items": [
-              "sadadsasdw"
-            ]
-          }
-        }
-      ],
-      "status": "borrador",
-      "createdAt": "2026-06-01T13:31:47.038Z",
-      "updatedAt": "2026-06-01T13:31:47.038Z",
-      "authorId": "2"
     }
   ],
   "applications": [
     {
-      "id": "907ab073-d11c-4e13-b822-4186da33dd16",
-      "projectId": "187dbdf6-2f3c-4772-8097-38837def4f3d",
-      "userId": "1",
-      "roleId": "SAASDASDASDASD",
-      "fullName": "Juan Pérez",
-      "email": "juan@example.com",
-      "portfolioUrl": "https://pe.linkedin.com/",
-      "phone": "910 089 304",
-      "cvUrl": "https://pe.linkedin.com/",
-      "message": ":-) wjwjwjwjwwieiu38i4uijkfms,fnsdnfjsdfhysudfuyyew7y783yirjewkfnekkefmdsnmfnmdsnfmsdnf",
-      "acceptedTerms": true,
-      "status": "pending",
-      "createdAt": "2026-05-21T06:39:48.541Z",
-      "updatedAt": "2026-05-21T06:39:48.541Z"
-    },
-    {
-      "id": "9a298dda-81b0-489d-8706-cf0b93b07c97",
-      "projectId": "04d5496e-e878-4056-95e1-e9e924067e4b",
-      "userId": "1",
-      "roleId": "SAADSASD",
-      "fullName": "Juan Pérez",
-      "email": "juan@example.com",
-      "portfolioUrl": "https://pe.linkedin.com/",
-      "phone": "910 089 304",
-      "cvUrl": "https://pe.linkedin.com/",
-      "message": "weiwieiejsjshshsndnnsdklalaiuwewueerosd",
+      "id": "8eb79645-1211-406a-882d-5beb0ab02950",
+      "projectId": "ba96b0d6-54bf-48ed-b026-29eb8636963a",
+      "userId": "4",
+      "roleId": "saddsadsasdadsa1",
+      "fullName": "test_1",
+      "email": "test_1@gmail.com",
+      "portfolioUrl": "https://www.youtube.com/watch?v=HeaL4WHy368",
+      "phone": "936 266 002",
+      "cvUrl": "https://www.youtube.com/watch?v=HeaL4WHy368",
+      "message": "samdlsdamdslñmdslñmdslñmdslñadsdas",
       "acceptedTerms": true,
       "status": "accepted",
-      "createdAt": "2026-05-21T06:43:41.193Z",
-      "updatedAt": "2026-05-25T18:00:46.511Z"
+      "createdAt": "2026-06-03T04:36:33.054Z",
+      "updatedAt": "2026-06-03T04:37:58.393Z"
+    },
+    {
+      "id": "400ccbed-8df7-4037-8a93-f68c8a1c1722",
+      "projectId": "ba96b0d6-54bf-48ed-b026-29eb8636963a",
+      "userId": "2",
+      "roleId": "saddsasadads2",
+      "fullName": "María García",
+      "email": "maria@example.com",
+      "portfolioUrl": "https://www.youtube.com/watch?v=WZ9IhjvkRvs&list=RD2asR0srps5g&index=2",
+      "phone": "936 266 002",
+      "cvUrl": "https://www.youtube.com/watch?v=WZ9IhjvkRvs&list=RD2asR0srps5g&index=2",
+      "message": "asmdkdasmldasmlñdasmlñadsdaslñ",
+      "acceptedTerms": true,
+      "status": "accepted",
+      "createdAt": "2026-06-03T04:37:44.511Z",
+      "updatedAt": "2026-06-03T04:38:01.005Z"
     }
   ],
   "tasks": [
@@ -485,47 +261,80 @@
   ],
   "milestones": [
     {
-      "id": "f7317d4e-e9f0-4e0c-b66d-78c6b566f493",
-      "projectId": "04d5496e-e878-4056-95e1-e9e924067e4b",
+      "id": "2b56d2b9-af13-4205-b0c6-7c9a9c53e3de",
+      "projectId": "ba96b0d6-54bf-48ed-b026-29eb8636963a",
       "creatorId": "1",
-      "title": "asknadsnkdasn",
-      "description": "askldaskladsnklads",
+      "title": "sadsadsadsdsasdasda",
+      "description": "samdsakndskldaskldasnkldas",
       "tools": [
-        "asdnkladsnkladsn"
+        "ssaasdsasaddas"
       ],
-      "generalComment": "asjkadskjdasbjk",
-      "dueDate": "2026-06-11T00:00:00.000Z",
+      "generalComment": "asdmldsalsanklasdnkslndkaslndklsndsa",
+      "dueDate": "2026-06-05T00:00:00.000Z",
       "attachments": [
-        "https://www.youtube.com/watch?v=Wbt59pmT26E&list=RDnPtxGC95LxE&index=2"
+        "https://www.youtube.com/watch?v=EaROq8Zj-aI"
       ],
       "tasks": [
         {
-          "id": "66a2ee58-8242-43b4-8c48-b140ef70bffb",
-          "milestoneId": "f7317d4e-e9f0-4e0c-b66d-78c6b566f493",
-          "title": "asdsaads",
-          "description": "asddasnkdasnk",
-          "assigneeId": "1",
+          "id": "c4425898-99cc-40a7-8ef2-aebb6f1875b2",
+          "milestoneId": "2b56d2b9-af13-4205-b0c6-7c9a9c53e3de",
+          "title": "sadnldsandkslndssadn",
+          "description": "asdknsaklndsdnskldsnkldsankadsl",
+          "assigneeId": "4",
           "checklist": [
             {
-              "description": "asnadsjdank",
+              "description": "saddasddass",
+              "done": false
+            },
+            {
+              "description": "ddasdsadsadsa",
+              "done": false
+            },
+            {
+              "description": "assadsadsa",
               "done": false
             }
           ],
           "attachments": [
-            "https://www.youtube.com/watch?v=Wbt59pmT26E&list=RDnPtxGC95LxE&index=2"
+            "https://www.youtube.com/watch?v=EaROq8Zj-aI"
           ],
           "status": "completed",
-          "deliveryUrl": "https://www.youtube.com/watch?v=kh_YCSW5lPc&list=RDnPtxGC95LxE&index=3",
-          "deliveryNotes": "asmasdladsmlaslmasdl",
-          "createdAt": "2026-06-02T22:24:55.544Z",
-          "updatedAt": "2026-06-02T22:29:15.046Z"
+          "deliveryUrl": "https://www.youtube.com/watch?v=EaROq8Zj-aI",
+          "deliveryNotes": "salmsadmsadsdamdsam",
+          "createdAt": "2026-06-03T04:40:57.435Z",
+          "updatedAt": "2026-06-03T04:41:27.191Z"
+        },
+        {
+          "id": "95979061-8c5e-421b-8687-0943c3b89811",
+          "milestoneId": "2b56d2b9-af13-4205-b0c6-7c9a9c53e3de",
+          "title": "sadmsaldmslñsamlñads",
+          "description": "sadsañlkdsñaadsk",
+          "assigneeId": "2",
+          "checklist": [
+            {
+              "description": "dasmñsdslñdsam",
+              "done": false
+            },
+            {
+              "description": "asdads",
+              "done": false
+            }
+          ],
+          "attachments": [
+            "https://www.youtube.com/watch?v=EaROq8Zj-aI"
+          ],
+          "status": "completed",
+          "deliveryUrl": "https://www.youtube.com/watch?v=EaROq8Zj-aI",
+          "deliveryNotes": "asmsadpdsakads`pdas sadklsnadñdslñadsmlñads",
+          "createdAt": "2026-06-03T04:40:57.435Z",
+          "updatedAt": "2026-06-03T04:41:35.620Z"
         }
       ],
       "status": "pending",
       "deliveryUrl": null,
       "deliveryNotes": null,
-      "createdAt": "2026-06-02T22:24:55.543Z",
-      "updatedAt": "2026-06-02T22:24:55.544Z"
+      "createdAt": "2026-06-03T04:40:57.435Z",
+      "updatedAt": "2026-06-03T04:40:57.436Z"
     }
   ]
 }
