@@ -1,5 +1,6 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ProjectStore } from '../../../application/project-store';
 import { Project } from '../../../domain/entities/project.entity';
@@ -10,7 +11,6 @@ import { TaskListComponent, AssigneeOption } from '../../../../task-management/p
 import { ApplicationStore } from '../../../../applications/application/application.store';
 import { ApplicationStatus } from '../../../../applications/domain/enum/application-status.enum';
 import { TaskStore } from '../../../../task-management/application/task.store';
-import { computed } from '@angular/core';
 import {
   MilestoneListComponent
 } from '../../../../milestones-management/presentation/components/milestone-list/milestone-list.component';
@@ -20,13 +20,21 @@ import {
 import { UserStore } from '../../../../iam/application/user.store';
 import { Milestone } from '../../../../milestones-management/domain/entities/milestone.entity';
 
-
 type Tab = 'inicio' | 'tareas' | 'iot' | 'hitos' | 'postulantes';
 
 @Component({
   selector: 'app-project-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule, IotDashboardComponent, PostulantListComponent, TaskListComponent, MilestoneListComponent, MilestoneDetailComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterModule,
+    IotDashboardComponent,
+    PostulantListComponent,
+    TaskListComponent,
+    MilestoneListComponent,
+    MilestoneDetailComponent
+  ],
   templateUrl: './project-detail.html',
   styleUrls: ['./project-detail.css']
 })
@@ -35,7 +43,7 @@ export class ProjectDetailComponent implements OnInit {
   private router = inject(Router);
   private projectStore = inject(ProjectStore);
   private applicationStore = inject(ApplicationStore);
-  private taskStore = inject(TaskStore);
+  readonly taskStore = inject(TaskStore);
   private userStore = inject(UserStore);
 
   project = signal<Project | null>(null);
@@ -43,6 +51,7 @@ export class ProjectDetailComponent implements OnInit {
   loading = signal(true);
   selectedMilestoneId = signal<string | null>(null);
 
+  // ── Computed helpers ───────────────────────────────────
   get projectName(): string {
     return this.project()?.name.getValue() ?? '';
   }
@@ -63,7 +72,11 @@ export class ProjectDetailComponent implements OnInit {
     return this.project()?.roles.map(r => r.name.getValue()) ?? [];
   }
 
-  /** Colaboradores aceptados del proyecto — alimentan los dropdowns de tareas y hitos */
+  get currentUserId(): string {
+    return this.userStore.currentUser()?.id ?? '';
+  }
+
+  /** Colaboradores aceptados — alimentan dropdowns de tareas y hitos */
   get taskAssignees(): AssigneeOption[] {
     const apps = this.applicationStore.projectApplications();
     return apps
@@ -71,8 +84,6 @@ export class ProjectDetailComponent implements OnInit {
       .map(a => ({ id: a.userId.toString(), fullName: a.fullName.getValue() }));
   }
 
-
-  /** Colaboradores aceptados del proyecto (signal computed) */
   readonly acceptedCollaborators = computed(() =>
     this.applicationStore.projectApplications()
       .filter(a => a.status === ApplicationStatus.ACCEPTED)
@@ -86,7 +97,6 @@ export class ProjectDetailComponent implements OnInit {
       }))
   );
 
-  /** Conteos de tareas del proyecto. */
   readonly totalTasks = computed(() => this.taskStore.projectTasks().length);
   readonly completedTasksCount = computed(() =>
     this.taskStore.projectTasks().filter(t => t.isCompleted()).length
@@ -94,19 +104,20 @@ export class ProjectDetailComponent implements OnInit {
   readonly urgentTasksCount = computed(() =>
     this.taskStore.projectTasks().filter(t => t.isDelayed()).length
   );
-
   readonly tasksCompletionPct = computed(() => {
     const total = this.totalTasks();
     if (total === 0) return 0;
     return Math.round((this.completedTasksCount() / total) * 100);
   });
-
-  /** Stroke conic-gradient para el ring de tareas (CSS variable inline). */
   readonly tasksRingStyle = computed(() => {
     const pct = this.tasksCompletionPct();
     return `conic-gradient(#667eea ${pct}%, #edeef8 ${pct}%)`;
   });
+  readonly urgentTasksList = computed(() =>
+    this.taskStore.projectTasks().filter(t => t.isDelayed())
+  );
 
+  // ── Lifecycle ──────────────────────────────────────────
   async ngOnInit(): Promise<void> {
     const id = this.route.snapshot.paramMap.get('id');
     if (!id) {
@@ -116,7 +127,6 @@ export class ProjectDetailComponent implements OnInit {
     const p = await this.projectStore.loadProject(id);
     this.project.set(p);
     if (p) {
-      // Cargamos applications aceptadas para alimentar el dropdown del task-list
       this.applicationStore.loadApplicationsByProject(p.id);
       this.taskStore.loadTasksByProject(p.id);
     }
@@ -125,21 +135,16 @@ export class ProjectDetailComponent implements OnInit {
 
   setTab(tab: Tab): void {
     this.activeTab.set(tab);
-    // Resetear selección de hito cuando cambiamos de pestaña
     if (tab !== 'hitos') {
       this.selectedMilestoneId.set(null);
     }
-  }
-
-  get currentUserId(): string {
-    return this.userStore.currentUser()?.id ?? '';
   }
 
   goBack(): void {
     this.router.navigate(['/projects']);
   }
 
-  // Métodos para manejo de hitos
+  // ── Milestone handlers ─────────────────────────────────
   onMilestoneSelected(milestone: Milestone): void {
     this.selectedMilestoneId.set(milestone.id);
   }
@@ -150,6 +155,14 @@ export class ProjectDetailComponent implements OnInit {
 
   onMilestoneUpdated(milestone: Milestone): void {
     console.log('Milestone updated:', milestone);
-    // Puedes recargar datos si es necesario
+  }
+
+  // ── Helpers ────────────────────────────────────────────
+  formatDate(d: Date): string {
+    if (!d) return '-';
+    const x = new Date(d);
+    const dd = String(x.getDate()).padStart(2, '0');
+    const mm = String(x.getMonth() + 1).padStart(2, '0');
+    return `${dd}/${mm}/${x.getFullYear()}`;
   }
 }

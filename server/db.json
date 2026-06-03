@@ -137,6 +137,48 @@
       "updatedAt": "2026-06-01T13:14:19.348Z"
     }
   ],
+  "tasks": [
+    {
+      "id": "t1",
+      "projectId": "04d5496e-e878-4056-95e1-e9e924067e4b",
+      "collaborator": "Juan Pérez",
+      "title": "prueba 1",
+      "dueDate": "2028-05-30",
+      "status": "atrasado"
+    },
+    {
+      "id": "t2",
+      "projectId": "04d5496e-e878-4056-95e1-e9e924067e4b",
+      "collaborator": "Juan Pérez",
+      "title": "ayudar a algo",
+      "dueDate": "2025-02-10",
+      "status": "completado"
+    },
+    {
+      "projectId": "187dbdf6-2f3c-4772-8097-38837def4f3d",
+      "collaborator": "juan perez",
+      "title": "revisar documentacion",
+      "dueDate": "2026-06-02",
+      "status": "pendiente",
+      "id": "c11a32ee-09b6-4f24-8629-c2ccd1008c61"
+    },
+    {
+      "projectId": "187dbdf6-2f3c-4772-8097-38837def4f3d",
+      "collaborator": "juan perez",
+      "title": "mirar",
+      "dueDate": "2026-06-10",
+      "status": "pendiente",
+      "id": "36a004de-a4cb-4288-893d-4013dbbfcebb"
+    },
+    {
+      "projectId": "187dbdf6-2f3c-4772-8097-38837def4f3d",
+      "collaborator": "juan perez",
+      "title": "leer",
+      "dueDate": "2026-06-04",
+      "status": "pendiente",
+      "id": "b4110f43-d6b1-4a65-9706-15580719b8a2"
+    }
+  ],
   "projects": [
     {
       "id": "ba96b0d6-54bf-48ed-b026-29eb8636963a",

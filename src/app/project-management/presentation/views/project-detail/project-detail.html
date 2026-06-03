@@ -49,11 +49,10 @@
                 <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
               </svg>
             </span>
-            <h3 class="card-heading">Progresó del Proyecto</h3>
+            <h3 class="card-heading">Progreso del Proyecto</h3>
           </div>
           <span class="pct-chip">{{ tasksCompletionPct() }}% completado</span>
         </div>
-
         <div class="card-body">
           <div class="progress-track-wrap">
             <div class="progress-track">
@@ -61,7 +60,6 @@
             </div>
             <span class="progress-track-label">Progreso general</span>
           </div>
-
           <div class="circles-row">
             <div class="circle-item">
               <div class="ring ring--tasks" [style.background]="tasksRingStyle()">
@@ -72,9 +70,7 @@
               </div>
               <span class="circle-desc">Tareas Completadas</span>
             </div>
-
             <div class="ring-divider"></div>
-
             <div class="circle-item">
               <div class="ring ring--milestones">
                 <div class="ring-inner">
@@ -110,7 +106,7 @@
             <p class="empty-title">Sin hitos programados</p>
             <p class="empty-hint">Los hitos de tu proyecto aparecerán aquí.</p>
           </div>
-          <button class="btn-action btn-hitos">Ver Todos los Hitos</button>
+          <button class="btn-action btn-hitos" (click)="setTab('hitos')">Ver Todos los Hitos</button>
         </div>
       </div>
 
@@ -170,7 +166,9 @@
           <span class="count-chip count-chip--urgent">{{ urgentTasksCount() }}</span>
         </div>
         <div class="card-body flex-col">
-          <div class="empty-state">
+
+          <!-- Sin urgentes -->
+          <div class="empty-state" *ngIf="urgentTasksList().length === 0">
             <div class="empty-illustration tareas-empty">
               <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#9b8ff8" stroke-width="1.5" stroke-linecap="round">
                 <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
@@ -179,23 +177,28 @@
             <p class="empty-title">Todo al día</p>
             <p class="empty-hint">No hay tareas urgentes pendientes.</p>
           </div>
-          <button class="btn-action btn-tareas">Ver Todas las Tareas</button>
+
+          <!-- Lista de urgentes -->
+          <ul class="urgent-list" *ngIf="urgentTasksList().length > 0">
+            <li class="urgent-item" *ngFor="let task of urgentTasksList()">
+              <div class="urgent-icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                  <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+              </div>
+              <div class="urgent-info">
+                <span class="urgent-title">{{ task.title.getValue() }}</span>
+                <span class="urgent-meta urgent-overdue">Atrasada · Vencía el {{ formatDate(task.dueDate) }}</span>
+              </div>
+              <span class="urgent-badge urgent-badge--overdue">Atrasada</span>
+            </li>
+          </ul>
+
+          <button class="btn-action btn-tareas" (click)="setTab('tareas')">Ver Todas las Tareas</button>
         </div>
       </div>
 
-    </div>
-
-    <!-- ════════════════ IOT ════════════════ -->
-    <div class="iot-tab-wrapper" *ngIf="activeTab() === 'iot'">
-      <app-iot-dashboard [metrics]="iotMetrics"></app-iot-dashboard>
-    </div>
-
-    <!-- ════════════════ POSTULANTES ════════════════ -->
-    <div *ngIf="activeTab() === 'postulantes'" class="postulantes-tab-wrapper">
-      <app-postulant-list
-        [projectId]="projectId"
-        [availableRoles]="projectRoleNames">
-      </app-postulant-list>
     </div>
 
     <!-- ════════════════ TAREAS ════════════════ -->
@@ -206,17 +209,19 @@
       </app-task-list>
     </div>
 
+    <!-- ════════════════ IOT ════════════════ -->
+    <div class="iot-tab-wrapper" *ngIf="activeTab() === 'iot'">
+      <app-iot-dashboard [metrics]="iotMetrics"></app-iot-dashboard>
+    </div>
+
     <!-- ════════════════ HITOS ════════════════ -->
     <div *ngIf="activeTab() === 'hitos'" class="hitos-tab-wrapper">
-      <!-- Lista de hitos -->
       <app-milestone-list
         *ngIf="!selectedMilestoneId()"
         [projectId]="projectId"
         [creatorId]="currentUserId"
         (milestoneSelected)="onMilestoneSelected($event)"
       />
-
-      <!-- Detalle del hito seleccionado -->
       <div *ngIf="selectedMilestoneId()" class="milestone-fullscreen">
         <app-milestone-detail
           [milestoneId]="selectedMilestoneId()!"
@@ -226,7 +231,15 @@
           (updated)="onMilestoneUpdated($event)"
         />
       </div>
+    </div>
+
+    <!-- ════════════════ POSTULANTES ════════════════ -->
+    <div *ngIf="activeTab() === 'postulantes'" class="postulantes-tab-wrapper">
+      <app-postulant-list
+        [projectId]="projectId"
+        [availableRoles]="projectRoleNames">
+      </app-postulant-list>
+    </div>
 
   </div>
-</div>
 </div>
