@@ -32,13 +32,6 @@ export class MyTasksListComponent implements OnInit, OnChanges {
     this.tasks().filter(t => t.isCompleted()).length
   );
 
-  // ── Modal de entrega ──────────────────────────────────
-  showDeliverModal = signal(false);
-  selectedTask = signal<Task | null>(null);
-  deliveryUrl = '';
-  deliveryNotes = '';
-  delivering = signal(false);
-  deliverError = signal('');
 
   ngOnInit(): void { this.load(); }
 
@@ -78,38 +71,7 @@ export class MyTasksListComponent implements OnInit, OnChanges {
     this.router.navigate(['/projects', this.projectId, 'tasks', task.id]);
   }
 
-  openDeliverModal(task: Task): void {
-    this.selectedTask.set(task);
-    this.deliveryUrl = '';
-    this.deliveryNotes = '';
-    this.deliverError.set('');
-    this.showDeliverModal.set(true);
-  }
-
-  closeDeliverModal(): void {
-    this.showDeliverModal.set(false);
-    this.selectedTask.set(null);
-  }
-
-  async submitDelivery(): Promise<void> {
-    if (!this.deliveryUrl.trim()) {
-      this.deliverError.set('El enlace de entrega es obligatorio.');
-      return;
-    }
-    const task = this.selectedTask();
-    if (!task) return;
-
-    this.delivering.set(true);
-    this.deliverError.set('');
-    try {
-      await this.taskStore.completeTask(task.id, this.deliveryUrl.trim(), this.deliveryNotes.trim() || null);
-      // Recargar lista
-      await this.load();
-      this.closeDeliverModal();
-    } catch (err: any) {
-      this.deliverError.set(err?.message ?? 'Error al entregar la tarea.');
-    } finally {
-      this.delivering.set(false);
-    }
+  doTask(task: Task): void {
+    this.router.navigate(['/projects', this.projectId, 'tasks', task.id]);
   }
 }

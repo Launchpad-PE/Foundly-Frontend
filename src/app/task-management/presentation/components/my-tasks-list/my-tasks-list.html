@@ -23,7 +23,7 @@
             <button
               type="button"
               class="btn-hacer"
-              (click)="openDeliverModal(task)"
+              (click)="doTask(task)"
               [disabled]="task.isCompleted()">
               {{ task.isCompleted() ? 'Completada ✓' : 'Hacer Tarea' }}
             </button>
@@ -33,46 +33,3 @@
     </div>
   }
 </section>
-
-<!-- ══ MODAL: ENTREGAR TAREA ══ -->
-@if (showDeliverModal()) {
-  <div class="deliver-overlay" (click)="closeDeliverModal()">
-    <div class="deliver-modal" (click)="$event.stopPropagation()">
-
-      <h2 class="deliver-title">Entregar Tarea</h2>
-      <p class="deliver-task-name">{{ selectedTask()?.title?.getValue() }}</p>
-
-      <div class="deliver-field">
-        <label class="deliver-label">Enlace de entrega <span class="required">*</span></label>
-        <input
-          class="deliver-input"
-          type="url"
-          [(ngModel)]="deliveryUrl"
-          placeholder="https://github.com/tu-repo o https://drive.google.com/..."
-        />
-      </div>
-
-      <div class="deliver-field">
-        <label class="deliver-label">Notas adicionales (opcional)</label>
-        <textarea
-          class="deliver-input deliver-textarea"
-          [(ngModel)]="deliveryNotes"
-          placeholder="Explica brevemente lo que entregaste..."
-          rows="3">
-        </textarea>
-      </div>
-
-      @if (deliverError()) {
-        <p class="deliver-error">{{ deliverError() }}</p>
-      }
-
-      <div class="deliver-actions">
-        <button class="btn-entregar" (click)="submitDelivery()" [disabled]="delivering()">
-          {{ delivering() ? 'Enviando...' : 'Entregar' }}
-        </button>
-        <button class="btn-cancelar" (click)="closeDeliverModal()">Cancelar</button>
-      </div>
-
-    </div>
-  </div>
-}
