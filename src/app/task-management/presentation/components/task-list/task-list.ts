@@ -41,6 +41,13 @@ export class TaskListComponent implements OnInit, OnChanges {
   searchInput = signal<string>('');
   showModal = signal<boolean>(false);
 
+  // ── Modal: nueva fecha ─────────────────────────────────
+  showRescheduleModal = signal<boolean>(false);
+  rescheduleTask = signal<Task | null>(null);
+  rescheduleDate: string = '';
+  rescheduling = signal<boolean>(false);
+  rescheduleError = signal<string>('');
+
   readonly filteredTasks = computed(() => {
     const assignee = this.selectedAssignee();
     const status = this.selectedStatus();
@@ -147,28 +154,72 @@ export class TaskListComponent implements OnInit, OnChanges {
     }
   }
 
-  async deleteTask(task: Task): Promise<void> {
-    if (!confirm(`¿Eliminar la tarea "${task.title.getValue()}"?`)) return;
+  // ── Modal: eliminar ───────────────────────────────────
+  showDeleteModal = signal<boolean>(false);
+  deleteTargetTask = signal<Task | null>(null);
+  deleting = signal<boolean>(false);
+
+  openDeleteModal(task: Task): void {
+    this.deleteTargetTask.set(task);
+    this.showDeleteModal.set(true);
+  }
+
+  closeDeleteModal(): void {
+    this.showDeleteModal.set(false);
+    this.deleteTargetTask.set(null);
+  }
+
+  async confirmDelete(): Promise<void> {
+    const task = this.deleteTargetTask();
+    if (!task) return;
+    this.deleting.set(true);
     try {
       await this.taskStore.deleteTask(task.id);
+      this.closeDeleteModal();
     } catch (err: any) {
       alert(err?.message ?? 'Error al eliminar la tarea');
+    } finally {
+      this.deleting.set(false);
     }
   }
 
-  async reschedule(task: Task): Promise<void> {
-    const currentIso = task.dueDate.toISOString().slice(0, 10);
-    const input = prompt('Nueva fecha de entrega (YYYY-MM-DD):', currentIso);
-    if (!input) return;
-    const newDate = new Date(input);
-    if (isNaN(newDate.getTime())) {
-      alert('Fecha inválida');
+  async deleteTask(task: Task): Promise<void> {
+    this.openDeleteModal(task);
+  }
+
+  reschedule(task: Task): void {
+    this.rescheduleTask.set(task);
+    this.rescheduleDate = task.dueDate.toISOString().slice(0, 10);
+    this.rescheduleError.set('');
+    this.showRescheduleModal.set(true);
+  }
+
+  closeRescheduleModal(): void {
+    this.showRescheduleModal.set(false);
+    this.rescheduleTask.set(null);
+  }
+
+  async confirmReschedule(): Promise<void> {
+    if (!this.rescheduleDate) {
+      this.rescheduleError.set('Selecciona una fecha.');
       return;
     }
+    const newDate = new Date(this.rescheduleDate);
+    if (isNaN(newDate.getTime())) {
+      this.rescheduleError.set('Fecha inválida.');
+      return;
+    }
+    const task = this.rescheduleTask();
+    if (!task) return;
+    this.rescheduling.set(true);
+    this.rescheduleError.set('');
     try {
       await this.taskStore.rescheduleTask(task.id, newDate);
+      this.closeRescheduleModal();
     } catch (err: any) {
-      alert(err?.message ?? 'Error al reagendar');
+      this.rescheduleError.set(err?.message ?? 'Error al reagendar.');
+    } finally {
+      this.rescheduling.set(false);
     }
   }
 }

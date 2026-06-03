@@ -79,3 +79,50 @@
     </app-task-form-modal>
   }
 </div>
+
+<!-- Modal: Eliminar tarea -->
+@if (showDeleteModal()) {
+  <div class="reschedule-overlay" (click)="closeDeleteModal()">
+    <div class="reschedule-modal" (click)="$event.stopPropagation()">
+      <h2 class="reschedule-title">Eliminar Tarea</h2>
+      <p class="reschedule-task-name">{{ deleteTargetTask()?.title?.getValue() }}</p>
+      <p style="margin:0; font-size:0.88rem; color:#6b7280;">¿Estás seguro? Esta acción no se puede deshacer.</p>
+      <div class="reschedule-actions">
+        <button class="btn-delete-confirm" (click)="confirmDelete()" [disabled]="deleting()">
+          {{ deleting() ? 'Eliminando...' : 'Eliminar' }}
+        </button>
+        <button class="btn-reschedule-cancel" (click)="closeDeleteModal()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Modal: Poner Nueva Fecha -->
+@if (showRescheduleModal()) {
+  <div class="reschedule-overlay" (click)="closeRescheduleModal()">
+    <div class="reschedule-modal" (click)="$event.stopPropagation()">
+      <h2 class="reschedule-title">Poner Nueva Fecha</h2>
+      <p class="reschedule-task-name">{{ rescheduleTask()?.title?.getValue() }}</p>
+
+      <div class="reschedule-field">
+        <label class="reschedule-label">Nueva fecha de entrega</label>
+        <input
+          class="reschedule-input"
+          type="date"
+          [(ngModel)]="rescheduleDate"
+        />
+      </div>
+
+      @if (rescheduleError()) {
+        <p class="reschedule-error">{{ rescheduleError() }}</p>
+      }
+
+      <div class="reschedule-actions">
+        <button class="btn-reschedule-accept" (click)="confirmReschedule()" [disabled]="rescheduling()">
+          {{ rescheduling() ? 'Guardando...' : 'Aceptar' }}
+        </button>
+        <button class="btn-reschedule-cancel" (click)="closeRescheduleModal()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+}
