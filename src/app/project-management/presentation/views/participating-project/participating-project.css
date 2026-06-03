@@ -142,16 +142,15 @@
   inset: 12px;
   background: #fff;
   border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 .donut-fill { display: none; }
 
-.avance-pct {
-  display: flex;
-  flex-direction: column;
-  color: #1f2937;
-}
-.pct-num { font-size: 1.6rem; font-weight: 700; }
-.pct-lbl { color: #6b7280; }
+.pct-num { font-size: 1.3rem; font-weight: 800; color: #3d4166; }
+.pct-lbl { font-size: 0.7rem; color: #9ca3af; font-weight: 600; }
 
 /* Stats card */
 .stats-list {

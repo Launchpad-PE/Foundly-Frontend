@@ -37,31 +37,41 @@
     <!-- ══════════ INICIO ══════════ -->
     <div *ngIf="activeTab() === 'inicio'" class="inicio-grid">
 
-      <!-- Avance General (stub visual) -->
+      <!-- Avance General -->
       <article class="card avance-card">
-        <h3 class="card-title">Avanze General del Proyecto</h3>
+        <h3 class="card-title">Avance General del Proyecto</h3>
         <div class="avance-body">
-          <div class="donut">
-            <div class="donut-fill"></div>
-            <div class="donut-hole"></div>
-          </div>
-          <div class="avance-pct">
-            <span class="pct-num">0%</span>
-            <span class="pct-lbl">Completado</span>
+          <div class="donut" [style.background]="myRingStyle()">
+            <div class="donut-hole">
+              <span class="pct-num">{{ myCompletionPct() }}%</span>
+              <span class="pct-lbl">Completado</span>
+            </div>
           </div>
         </div>
       </article>
 
-      <!-- Stats (stub) -->
+      <!-- Stats -->
       <article class="card stats-card">
         <ul class="stats-list">
-          <li><span class="stat-icon stat-tasks">✎</span><span class="stat-label">Tareas Completadas</span><span class="stat-value">0/0</span></li>
-          <li><span class="stat-icon stat-hitos">⚑</span><span class="stat-label">Hitos Alcanzados</span><span class="stat-value">0/0</span></li>
-          <li><span class="stat-icon stat-next">⌛</span><span class="stat-label">Proxima Entrega</span><span class="stat-value">—</span></li>
+          <li>
+            <span class="stat-icon stat-tasks">✎</span>
+            <span class="stat-label">Tareas Completadas</span>
+            <span class="stat-value">{{ myCompletedCount() }}/{{ myTotalCount() }}</span>
+          </li>
+          <li>
+            <span class="stat-icon stat-hitos">⚑</span>
+            <span class="stat-label">Hitos Alcanzados</span>
+            <span class="stat-value">0/0</span>
+          </li>
+          <li>
+            <span class="stat-icon stat-next">⌛</span>
+            <span class="stat-label">Próxima Entrega</span>
+            <span class="stat-value">{{ nextDelivery() ? formatDate(nextDelivery()!) : '—' }}</span>
+          </li>
         </ul>
       </article>
 
-      <!-- Mis Tareas (REAL) -->
+      <!-- Mis Tareas -->
       <div class="card no-padding mis-tareas-slot">
         <app-my-tasks-card
           [projectId]="projectId"
@@ -69,7 +79,7 @@
         </app-my-tasks-card>
       </div>
 
-      <!-- Próximos Hitos (stub) -->
+      <!-- Próximos Hitos -->
       <article class="card hitos-card">
         <h3 class="card-title">Próximos Hitos</h3>
         <p class="state-empty">No hay hitos por mostrar todavía.</p>
@@ -85,9 +95,8 @@
       </app-my-tasks-list>
     </div>
 
-    <!-- ══════════ OTRAS TABS (placeholder) ══════════ -->
+    <!-- ══════════ HITOS ══════════ -->
     <div *ngIf="activeTab() === 'hitos'" class="hitos-tab-wrapper">
-      <!-- El colaborador solo ve sus tareas asignadas -->
       <app-my-milestone-tasks
         [projectId]="projectId"
         [assigneeId]="currentUserId"
