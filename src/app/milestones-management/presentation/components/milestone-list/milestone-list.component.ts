@@ -4,11 +4,12 @@ import { Milestone } from '../../../domain/entities/milestone.entity';
 import { MilestoneCardComponent } from '../milestone-card/milestone-card.component';
 import { CommonModule } from '@angular/common';
 import { CreateMilestoneModalComponent } from '../create-milestone-modal/create-milestone-modal.component';
-
+import { RescheduleMilestoneModalComponent } from '../reschedule-milestone-modal/reschedule-milestone-modal.component';
+import { DeleteMilestoneModalComponent } from '../delete-milestone-modal/delete-milestone-modal.component';
 @Component({
   selector: 'app-milestone-list',
   standalone: true,
-  imports: [MilestoneCardComponent, CommonModule, CreateMilestoneModalComponent],
+  imports: [MilestoneCardComponent, CommonModule, CreateMilestoneModalComponent, RescheduleMilestoneModalComponent, DeleteMilestoneModalComponent ],
   templateUrl: './milestone-list.component.html',
   styleUrl: './milestone-list.component.css',
 })
@@ -18,12 +19,17 @@ export class MilestoneListComponent implements OnInit, OnDestroy {
   // Inputs
   projectId = input.required<string>();
   creatorId = input.required<string>();
+  milestoneCreated = output<Milestone>();
 
   // Outputs
   milestoneSelected = output<Milestone>();
 
   // State
   showCreateModal = signal(false);
+  showRescheduleModal = signal(false);
+  showDeleteModal = signal(false);
+  selectedMilestoneForReschedule = signal<Milestone | null>(null);
+  selectedMilestoneForDelete = signal<Milestone | null>(null);
 
   // Signals from store
   milestones = this.milestoneStore.projectMilestones;
@@ -64,22 +70,51 @@ export class MilestoneListComponent implements OnInit, OnDestroy {
 
   async onMilestoneCreated(milestone: Milestone): Promise<void> {
     this.closeCreateModal();
-    // Recargar la lista para mostrar el nuevo hito
     await this.loadMilestones();
+    this.milestoneCreated.emit(milestone);
   }
 
   onMilestoneClick(milestone: Milestone): void {
     this.milestoneSelected.emit(milestone);
   }
 
-  async onMilestoneDeleted(milestoneId: string): Promise<void> {
-    if (confirm('¿Eliminar este hito? Se perderán todas las tareas asociadas.')) {
-      await this.milestoneStore.deleteMilestone(milestoneId);
+  // NUEVO: Abrir modal de eliminación en lugar de confirm()
+  onMilestoneDelete(milestone: Milestone): void {
+    this.selectedMilestoneForDelete.set(milestone);
+    this.showDeleteModal.set(true);
+  }
+
+  async confirmDelete(): Promise<void> {
+    const milestone = this.selectedMilestoneForDelete();
+    if (milestone) {
+      await this.milestoneStore.deleteMilestone(milestone.id);
+      this.closeDeleteModal();
+      await this.loadMilestones();
     }
+  }
+
+  closeDeleteModal(): void {
+    this.showDeleteModal.set(false);
+    this.selectedMilestoneForDelete.set(null);
+  }
+
+  // Métodos para reprogramar
+  onMilestoneReschedule(milestone: Milestone): void {
+    this.selectedMilestoneForReschedule.set(milestone);
+    this.showRescheduleModal.set(true);
+  }
+
+  closeRescheduleModal(): void {
+    this.showRescheduleModal.set(false);
+    this.selectedMilestoneForReschedule.set(null);
+  }
+
+  async onMilestoneRescheduled(updatedMilestone: Milestone): Promise<void> {
+    this.closeRescheduleModal();
+    await this.loadMilestones();
   }
 
   refresh(): void {
     this.loadMilestones();
   }
-
 }

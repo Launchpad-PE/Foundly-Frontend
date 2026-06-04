@@ -46,20 +46,21 @@ export class TaskFormModalComponent {
   errorMessage = signal<string>('');
   submitting = signal<boolean>(false);
 
-  /* Checklist */
   addStep(): void {
     const v = this.newStep().trim();
     if (v.length === 0) return;
     this.checklist.update(list => [...list, v]);
     this.newStep.set('');
   }
+
   removeStep(i: number): void {
     this.checklist.update(list => list.filter((_, idx) => idx !== i));
   }
 
-  /* Enlaces (sin archivos — regla del líder) */
   openLinkInput(): void { this.showLinkInput.set(true); }
+
   cancelLink(): void { this.showLinkInput.set(false); this.newLink.set(''); }
+
   addLink(): void {
     const v = this.newLink().trim();
     if (v.length === 0) return;
@@ -75,22 +76,22 @@ export class TaskFormModalComponent {
     this.showLinkInput.set(false);
     this.errorMessage.set('');
   }
+
   removeLink(i: number): void {
     this.attachments.update(list => list.filter((_, idx) => idx !== i));
   }
 
-  /* Herramientas */
   addTool(): void {
     const v = this.newTool().trim();
     if (v.length === 0) return;
     this.tools.update(list => [...list, v]);
     this.newTool.set('');
   }
+
   removeTool(i: number): void {
     this.tools.update(list => list.filter((_, idx) => idx !== i));
   }
 
-  /* Cerrar al hacer click fuera */
   onBackdropClick(ev: MouseEvent): void {
     if ((ev.target as HTMLElement).classList.contains('modal-backdrop')) {
       this.close.emit();
@@ -116,12 +117,17 @@ export class TaskFormModalComponent {
       this.errorMessage.set(v);
       return;
     }
+
     this.submitting.set(true);
+
+    const [year, month, day] = this.dueDate().split('-').map(Number);
+    const utcDate = new Date(Date.UTC(year, month - 1, day, 12, 0, 0));
+
     this.submitTask.emit({
       assigneeId: this.assigneeId(),
       title: this.title().trim(),
       description: this.description().trim(),
-      dueDate: this.dueDate(),
+      dueDate: utcDate.toISOString(),
       checklist: this.checklist().map(d => ({ description: d, done: false })),
       attachments: this.attachments(),
       tools: this.tools(),

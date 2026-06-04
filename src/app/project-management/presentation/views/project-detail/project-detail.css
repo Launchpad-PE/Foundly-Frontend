@@ -1026,3 +1026,77 @@
   display: block;
   height: 100%;
 }
+
+/* Hitos list */
+.hitos-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.hito-item {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  border-left: 3px solid #4f46e5;
+}
+
+.hito-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hito-title {
+  font-weight: 600;
+  color: #1a1a2e;
+  font-size: 14px;
+}
+
+.hito-date {
+  font-size: 11px;
+  color: #64748b;
+}
+
+.hito-progress {
+  background: #e2e8f0;
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #475569;
+}
+
+.hito-progress .hito-tasks {
+  color: #4f46e5;
+}
+
+.loading-small {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.spinner-small {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #e2e8f0;
+  border-top-color: #4f46e5;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+/* Ring para hitos */
+.ring--milestones {
+  background: conic-gradient(#4f46e5 0%, #e2e8f0 0%);
+}

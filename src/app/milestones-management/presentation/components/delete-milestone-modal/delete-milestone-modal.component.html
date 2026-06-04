@@ -1,0 +1,21 @@
+<div class="modal-overlay" *ngIf="isOpen()" (click)="onBackdropClick($event)">
+  <div class="modal-container delete-modal">
+    <div class="modal-header delete-modal">
+      <h3>Eliminar hito</h3>
+      <button class="btn-close" (click)="onClose()">×</button>
+    </div>
+    <div class="modal-body">
+      <p>¿Estás seguro de que deseas eliminar este hito?</p>
+      <p class="warning-text">
+        ⚠️ Esta acción es irreversible y eliminará todas las tareas asociadas.
+      </p>
+      <p class="milestone-name">
+        "<strong>{{ milestone().title.getValue() }}</strong>"
+      </p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="onClose()">Cancelar</button>
+      <button class="btn-confirm-delete" (click)="onConfirm()">Eliminar</button>
+    </div>
+  </div>
+</div>

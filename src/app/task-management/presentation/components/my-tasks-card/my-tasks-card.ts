@@ -6,10 +6,6 @@ import { firstValueFrom } from 'rxjs';
 import { TaskApi } from '../../../infrastructure/task-api';
 import { Task } from '../../../domain/entities/task.entity';
 
-/**
- * Lista de tareas asignadas al colaborador en un proyecto específico,
- * con diseño de tarjetas (no tabla). Para uso en la vista del colaborador.
- */
 @Component({
   selector: 'app-my-tasks-card',
   standalone: true,
@@ -50,7 +46,6 @@ export class MyTasksCardComponent implements OnInit, OnChanges {
       const all = await firstValueFrom(
         this.taskApi.getTasksByProjectAndAssignee(this.projectId, this.assigneeId)
       );
-      // Mostrar pendientes primero, ordenadas por fecha de vencimiento ascendente
       const sorted = [...all].sort((a, b) => {
         if (a.isCompleted() !== b.isCompleted()) return a.isCompleted() ? 1 : -1;
         return a.dueDate.getTime() - b.dueDate.getTime();
@@ -65,9 +60,10 @@ export class MyTasksCardComponent implements OnInit, OnChanges {
 
   formatDate(d: Date): string {
     const x = new Date(d);
-    const dd = String(x.getDate()).padStart(2, '0');
-    const mm = String(x.getMonth() + 1).padStart(2, '0');
-    return `${dd}-${mm}-${x.getFullYear()}`;
+    const day = String(x.getUTCDate()).padStart(2, '0');
+    const month = String(x.getUTCMonth() + 1).padStart(2, '0');
+    const year = x.getUTCFullYear();
+    return `${day}/${month}/${year}`;
   }
 
   viewTask(task: Task): void {

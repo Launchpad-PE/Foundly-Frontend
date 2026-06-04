@@ -8,16 +8,6 @@ import { ProjectId } from '../value-objects/project-id.vo';
 import { UserId } from '../value-objects/user-id.vo';
 import { TaskStatus } from '../enum/task-status.enum';
 
-/**
- * Tarea asignada por el emprendedor a un colaborador dentro de un proyecto.
- *
- * Reglas:
- * - Una tarea siempre pertenece a un proyecto y a un assignee (colaborador).
- * - No se aceptan archivos; los adjuntos son enlaces externos.
- * - El status real expuesto al usuario es derivado: si está pendiente y ya pasó
- *   la fecha de entrega, se reporta como DELAYED.
- * - Solo se puede completar una tarea desde PENDING o DELAYED.
- */
 export class Task {
   public readonly id: string;
   public readonly projectId: ProjectId;
@@ -30,7 +20,6 @@ export class Task {
   public readonly attachments: UrlLink[];
   public readonly tools: Tool[];
   public readonly comment: string | null;
-  /** Estado persistido (solo PENDING / COMPLETED). DELAYED se deriva. */
   public status: TaskStatus.PENDING | TaskStatus.COMPLETED;
   public deliveryUrl: UrlLink | null;
   public deliveryNotes: string | null;
@@ -73,6 +62,50 @@ export class Task {
     this.updatedAt = updatedAt;
   }
 
+  private static normalizeDate(dateInput: string | Date): Date {
+    if (dateInput instanceof Date) {
+      return new Date(Date.UTC(
+        dateInput.getUTCFullYear(),
+        dateInput.getUTCMonth(),
+        dateInput.getUTCDate(),
+        12, 0, 0
+      ));
+    }
+
+    const dateStr = dateInput;
+
+    if (dateStr.includes('T') && dateStr.includes('Z')) {
+      const d = new Date(dateStr);
+      if (!isNaN(d.getTime())) return d;
+    }
+
+    if (dateStr.length === 10 && dateStr.match(/^\d{4}-\d{2}-\d{2}$/)) {
+      const [year, month, day] = dateStr.split('-').map(Number);
+      return new Date(Date.UTC(year, month - 1, day, 12, 0, 0));
+    }
+
+    const d = new Date(dateStr);
+    if (!isNaN(d.getTime())) return d;
+
+    throw new Error('Invalid date');
+  }
+
+  // CORREGIDO: Obtiene la fecha UTC actual correctamente
+  private static getCurrentUTC(): Date {
+    const now = new Date();
+    // Creamos un timestamp UTC explícito
+    const utcTimestamp = Date.UTC(
+      now.getUTCFullYear(),
+      now.getUTCMonth(),
+      now.getUTCDate(),
+      now.getUTCHours(),
+      now.getUTCMinutes(),
+      now.getUTCSeconds(),
+      now.getUTCMilliseconds()
+    );
+    return new Date(utcTimestamp);
+  }
+
   static create(props: {
     id?: string;
     projectId: string;
@@ -88,16 +121,20 @@ export class Task {
     status?: TaskStatus;
     deliveryUrl?: string | null;
     deliveryNotes?: string | null;
-    createdAt?: string;
-    updatedAt?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
   }): Task {
     const id = props.id ? TaskId.fromString(props.id) : TaskId.generate();
-    const due = props.dueDate instanceof Date ? props.dueDate : new Date(props.dueDate);
-    if (isNaN(due.getTime())) {
-      throw new Error('Invalid dueDate');
-    }
+    const due = this.normalizeDate(props.dueDate);
+    const now = new Date();
 
-    // Solo PENDING o COMPLETED se persisten — DELAYED es derivado en getDisplayStatus()
+    const createdAt = props.createdAt
+      ? new Date(props.createdAt)
+      : this.getCurrentUTC();
+    const updatedAt = props.updatedAt
+      ? new Date(props.updatedAt)
+      : this.getCurrentUTC();
+
     const incomingStatus = props.status ?? TaskStatus.PENDING;
     const persistedStatus: TaskStatus.PENDING | TaskStatus.COMPLETED =
       incomingStatus === TaskStatus.COMPLETED ? TaskStatus.COMPLETED : TaskStatus.PENDING;
@@ -117,15 +154,16 @@ export class Task {
       persistedStatus,
       props.deliveryUrl ? new UrlLink(props.deliveryUrl) : null,
       props.deliveryNotes && props.deliveryNotes.trim().length > 0 ? props.deliveryNotes : null,
-      props.createdAt ? new Date(props.createdAt) : new Date(),
-      props.updatedAt ? new Date(props.updatedAt) : new Date()
+      props.createdAt ?? now,
+      props.updatedAt ?? now
     );
   }
 
-  /** Estado real para mostrar (incluye DELAYED si está vencida). */
   getDisplayStatus(now: Date = new Date()): TaskStatus {
     if (this.status === TaskStatus.COMPLETED) return TaskStatus.COMPLETED;
-    return now.getTime() > this.dueDate.getTime() ? TaskStatus.DELAYED : TaskStatus.PENDING;
+    const nowUTC = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+    const dueUTC = Date.UTC(this.dueDate.getUTCFullYear(), this.dueDate.getUTCMonth(), this.dueDate.getUTCDate());
+    return nowUTC > dueUTC ? TaskStatus.DELAYED : TaskStatus.PENDING;
   }
 
   isCompleted(): boolean {
@@ -136,19 +174,25 @@ export class Task {
     return this.getDisplayStatus(now) === TaskStatus.DELAYED;
   }
 
-  /** El emprendedor reprograma una tarea retrasada o por vencer. */
   reschedule(newDueDate: Date): void {
     if (this.isCompleted()) {
       throw new Error('Cannot reschedule a completed task');
     }
-    if (isNaN(newDueDate.getTime())) {
+
+    const utcDate = new Date(Date.UTC(
+      newDueDate.getUTCFullYear(),
+      newDueDate.getUTCMonth(),
+      newDueDate.getUTCDate(),
+      12, 0, 0
+    ));
+
+    if (isNaN(utcDate.getTime())) {
       throw new Error('Invalid new due date');
     }
-    this.dueDate = newDueDate;
-    this.updatedAt = new Date();
+    this.dueDate = utcDate;
+    this.updatedAt = Task.getCurrentUTC();
   }
 
-  /** El colaborador completa la tarea entregando un enlace y notas opcionales. */
   complete(deliveryUrl: string, deliveryNotes?: string | null): void {
     if (this.isCompleted()) {
       throw new Error('Task is already completed');
@@ -156,6 +200,6 @@ export class Task {
     this.deliveryUrl = new UrlLink(deliveryUrl);
     this.deliveryNotes = deliveryNotes && deliveryNotes.trim().length > 0 ? deliveryNotes : null;
     this.status = TaskStatus.COMPLETED;
-    this.updatedAt = new Date();
+    this.updatedAt = Task.getCurrentUTC();
   }
 }

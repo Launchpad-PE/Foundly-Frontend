@@ -19,6 +19,7 @@ import {
 } from '../../../../milestones-management/presentation/components/milestone-detail/milestone-detail.component';
 import { UserStore } from '../../../../iam/application/user.store';
 import { Milestone } from '../../../../milestones-management/domain/entities/milestone.entity';
+import { MilestoneStore } from '../../../../milestones-management/application/milestone-store';
 
 type Tab = 'inicio' | 'tareas' | 'iot' | 'hitos' | 'postulantes';
 
@@ -45,11 +46,16 @@ export class ProjectDetailComponent implements OnInit {
   private applicationStore = inject(ApplicationStore);
   readonly taskStore = inject(TaskStore);
   private userStore = inject(UserStore);
+  private milestoneStore = inject(MilestoneStore);
 
   project = signal<Project | null>(null);
   activeTab = signal<Tab>('inicio');
   loading = signal(true);
   selectedMilestoneId = signal<string | null>(null);
+
+// Agregar signals para milestones
+  readonly projectMilestones = this.milestoneStore.projectMilestones;
+  readonly loadingMilestones = this.milestoneStore.loading;
 
   // ── Computed helpers ───────────────────────────────────
   get projectName(): string {
@@ -113,9 +119,40 @@ export class ProjectDetailComponent implements OnInit {
     const pct = this.tasksCompletionPct();
     return `conic-gradient(#667eea ${pct}%, #edeef8 ${pct}%)`;
   });
-  readonly urgentTasksList = computed(() =>
-    this.taskStore.projectTasks().filter(t => t.isDelayed())
+
+  readonly urgentTasksList = computed(() => {
+    const now = new Date();
+    const threeDaysFromNow = new Date();
+    threeDaysFromNow.setDate(now.getDate() + 3);
+
+    return this.taskStore.projectTasks().filter(t => {
+      // Tareas atrasadas
+      if (t.isDelayed()) return true;
+      // Tareas pendientes que vencen en los próximos 3 días
+      if (!t.isCompleted() && t.dueDate <= threeDaysFromNow) return true;
+      return false;
+    });
+  });
+  // Computed para hitos del proyecto
+  readonly totalMilestones = computed(() => this.projectMilestones().length);
+  readonly completedMilestonesCount = computed(() =>
+    this.projectMilestones().filter(m => m.isCompleted).length
   );
+  readonly milestonesCompletionPct = computed(() => {
+    const total = this.totalMilestones();
+    if (total === 0) return 0;
+    return Math.round((this.completedMilestonesCount() / total) * 100);
+  });
+
+
+  // Próximos hitos (fecha futura, no completados)
+  readonly upcomingMilestones = computed(() => {
+    const now = new Date();
+    return this.projectMilestones()
+      .filter(m => !m.isCompleted && new Date(m.dueDate) >= now)
+      .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime())
+      .slice(0, 3); // Solo los próximos 3
+  });
 
   // ── Lifecycle ──────────────────────────────────────────
   async ngOnInit(): Promise<void> {
@@ -129,14 +166,39 @@ export class ProjectDetailComponent implements OnInit {
     if (p) {
       this.applicationStore.loadApplicationsByProject(p.id);
       this.taskStore.loadTasksByProject(p.id);
+      await this.milestoneStore.loadMilestonesByProject(p.id);
     }
     this.loading.set(false);
   }
 
   setTab(tab: Tab): void {
     this.activeTab.set(tab);
+
+    // 👈 Recargar datos cuando se vuelve a la pestaña Inicio
+    if (tab === 'inicio' && this.projectId) {
+      this.refreshProjectData();
+    }
+
     if (tab !== 'hitos') {
       this.selectedMilestoneId.set(null);
+    }
+  }
+
+  async onMilestoneCreated(milestone: Milestone): Promise<void> {
+    // Si estamos en la pestaña hitos, refrescar en segundo plano
+    if (this.activeTab() === 'hitos') {
+      await this.milestoneStore.loadMilestonesByProject(this.projectId);
+    }
+  }
+
+  async refreshProjectData(): Promise<void> {
+    if (this.projectId) {
+      // Recargar aplicaciones (colaboradores)
+      await this.applicationStore.loadApplicationsByProject(this.projectId);
+      // Recargar tareas
+      await this.taskStore.loadTasksByProject(this.projectId);
+      // Recargar hitos
+      await this.milestoneStore.loadMilestonesByProject(this.projectId);
     }
   }
 
@@ -165,4 +227,26 @@ export class ProjectDetailComponent implements OnInit {
     const mm = String(x.getMonth() + 1).padStart(2, '0');
     return `${dd}/${mm}/${x.getFullYear()}`;
   }
+
+  getCompletedTasksCount(tasks: any[]): number {
+    return tasks.filter(task => task.isCompleted).length;
+  }
+
+  readonly overallCompletionPct = computed(() => {
+    const tasksWeight = 0.6;  // 60% importancia a tareas
+    const milestonesWeight = 0.4; // 40% importancia a hitos
+
+    if (this.totalTasks() === 0 && this.totalMilestones() === 0) return 0;
+    if (this.totalMilestones() === 0) return this.tasksCompletionPct();
+    if (this.totalTasks() === 0) return this.milestonesCompletionPct();
+
+    const weightedPct = (this.tasksCompletionPct() * tasksWeight) +
+      (this.milestonesCompletionPct() * milestonesWeight);
+    return Math.round(weightedPct);
+  });
+
+  readonly milestonesRingStyle = computed(() => {
+    const pct = this.milestonesCompletionPct();
+    return `conic-gradient(#667eea ${pct}%, #edeef8 ${pct}%)`;
+  });
 }

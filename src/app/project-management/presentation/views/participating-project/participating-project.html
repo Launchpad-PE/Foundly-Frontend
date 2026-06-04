@@ -39,11 +39,11 @@
 
       <!-- Avance General -->
       <article class="card avance-card">
-        <h3 class="card-title">Avance General del Proyecto</h3>
+        <h3 class="card-title">Mi Progreso</h3>
         <div class="avance-body">
-          <div class="donut" [style.background]="myRingStyle()">
+          <div class="donut" [style.background]="myOverallRingStyle()">
             <div class="donut-hole">
-              <span class="pct-num">{{ myCompletionPct() }}%</span>
+              <span class="pct-num">{{ myOverallCompletionPct() }}%</span>
               <span class="pct-lbl">Completado</span>
             </div>
           </div>
@@ -55,17 +55,24 @@
         <ul class="stats-list">
           <li>
             <span class="stat-icon stat-tasks">✎</span>
-            <span class="stat-label">Tareas Completadas</span>
+            <span class="stat-label">Mis Tareas Completadas</span>
             <span class="stat-value">{{ myCompletedCount() }}/{{ myTotalCount() }}</span>
           </li>
           <li>
             <span class="stat-icon stat-hitos">⚑</span>
-            <span class="stat-label">Hitos Alcanzados</span>
-            <span class="stat-value">0/0</span>
+            <span class="stat-label">Mis Hitos Alcanzados</span>
+            <span class="stat-value">{{ myCompletedMilestonesCount() }}/{{ myTotalMilestonesCount() }}</span>
           </li>
           <li>
-            <span class="stat-icon stat-next">⌛</span>
-            <span class="stat-label">Próxima Entrega</span>
+            <span class="stat-icon stat-next">
+              <ng-container *ngIf="nextDeliveryType() === 'task'">✎</ng-container>
+              <ng-container *ngIf="nextDeliveryType() === 'milestone'">⚑</ng-container>
+              <ng-container *ngIf="!nextDeliveryType()">⌛</ng-container>
+            </span>
+            <span class="stat-label">
+              Próxima Entrega
+              <span *ngIf="nextDeliveryName()" class="next-name">({{ nextDeliveryName() }})</span>
+            </span>
             <span class="stat-value">{{ nextDelivery() ? formatDate(nextDelivery()!) : '—' }}</span>
           </li>
         </ul>
@@ -81,8 +88,38 @@
 
       <!-- Próximos Hitos -->
       <article class="card hitos-card">
-        <h3 class="card-title">Próximos Hitos</h3>
-        <p class="state-empty">No hay hitos por mostrar todavía.</p>
+        <h3 class="card-title">Mis Próximos Hitos</h3>
+
+        <!-- Con hitos -->
+        <div *ngIf="upcomingMilestonesForUser().length > 0" class="hitos-list">
+          <div *ngFor="let milestone of upcomingMilestonesForUser()" class="hito-item">
+            <div class="hito-info">
+              <span class="hito-title">{{ milestone.title.getValue() }}</span>
+              <span class="hito-date">📅 {{ formatDate(milestone.dueDate) }}</span>
+            </div>
+            <div class="hito-progress">
+              <span class="hito-tasks">{{ getCompletedTasksCount(milestone.tasks) }}/{{ milestone.tasks.length }} tareas</span>
+            </div>
+          </div>
+          <button class="btn-action btn-hitos" (click)="setTab('hitos')">Ver Todos Mis Hitos</button>
+        </div>
+
+        <!-- Sin hitos -->
+        <div class="empty-state" *ngIf="upcomingMilestonesForUser().length === 0 && !loadingMilestones()">
+          <div class="empty-illustration hitos-empty">
+            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#9b8ff8" stroke-width="1.5">
+              <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
+            </svg>
+          </div>
+          <p class="empty-title">No hay hitos pendientes</p>
+          <p class="empty-hint">Tus hitos asignados aparecerán aquí.</p>
+        </div>
+
+        <!-- Loading -->
+        <div class="loading-small" *ngIf="loadingMilestones()">
+          <span class="spinner-small"></span>
+          <span>Cargando hitos...</span>
+        </div>
       </article>
 
     </div>

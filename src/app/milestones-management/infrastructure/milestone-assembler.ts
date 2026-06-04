@@ -71,14 +71,15 @@ export class MilestoneAssembler implements BaseAssembler<Milestone, MilestoneRes
       title: task.title,
       description: task.description.getValue(),
       assigneeId: task.assigneeId.toString(),
+      dueDate: task.dueDate.toISOString(),
       checklist: task.checklist.map(step => ({
         description: step.getDescription(),
         done: step.isDone()
       })),
       attachments: task.attachments.map(att => att.getValue()),
       status: task.status,
-      deliveryUrl: null,
-      deliveryNotes: null,
+      deliveryUrl: task.deliveryUrl,
+      deliveryNotes:  task.deliveryNotes,
       createdAt: task.createdAt.toISOString(),
       updatedAt: task.updatedAt.toISOString()
     };
@@ -92,12 +93,12 @@ export class MilestoneAssembler implements BaseAssembler<Milestone, MilestoneRes
       title: resource.title,
       description: resource.description,
       assigneeId: resource.assigneeId,
+      dueDate: resource.dueDate ? new Date(resource.dueDate) : undefined,
       checklist: resource.checklist,
       attachments: resource.attachments,
       status: resource.status,
-      deliveryUrl: resource.deliveryUrl,
-      deliveryNotes: resource.deliveryNotes,
-      createdAt: new Date(resource.createdAt),
+      deliveryUrl: resource.deliveryUrl ?? null,
+      deliveryNotes: resource.deliveryNotes ?? null,       createdAt: new Date(resource.createdAt),
       updatedAt: new Date(resource.updatedAt)
     };
   }

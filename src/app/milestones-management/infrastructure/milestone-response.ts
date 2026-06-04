@@ -15,6 +15,7 @@ export interface MilestoneTaskResource extends BaseResource {
   title: string;
   description: string;
   assigneeId: string;
+  dueDate?: string;
   checklist: ChecklistStepResource[];
   attachments: string[];
   status: MilestoneTaskStatus;

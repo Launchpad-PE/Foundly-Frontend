@@ -32,7 +32,6 @@ export class MyTasksListComponent implements OnInit, OnChanges {
     this.tasks().filter(t => t.isCompleted()).length
   );
 
-
   ngOnInit(): void { this.load(); }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -64,7 +63,10 @@ export class MyTasksListComponent implements OnInit, OnChanges {
 
   formatDate(d: Date): string {
     const x = new Date(d);
-    return `${String(x.getDate()).padStart(2, '0')}-${String(x.getMonth() + 1).padStart(2, '0')}-${x.getFullYear()}`;
+    const day = String(x.getUTCDate()).padStart(2, '0');
+    const month = String(x.getUTCMonth() + 1).padStart(2, '0');
+    const year = x.getUTCFullYear();
+    return `${day}/${month}/${year}`;
   }
 
   viewTask(task: Task): void {
