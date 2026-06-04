@@ -240,11 +240,11 @@
       "attachments": [],
       "tools": [],
       "comment": null,
-      "status": "pending",
-      "deliveryUrl": null,
-      "deliveryNotes": null,
+      "status": "completed",
+      "deliveryUrl": "https://aulavirtual.upc.edu.pe/",
+      "deliveryNotes": "sadsadsadsads",
       "createdAt": "2026-06-03T10:00:00.000Z",
-      "updatedAt": "2026-06-03T10:00:00.000Z"
+      "updatedAt": "2026-06-03T23:15:42.773Z"
     },
     {
       "id": "452ee36f-aaa6-4979-97a7-736674baa08d",
@@ -272,6 +272,114 @@
       "deliveryNotes": null,
       "createdAt": "2026-05-25T18:58:46.792Z",
       "updatedAt": "2026-05-25T18:58:46.792Z"
+    },
+    {
+      "id": "0b27c778-6f5d-460a-9bcb-1939d34e6aa0",
+      "projectId": "ba96b0d6-54bf-48ed-b026-29eb8636963a",
+      "assigneeId": "2",
+      "creatorId": "1",
+      "title": "asdasd",
+      "description": "sadsadsadsad",
+      "dueDate": "2026-06-06T00:00:00.000Z",
+      "checklist": [
+        {
+          "description": "asdasdsad",
+          "done": false
+        },
+        {
+          "description": "asdasdsad",
+          "done": false
+        }
+      ],
+      "attachments": [
+        "https://aulavirtual.upc.edu.pe/"
+      ],
+      "tools": [
+        "sadsadsad",
+        "sadsad"
+      ],
+      "comment": "asdfasdsadsadsadsadsadsad",
+      "status": "completed",
+      "deliveryUrl": "https://aulavirtual.upc.edu.pe/",
+      "deliveryNotes": "asdasasdasdasd",
+      "createdAt": "2026-06-03T23:40:25.030Z",
+      "updatedAt": "2026-06-03T23:41:06.013Z"
+    },
+    {
+      "id": "12183b84-2b9a-4c86-9e19-c05539116eb9",
+      "projectId": "ba96b0d6-54bf-48ed-b026-29eb8636963a",
+      "assigneeId": "4",
+      "creatorId": "4",
+      "title": "sadsdadas",
+      "description": "asdsadasdasd",
+      "dueDate": "2026-06-04T12:00:00.000Z",
+      "checklist": [
+        {
+          "description": "sdaasdasd",
+          "done": false
+        }
+      ],
+      "attachments": [
+        "https://aulavirtual.upc.edu.pe/"
+      ],
+      "tools": [
+        "sdaasdasd"
+      ],
+      "comment": "sdaasdasdasdasdasdasd",
+      "status": "completed",
+      "deliveryUrl": "https://aulavirtual.upc.edu.pe/",
+      "deliveryNotes": "adsfasddasasdasd",
+      "createdAt": "2026-06-04T00:24:12.110Z",
+      "updatedAt": "2026-06-04T00:25:37.076Z"
+    },
+    {
+      "id": "3929e355-6da5-4c5e-b4b5-511c645e27bb",
+      "projectId": "ba96b0d6-54bf-48ed-b026-29eb8636963a",
+      "assigneeId": "4",
+      "creatorId": "1",
+      "title": "sadasdasd",
+      "description": "sadadsasadsasd",
+      "dueDate": "2026-06-04T12:00:00.000Z",
+      "checklist": [],
+      "attachments": [
+        "https://aulavirtual.upc.edu.pe/"
+      ],
+      "tools": [
+        "sadasdasd"
+      ],
+      "comment": "sdasdsdsaasddsasdasd",
+      "status": "completed",
+      "deliveryUrl": "https://aulavirtual.upc.edu.pe/",
+      "deliveryNotes": "asdadsdasasdasdsa",
+      "createdAt": "2026-06-04T00:59:06.288Z",
+      "updatedAt": "2026-06-04T01:02:23.829Z"
+    },
+    {
+      "id": "924d51d6-fb6b-427e-88c6-e3a3ef752a29",
+      "projectId": "ba96b0d6-54bf-48ed-b026-29eb8636963a",
+      "assigneeId": "4",
+      "creatorId": "1",
+      "title": "sdfsfdsdf",
+      "description": "dfsdfsdf",
+      "dueDate": "2026-06-04T12:00:00.000Z",
+      "checklist": [
+        {
+          "description": "sdfsdfsdsdf",
+          "done": false
+        }
+      ],
+      "attachments": [
+        "https://aulavirtual.upc.edu.pe/"
+      ],
+      "tools": [
+        "sdasadasdasd"
+      ],
+      "comment": "sadasdasdsdsadasddssad",
+      "status": "completed",
+      "deliveryUrl": "https://aulavirtual.upc.edu.pe/",
+      "deliveryNotes": "asdasdasd",
+      "createdAt": "2026-06-04T01:03:05.894Z",
+      "updatedAt": "2026-06-04T01:05:16.588Z"
     }
   ],
   "projects": [
@@ -642,6 +750,175 @@
       "deliveryNotes": null,
       "createdAt": "2026-06-03T22:03:08.329Z",
       "updatedAt": "2026-06-03T22:05:11.703Z"
+    },
+    {
+      "id": "40000204-6c5b-4e2e-b13f-f5b1a13cae5d",
+      "projectId": "ba96b0d6-54bf-48ed-b026-29eb8636963a",
+      "creatorId": "1",
+      "title": "asad",
+      "description": "sadsdasdaasdsda",
+      "tools": [
+        "sadasdasdasdasd"
+      ],
+      "generalComment": "asdsasdsasdasdasd",
+      "dueDate": "2026-06-06T00:00:00.000Z",
+      "attachments": [
+        "https://aulavirtual.upc.edu.pe/"
+      ],
+      "tasks": [
+        {
+          "id": "d447a99b-cc5a-4947-88b3-96e13ea83621",
+          "milestoneId": "40000204-6c5b-4e2e-b13f-f5b1a13cae5d",
+          "title": "asdsdasad",
+          "description": "sadsadsadasd",
+          "assigneeId": "4",
+          "dueDate": "2026-06-06T00:00:00.000Z",
+          "checklist": [
+            {
+              "description": "sdaasdasdsad",
+              "done": false
+            }
+          ],
+          "attachments": [
+            "https://aulavirtual.upc.edu.pe/"
+          ],
+          "status": "completed",
+          "deliveryUrl": "https://aulavirtual.upc.edu.pe/",
+          "deliveryNotes": "dssdffsd",
+          "createdAt": "2026-06-03T23:39:51.053Z",
+          "updatedAt": "2026-06-03T23:42:19.157Z"
+        },
+        {
+          "id": "f8b4c4e8-27c6-4254-b716-3f1d3d46656e",
+          "milestoneId": "40000204-6c5b-4e2e-b13f-f5b1a13cae5d",
+          "title": "sadsadasdsda",
+          "description": "sadsdasdasdsad",
+          "assigneeId": "2",
+          "dueDate": "2026-06-06T00:00:00.000Z",
+          "checklist": [
+            {
+              "description": "sdasadsdaasd",
+              "done": false
+            }
+          ],
+          "attachments": [
+            "https://aulavirtual.upc.edu.pe/"
+          ],
+          "status": "completed",
+          "deliveryUrl": "https://aulavirtual.upc.edu.pe/",
+          "deliveryNotes": "asdsadasdasdasdasdasdasdsadasd",
+          "createdAt": "2026-06-03T23:39:51.053Z",
+          "updatedAt": "2026-06-03T23:41:35.613Z"
+        }
+      ],
+      "status": "completed",
+      "deliveryUrl": null,
+      "deliveryNotes": null,
+      "createdAt": "2026-06-03T23:39:51.053Z",
+      "updatedAt": "2026-06-03T23:42:19.221Z"
+    },
+    {
+      "id": "d35249df-5668-4a20-8906-e7b23e3ebbbc",
+      "projectId": "ba96b0d6-54bf-48ed-b026-29eb8636963a",
+      "creatorId": "1",
+      "title": "asdasdsdaasd",
+      "description": "sadsadsadasdsadsad",
+      "tools": [
+        "sadsadsdaasd"
+      ],
+      "generalComment": "asdsdasdasasdsadasdasd",
+      "dueDate": "2026-06-06T00:00:00.000Z",
+      "attachments": [
+        "https://aulavirtual.upc.edu.pe/"
+      ],
+      "tasks": [
+        {
+          "id": "3591d70e-ff8f-40bf-9573-3c5ebf9ed95e",
+          "milestoneId": "d35249df-5668-4a20-8906-e7b23e3ebbbc",
+          "title": "sadasdasd",
+          "description": "asdasdasd",
+          "assigneeId": "4",
+          "dueDate": "2026-06-06T00:00:00.000Z",
+          "checklist": [
+            {
+              "description": "asdsadasdasdasd",
+              "done": false
+            }
+          ],
+          "attachments": [
+            "https://aulavirtual.upc.edu.pe/"
+          ],
+          "status": "completed",
+          "deliveryUrl": "https://aulavirtual.upc.edu.pe/",
+          "deliveryNotes": "assadsadasdasdsdaasd",
+          "createdAt": "2026-06-03T23:44:19.125Z",
+          "updatedAt": "2026-06-03T23:44:31.875Z"
+        },
+        {
+          "id": "d2a33531-1714-4aa4-a2e9-e09f3e12753a",
+          "milestoneId": "d35249df-5668-4a20-8906-e7b23e3ebbbc",
+          "title": "sadasdasd",
+          "description": "sdsadsdsdsad",
+          "assigneeId": "2",
+          "dueDate": "2026-06-06T00:00:00.000Z",
+          "checklist": [
+            {
+              "description": "sdasdasadsadsad",
+              "done": false
+            }
+          ],
+          "attachments": [
+            "https://aulavirtual.upc.edu.pe/"
+          ],
+          "status": "completed",
+          "deliveryUrl": "https://aulavirtual.upc.edu.pe/",
+          "deliveryNotes": "asddsadasadsasdsdasadasdasdasdsdaasd",
+          "createdAt": "2026-06-03T23:44:19.125Z",
+          "updatedAt": "2026-06-03T23:44:51.347Z"
+        }
+      ],
+      "status": "completed",
+      "deliveryUrl": null,
+      "deliveryNotes": null,
+      "createdAt": "2026-06-03T23:44:08.556Z",
+      "updatedAt": "2026-06-03T23:44:51.394Z"
+    },
+    {
+      "id": "5370bfc8-8541-4060-bf5d-6f9ca5fcb22a",
+      "projectId": "ba96b0d6-54bf-48ed-b026-29eb8636963a",
+      "creatorId": "1",
+      "title": "sadasdasd",
+      "description": "asdasdasdasd",
+      "tools": [
+        "sdsadasdasd"
+      ],
+      "generalComment": "asdadsasdasdasdasd",
+      "dueDate": "2026-06-05T00:00:00.000Z",
+      "attachments": [
+        "https://aulavirtual.upc.edu.pe/"
+      ],
+      "tasks": [
+        {
+          "id": "d9fed711-2301-44c2-9420-457e30e35687",
+          "milestoneId": "5370bfc8-8541-4060-bf5d-6f9ca5fcb22a",
+          "title": "sadasdsad",
+          "description": "sdasdasd",
+          "assigneeId": "4",
+          "dueDate": "2026-06-05T00:00:00.000Z",
+          "checklist": [],
+          "attachments": [],
+          "status": "completed",
+          "deliveryUrl": "https://aulavirtual.upc.edu.pe/",
+          "deliveryNotes": "saasdasdasdadsasdasdasdasd",
+          "createdAt": "2026-06-04T01:03:35.716Z",
+          "updatedAt": "2026-06-04T01:05:35.789Z"
+        }
+      ],
+      "status": "completed",
+      "deliveryUrl": null,
+      "deliveryNotes": null,
+      "createdAt": "2026-06-04T01:03:35.716Z",
+      "updatedAt": "2026-06-04T01:05:35.816Z"
     }
   ]
 }
