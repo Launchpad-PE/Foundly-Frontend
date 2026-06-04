@@ -10,20 +10,6 @@ import { TaskStatus } from '../../../domain/enum/task-status.enum';
 import { ProjectStore } from '../../../../project-management/application/project-store';
 import { ApplicationApi } from '../../../../applications/infrastructure/application-api';
 
-/**
- * Vista de detalle de tarea desde la perspectiva del EMPRENDEDOR (read-only).
- *
- * Renderiza DOS layouts según el estado:
- *  - Si la tarea está COMPLETED → layout simplificado (título + colaborador + status,
- *    Archivos entregados, Nota del colaborador con avatar).
- *  - Si NO está completada → layout extendido (descripción, checklist, herramientas,
- *    archivos de referencia, notas de colaborador placeholder).
- *
- * Reglas aplicadas:
- *  - Sin acciones (no botones "Marcar como completado" / "Guardar progreso").
- *  - Sin "Subir archivo" (solo enlaces).
- *  - Sin checklist interactivo.
- */
 @Component({
   selector: 'app-task-detail',
   standalone: true,
@@ -41,7 +27,6 @@ export class TaskDetailComponent implements OnInit {
   task = signal<Task | null>(null);
   loading = signal<boolean>(true);
   projectName = signal<string>('');
-  /** Nombre del colaborador asignado (cargado vía Application del proyecto). */
   collaboratorName = signal<string>('');
 
   private projectId: string = '';
@@ -80,7 +65,6 @@ export class TaskDetailComponent implements OnInit {
     }
     this.projectId = projectId;
 
-    // Cargar tarea + proyecto en paralelo
     const [task, project] = await Promise.all([
       this.taskStore.loadTask(taskId),
       this.projectStore.loadProject(projectId)
@@ -89,7 +73,6 @@ export class TaskDetailComponent implements OnInit {
     this.task.set(task);
     this.projectName.set(project?.name.getValue() ?? '');
 
-    // Cargar el nombre del colaborador asignado (vía Application del proyecto)
     if (task) {
       try {
         const apps = await firstValueFrom(
@@ -99,14 +82,13 @@ export class TaskDetailComponent implements OnInit {
           this.collaboratorName.set(apps[0].fullName.getValue());
         }
       } catch {
-        // Si falla la carga del colaborador no rompemos la vista entera
+        // Si falla, no romper
       }
     }
 
     this.loading.set(false);
   }
 
-  // ── Entregar tarea ────────────────────────────────────
   deliveryUrl: string = '';
   deliveryNotes: string = '';
   deliveryComment: string = '';
@@ -124,7 +106,6 @@ export class TaskDetailComponent implements OnInit {
     this.deliverError.set('');
     try {
       await this.taskStore.completeTask(task.id, this.deliveryUrl.trim(), this.deliveryNotes.trim() || null);
-      // Recargar tarea para mostrar vista de completada
       const updated = await this.taskStore.loadTask(task.id);
       this.task.set(updated);
     } catch (err: any) {
@@ -140,8 +121,9 @@ export class TaskDetailComponent implements OnInit {
 
   formatDate(d: Date): string {
     const x = new Date(d);
-    const dd = String(x.getDate()).padStart(2, '0');
-    const mm = String(x.getMonth() + 1).padStart(2, '0');
-    return `${dd}-${mm}-${x.getFullYear()}`;
+    const day = String(x.getUTCDate()).padStart(2, '0');
+    const month = String(x.getUTCMonth() + 1).padStart(2, '0');
+    const year = x.getUTCFullYear();
+    return `${day}/${month}/${year}`;
   }
 }

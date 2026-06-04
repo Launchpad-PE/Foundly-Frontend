@@ -26,7 +26,6 @@ export interface AssigneeOption {
 })
 export class TaskListComponent implements OnInit, OnChanges {
   @Input() projectId: string = '';
-  /** Opciones para el dropdown "Por Colaborador" — postulantes aceptados del proyecto. */
   @Input() assignees: AssigneeOption[] = [];
 
   private taskStore = inject(TaskStore);
@@ -41,7 +40,6 @@ export class TaskListComponent implements OnInit, OnChanges {
   searchInput = signal<string>('');
   showModal = signal<boolean>(false);
 
-  // ── Modal: nueva fecha ─────────────────────────────────
   showRescheduleModal = signal<boolean>(false);
   rescheduleTask = signal<Task | null>(null);
   rescheduleDate: string = '';
@@ -76,7 +74,6 @@ export class TaskListComponent implements OnInit, OnChanges {
   }
 
   applySearch(): void {
-    // El cómputo ya es reactivo, este botón solo dispara el efecto visual
     this.searchInput.set(this.searchInput());
   }
 
@@ -91,7 +88,10 @@ export class TaskListComponent implements OnInit, OnChanges {
 
   formatDate(date: Date): string {
     const d = new Date(date);
-    return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
+    const day = String(d.getUTCDate()).padStart(2, '0');
+    const month = String(d.getUTCMonth() + 1).padStart(2, '0');
+    const year = d.getUTCFullYear();
+    return `${day}/${month}/${year}`;
   }
 
   displayStatus(task: Task): TaskStatus {
@@ -117,7 +117,6 @@ export class TaskListComponent implements OnInit, OnChanges {
   }
 
   viewTask(task: Task): void {
-    // Vista de detalle se planea como ruta futura
     this.router.navigate(['/projects', this.projectId, 'tasks', task.id]);
   }
 
@@ -130,6 +129,9 @@ export class TaskListComponent implements OnInit, OnChanges {
   }
 
   async onFormSubmit(data: TaskFormSubmit): Promise<void> {
+    console.log('📅 FECHA RECIBIDA DEL FORMULARIO:', data.dueDate);
+    console.log('📅 TIPO:', typeof data.dueDate);
+
     const creatorId = this.userStore.currentUser()?.id;
     if (!creatorId) {
       alert('Debes iniciar sesión');
@@ -154,7 +156,6 @@ export class TaskListComponent implements OnInit, OnChanges {
     }
   }
 
-  // ── Modal: eliminar ───────────────────────────────────
   showDeleteModal = signal<boolean>(false);
   deleteTargetTask = signal<Task | null>(null);
   deleting = signal<boolean>(false);
@@ -189,7 +190,8 @@ export class TaskListComponent implements OnInit, OnChanges {
 
   reschedule(task: Task): void {
     this.rescheduleTask.set(task);
-    this.rescheduleDate = task.dueDate.toISOString().slice(0, 10);
+    const d = new Date(task.dueDate);
+    this.rescheduleDate = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-${String(d.getUTCDate()).padStart(2, '0')}`;
     this.rescheduleError.set('');
     this.showRescheduleModal.set(true);
   }
@@ -204,8 +206,10 @@ export class TaskListComponent implements OnInit, OnChanges {
       this.rescheduleError.set('Selecciona una fecha.');
       return;
     }
-    const newDate = new Date(this.rescheduleDate);
-    if (isNaN(newDate.getTime())) {
+    const [year, month, day] = this.rescheduleDate.split('-').map(Number);
+    const utcDate = new Date(Date.UTC(year, month - 1, day, 12, 0, 0));
+
+    if (isNaN(utcDate.getTime())) {
       this.rescheduleError.set('Fecha inválida.');
       return;
     }
@@ -214,7 +218,7 @@ export class TaskListComponent implements OnInit, OnChanges {
     this.rescheduling.set(true);
     this.rescheduleError.set('');
     try {
-      await this.taskStore.rescheduleTask(task.id, newDate);
+      await this.taskStore.rescheduleTask(task.id, utcDate);
       this.closeRescheduleModal();
     } catch (err: any) {
       this.rescheduleError.set(err?.message ?? 'Error al reagendar.');

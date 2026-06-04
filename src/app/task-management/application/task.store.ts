@@ -20,15 +20,13 @@ export interface CreateTaskData {
 
 @Injectable({ providedIn: 'root' })
 export class TaskStore {
-  // State signals
   readonly projectTasks = signal<Task[]>([]);
   readonly userTasks = signal<Task[]>([]);
   readonly currentTask = signal<Task | null>(null);
   readonly loading = signal<boolean>(false);
   readonly error = signal<string | null>(null);
 
-  // Filtros UI
-  readonly assigneeFilter = signal<string>(''); // userId, '' = todos
+  readonly assigneeFilter = signal<string>('');
   readonly searchTerm = signal<string>('');
 
   private taskApi = inject(TaskApi);
@@ -107,6 +105,7 @@ export class TaskStore {
     this.setLoading(true);
     this.clearError();
     try {
+      // Task.create() generará createdAt y updatedAt automáticamente en UTC
       const task = Task.create(data);
       const saved = await firstValueFrom(this.taskApi.createTask(task));
       this.projectTasks.update(list => [saved, ...list]);
@@ -119,7 +118,6 @@ export class TaskStore {
     }
   }
 
-  /** Reagendar (usado por el botón "Poner Nueva fecha"). Pasa por el dominio. */
   async rescheduleTask(taskId: string, newDueDate: Date): Promise<Task> {
     this.setLoading(true);
     this.clearError();
@@ -128,7 +126,14 @@ export class TaskStore {
         ?? (this.currentTask()?.id === taskId ? this.currentTask() : null);
       const entity = cached ?? await firstValueFrom(this.taskApi.getTask(taskId));
 
-      entity.reschedule(newDueDate); // dominio valida que no esté completada
+      const utcDate = new Date(Date.UTC(
+        newDueDate.getFullYear(),
+        newDueDate.getMonth(),
+        newDueDate.getDate(),
+        12, 0, 0
+      ));
+
+      entity.reschedule(utcDate);
       const saved = await firstValueFrom(this.taskApi.updateTask(entity));
 
       this.projectTasks.update(list => list.map(t => t.id === taskId ? saved : t));
@@ -142,7 +147,6 @@ export class TaskStore {
     }
   }
 
-  /** El colaborador entrega la tarea (link + notas). Pasa por el dominio. */
   async completeTask(taskId: string, deliveryUrl: string, deliveryNotes?: string | null): Promise<Task> {
     this.setLoading(true);
     this.clearError();
@@ -152,7 +156,7 @@ export class TaskStore {
         ?? (this.currentTask()?.id === taskId ? this.currentTask() : null);
       const entity = cached ?? await firstValueFrom(this.taskApi.getTask(taskId));
 
-      entity.complete(deliveryUrl, deliveryNotes); // dominio valida no-doble-completada
+      entity.complete(deliveryUrl, deliveryNotes);
       const saved = await firstValueFrom(this.taskApi.updateTask(entity));
 
       this.projectTasks.update(list => list.map(t => t.id === taskId ? saved : t));
@@ -185,6 +189,7 @@ export class TaskStore {
 
   setAssigneeFilter(userId: string): void { this.assigneeFilter.set(userId); }
   setSearchTerm(term: string): void { this.searchTerm.set(term); }
+
   clearFilters(): void {
     this.assigneeFilter.set('');
     this.searchTerm.set('');

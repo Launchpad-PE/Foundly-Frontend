@@ -28,8 +28,8 @@ export class TaskAssembler implements BaseAssembler<Task, TaskResource, TaskResp
       status: resource.status,
       deliveryUrl: resource.deliveryUrl,
       deliveryNotes: resource.deliveryNotes,
-      createdAt: resource.createdAt,
-      updatedAt: resource.updatedAt
+      createdAt: new Date(resource.createdAt),
+      updatedAt: new Date(resource.updatedAt)
     });
   }
 
