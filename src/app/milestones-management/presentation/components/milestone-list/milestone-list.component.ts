@@ -19,6 +19,7 @@ export class MilestoneListComponent implements OnInit, OnDestroy {
   // Inputs
   projectId = input.required<string>();
   creatorId = input.required<string>();
+  milestoneCreated = output<Milestone>();
 
   // Outputs
   milestoneSelected = output<Milestone>();
@@ -70,6 +71,7 @@ export class MilestoneListComponent implements OnInit, OnDestroy {
   async onMilestoneCreated(milestone: Milestone): Promise<void> {
     this.closeCreateModal();
     await this.loadMilestones();
+    this.milestoneCreated.emit(milestone);
   }
 
   onMilestoneClick(milestone: Milestone): void {
