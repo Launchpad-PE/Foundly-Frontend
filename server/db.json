@@ -380,6 +380,33 @@
       "deliveryNotes": "asdasdasd",
       "createdAt": "2026-06-04T01:03:05.894Z",
       "updatedAt": "2026-06-04T01:05:16.588Z"
+    },
+    {
+      "id": "feeac77b-dcdb-4fdd-9907-d7ecd88f5dd3",
+      "projectId": "ba96b0d6-54bf-48ed-b026-29eb8636963a",
+      "assigneeId": "2",
+      "creatorId": "1",
+      "title": "asddsaasdasd",
+      "description": "assadasdasd",
+      "dueDate": "2026-06-05T12:00:00.000Z",
+      "checklist": [
+        {
+          "description": "sda",
+          "done": false
+        }
+      ],
+      "attachments": [
+        "https://web.whatsapp.com/"
+      ],
+      "tools": [
+        "aswdasads"
+      ],
+      "comment": "asdsdasdadsasdsdsdasdsds asdsadsadsda",
+      "status": "pending",
+      "deliveryUrl": null,
+      "deliveryNotes": null,
+      "createdAt": "2026-06-04T12:57:56.813Z",
+      "updatedAt": "2026-06-04T12:57:56.813Z"
     }
   ],
   "projects": [
@@ -919,6 +946,43 @@
       "deliveryNotes": null,
       "createdAt": "2026-06-04T01:03:35.716Z",
       "updatedAt": "2026-06-04T01:05:35.816Z"
+    },
+    {
+      "id": "27466ae5-40ae-43ac-a4d6-3a54023b400c",
+      "projectId": "ba96b0d6-54bf-48ed-b026-29eb8636963a",
+      "creatorId": "1",
+      "title": "dfsdfsdf",
+      "description": "asasdsadasdasd",
+      "tools": [
+        "asdasdsda"
+      ],
+      "generalComment": "asdasdasdasdasdasd",
+      "dueDate": "2026-06-06T00:00:00.000Z",
+      "attachments": [
+        "https://web.whatsapp.com/"
+      ],
+      "tasks": [
+        {
+          "id": "096b56a9-e997-4d53-87be-59b633e7c8c0",
+          "milestoneId": "27466ae5-40ae-43ac-a4d6-3a54023b400c",
+          "title": "asdasdsad",
+          "description": "sadasdasd",
+          "assigneeId": "4",
+          "dueDate": "2026-06-06T00:00:00.000Z",
+          "checklist": [],
+          "attachments": [],
+          "status": "pending",
+          "deliveryUrl": null,
+          "deliveryNotes": null,
+          "createdAt": "2026-06-04T12:56:29.045Z",
+          "updatedAt": "2026-06-04T12:56:29.045Z"
+        }
+      ],
+      "status": "pending",
+      "deliveryUrl": null,
+      "deliveryNotes": null,
+      "createdAt": "2026-06-04T12:56:29.044Z",
+      "updatedAt": "2026-06-04T12:56:29.045Z"
     }
   ]
 }
