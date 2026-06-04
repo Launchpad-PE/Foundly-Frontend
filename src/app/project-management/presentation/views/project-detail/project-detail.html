@@ -44,19 +44,19 @@
       <div class="card progress-card">
         <div class="card-header-strip progress-strip">
           <div class="card-header-content">
-            <span class="card-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
-              </svg>
-            </span>
+      <span class="card-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+        </svg>
+      </span>
             <h3 class="card-heading">Progreso del Proyecto</h3>
           </div>
-          <span class="pct-chip">{{ tasksCompletionPct() }}% completado</span>
+          <span class="pct-chip">{{ overallCompletionPct() }}% completado</span>
         </div>
         <div class="card-body">
           <div class="progress-track-wrap">
             <div class="progress-track">
-              <div class="progress-fill" [style.width.%]="tasksCompletionPct()"></div>
+              <div class="progress-fill" [style.width.%]="overallCompletionPct()"></div>
             </div>
             <span class="progress-track-label">Progreso general</span>
           </div>
@@ -72,9 +72,9 @@
             </div>
             <div class="ring-divider"></div>
             <div class="circle-item">
-              <div class="ring ring--milestones">
+              <div class="ring ring--milestones" [style.background]="milestonesRingStyle()">
                 <div class="ring-inner">
-                  <span class="ring-pct">0%</span>
+                  <span class="ring-pct">{{ milestonesCompletionPct() }}%</span>
                   <span class="ring-sub">de hitos</span>
                 </div>
               </div>
@@ -88,16 +88,31 @@
       <div class="card hitos-card">
         <div class="card-header-strip hitos-strip">
           <div class="card-header-content">
-            <span class="card-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
-              </svg>
-            </span>
+      <span class="card-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
+        </svg>
+      </span>
             <h3 class="card-heading">Próximos Hitos</h3>
           </div>
         </div>
         <div class="card-body flex-col">
-          <div class="empty-state">
+          <!-- Con hitos -->
+          <div *ngIf="upcomingMilestones().length > 0" class="hitos-list">
+            <div *ngFor="let milestone of upcomingMilestones()" class="hito-item">
+              <div class="hito-info">
+                <span class="hito-title">{{ milestone.title.getValue() }}</span>
+                <span class="hito-date">📅 {{ formatDate(milestone.dueDate) }}</span>
+              </div>
+              <div class="hito-progress">
+                <span class="hito-tasks">{{ getCompletedTasksCount(milestone.tasks) }}/{{ milestone.tasks.length }} tareas</span>
+              </div>
+            </div>
+            <button class="btn-action btn-hitos" (click)="setTab('hitos')">Ver Todos los Hitos ({{ totalMilestones() }})</button>
+          </div>
+
+          <!-- Sin hitos -->
+          <div class="empty-state" *ngIf="upcomingMilestones().length === 0 && !loadingMilestones()">
             <div class="empty-illustration hitos-empty">
               <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#9b8ff8" stroke-width="1.5" stroke-linecap="round">
                 <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/>
@@ -105,8 +120,14 @@
             </div>
             <p class="empty-title">Sin hitos programados</p>
             <p class="empty-hint">Los hitos de tu proyecto aparecerán aquí.</p>
+            <button class="btn-action btn-hitos" (click)="setTab('hitos')">Ver Todos los Hitos</button>
           </div>
-          <button class="btn-action btn-hitos" (click)="setTab('hitos')">Ver Todos los Hitos</button>
+
+          <!-- Loading -->
+          <div class="loading-small" *ngIf="loadingMilestones()">
+            <span class="spinner-small"></span>
+            <span>Cargando hitos...</span>
+          </div>
         </div>
       </div>
 
@@ -221,6 +242,7 @@
         [projectId]="projectId"
         [creatorId]="currentUserId"
         (milestoneSelected)="onMilestoneSelected($event)"
+        (milestoneCreated)="onMilestoneCreated($event)"
       />
       <div *ngIf="selectedMilestoneId()" class="milestone-fullscreen">
         <app-milestone-detail
