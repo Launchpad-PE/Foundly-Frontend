@@ -402,11 +402,11 @@
         "aswdasads"
       ],
       "comment": "asdsdasdadsasdsdsdasdsds asdsadsadsda",
-      "status": "pending",
-      "deliveryUrl": null,
-      "deliveryNotes": null,
+      "status": "completed",
+      "deliveryUrl": "https://www.youtube.com/watch?v=LpC0SKU6O00&list=RDLpC0SKU6O00&start_radio=1",
+      "deliveryNotes": "dokajosjdoads",
       "createdAt": "2026-06-04T12:57:56.813Z",
-      "updatedAt": "2026-06-04T12:57:56.813Z"
+      "updatedAt": "2026-06-04T14:46:29.898Z"
     }
   ],
   "projects": [
@@ -971,18 +971,155 @@
           "dueDate": "2026-06-06T00:00:00.000Z",
           "checklist": [],
           "attachments": [],
-          "status": "pending",
-          "deliveryUrl": null,
-          "deliveryNotes": null,
+          "status": "completed",
+          "deliveryUrl": "https://www.youtube.com/watch?v=LpC0SKU6O00&list=RDLpC0SKU6O00&start_radio=1",
+          "deliveryNotes": "sasdasasddassaddsadasdads",
           "createdAt": "2026-06-04T12:56:29.045Z",
-          "updatedAt": "2026-06-04T12:56:29.045Z"
+          "updatedAt": "2026-06-04T14:47:07.947Z"
         }
       ],
-      "status": "pending",
+      "status": "completed",
       "deliveryUrl": null,
       "deliveryNotes": null,
       "createdAt": "2026-06-04T12:56:29.044Z",
-      "updatedAt": "2026-06-04T12:56:29.045Z"
+      "updatedAt": "2026-06-04T14:47:08.006Z"
+    },
+    {
+      "id": "210b933f-ad52-475d-bf64-67615d34effd",
+      "projectId": "ba96b0d6-54bf-48ed-b026-29eb8636963a",
+      "creatorId": "1",
+      "title": "test",
+      "description": "samasdklndaknlas",
+      "tools": [
+        "assdas",
+        "saasdads"
+      ],
+      "generalComment": "jnnjknjlnklnklln",
+      "dueDate": "2026-06-06T00:00:00.000Z",
+      "attachments": [
+        "https://www.youtube.com/watch?v=LpC0SKU6O00&list=RDLpC0SKU6O00&start_radio=1"
+      ],
+      "tasks": [
+        {
+          "id": "e2307c85-6836-4a0f-afb7-16888acc5b71",
+          "milestoneId": "210b933f-ad52-475d-bf64-67615d34effd",
+          "title": "asdasdjsadk",
+          "description": "sdasaklndsa",
+          "assigneeId": "4",
+          "dueDate": "2026-06-06T00:00:00.000Z",
+          "checklist": [
+            {
+              "description": "sasdsd",
+              "done": false
+            }
+          ],
+          "attachments": [
+            "https://www.youtube.com/watch?v=LpC0SKU6O00&list=RDLpC0SKU6O00&start_radio=1"
+          ],
+          "status": "completed",
+          "deliveryUrl": "https://www.youtube.com/watch?v=LpC0SKU6O00&list=RDLpC0SKU6O00&start_radio=1",
+          "deliveryNotes": "saklmfasklsafnkasnklasdnk",
+          "createdAt": "2026-06-04T14:50:00.680Z",
+          "updatedAt": "2026-06-04T14:51:02.035Z"
+        },
+        {
+          "id": "053f107b-6e7e-4679-8077-aa9c60047549",
+          "milestoneId": "210b933f-ad52-475d-bf64-67615d34effd",
+          "title": "nasdjnasjkdsakjd",
+          "description": "kasdkasjkdakjadskjbadsjbkads",
+          "assigneeId": "2",
+          "dueDate": "2026-06-06T00:00:00.000Z",
+          "checklist": [
+            {
+              "description": "nskanskdaskjads",
+              "done": false
+            },
+            {
+              "description": "sadasdaadsdsa",
+              "done": false
+            }
+          ],
+          "attachments": [
+            "https://www.youtube.com/watch?v=LpC0SKU6O00&list=RDLpC0SKU6O00&start_radio=1"
+          ],
+          "status": "completed",
+          "deliveryUrl": "https://www.youtube.com/watch?v=LpC0SKU6O00&list=RDLpC0SKU6O00&start_radio=1",
+          "deliveryNotes": "asklnadslkdasnklas",
+          "createdAt": "2026-06-04T14:50:00.680Z",
+          "updatedAt": "2026-06-04T14:50:38.193Z"
+        }
+      ],
+      "status": "completed",
+      "deliveryUrl": null,
+      "deliveryNotes": null,
+      "createdAt": "2026-06-04T14:50:00.680Z",
+      "updatedAt": "2026-06-04T14:51:02.096Z"
+    },
+    {
+      "id": "76339715-a057-4b11-bb05-6cae2a06133f",
+      "projectId": "ba96b0d6-54bf-48ed-b026-29eb8636963a",
+      "creatorId": "1",
+      "title": "asdnlkadsadnksl",
+      "description": "asdlnadskldasnkl",
+      "tools": [
+        "msdaldasdaskl"
+      ],
+      "generalComment": "kndasknladsnkladslnadslk",
+      "dueDate": "2026-06-13T00:00:00.000Z",
+      "attachments": [
+        "https://www.youtube.com/watch?v=LpC0SKU6O00&list=RDLpC0SKU6O00&start_radio=1"
+      ],
+      "tasks": [
+        {
+          "id": "4d3cc289-a310-4b84-b5ea-a7c2aadbffcb",
+          "milestoneId": "76339715-a057-4b11-bb05-6cae2a06133f",
+          "title": "aksnadsnkdawnk",
+          "description": "madslkasnkls",
+          "assigneeId": "4",
+          "dueDate": "2026-06-13T00:00:00.000Z",
+          "checklist": [
+            {
+              "description": "ndaLKNDnl",
+              "done": false
+            }
+          ],
+          "attachments": [
+            "https://www.youtube.com/watch?v=LpC0SKU6O00&list=RDLpC0SKU6O00&start_radio=1"
+          ],
+          "status": "completed",
+          "deliveryUrl": "https://www.youtube.com/watch?v=LpC0SKU6O00&list=RDLpC0SKU6O00&start_radio=1",
+          "deliveryNotes": "asdmdaslnadsasnkl",
+          "createdAt": "2026-06-04T14:55:21.553Z",
+          "updatedAt": "2026-06-04T14:55:33.605Z"
+        },
+        {
+          "id": "31276c0b-532b-4795-b821-456e95ee527d",
+          "milestoneId": "76339715-a057-4b11-bb05-6cae2a06133f",
+          "title": "nafknlfanklfas",
+          "description": "sdalkadsnlkadsnadsl",
+          "assigneeId": "2",
+          "dueDate": "2026-06-13T00:00:00.000Z",
+          "checklist": [
+            {
+              "description": "mdaslkadsnads",
+              "done": false
+            }
+          ],
+          "attachments": [
+            "https://www.youtube.com/watch?v=LpC0SKU6O00&list=RDLpC0SKU6O00&start_radio=1"
+          ],
+          "status": "completed",
+          "deliveryUrl": "https://www.youtube.com/watch?v=LpC0SKU6O00&list=RDLpC0SKU6O00&start_radio=1",
+          "deliveryNotes": "sdmadslñds",
+          "createdAt": "2026-06-04T14:55:21.553Z",
+          "updatedAt": "2026-06-04T14:55:49.293Z"
+        }
+      ],
+      "status": "completed",
+      "deliveryUrl": null,
+      "deliveryNotes": null,
+      "createdAt": "2026-06-04T14:54:59.872Z",
+      "updatedAt": "2026-06-04T14:55:49.339Z"
     }
   ]
 }
