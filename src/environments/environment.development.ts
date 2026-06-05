@@ -1,9 +1,9 @@
 export const environment = {
   production: false,
-  platformProviderApiBaseUrl: 'http://localhost:3000',
+  platformProviderApiBaseUrl: 'https://json-server-qmbj.onrender.com',
   platformProfileEndpointPath: '/profiles',
   platformUserEndpointPath: '/user',
-  platformProjectEndpointPath: "/projects",
+  platformProjectEndpointPath: '/projects',
   logoProviderApiBaseUrl: 'https://img.logo.dev.com',
-  landingPageRedirection: "https://launchpad-pe.github.io/Foundly-Landing-Page/"
+  landingPageRedirection: 'https://launchpad-pe.github.io/Foundly-Landing-Page/',
 };

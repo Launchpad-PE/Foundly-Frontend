@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { UserApiData } from './user.assembler';
 
-const BASE_URL = 'http://localhost:3000'; // Replace with your API base URL
+const BASE_URL = 'https://json-server-qmbj.onrender.com'; // Replace with your API base URL
 
 @Injectable({ providedIn: 'root' })
 export class UsersApi {
