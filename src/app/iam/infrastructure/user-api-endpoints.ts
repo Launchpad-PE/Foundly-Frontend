@@ -47,13 +47,6 @@ export class UsersApi {
     });
   }
 
-  /**
-   * Update user profile
-   */
-  updateProfile(id: string, userData: Partial<UserApiData>): Observable<any> {
-    return this.http.put(`${this.baseUrl}${this.endpointPath}/${id}`, userData, {
-      headers: this.getHeaders(),
-    });
-  }
+
 
 }

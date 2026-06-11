@@ -54,19 +54,19 @@ export class UserStore {
       this.setLoading(true);
       this.clearError();
 
-      // ✅ Usar RegisterRequest directamente
       const registerRequest: RegisterRequest = {
-        fullName: registrationData.fullName,
+        username: registrationData.email,
         email: registrationData.email,
         password: registrationData.password,
+        roles: ['ROLE_USER'],
       };
 
       const response = await firstValueFrom(this.usersApi.register(registerRequest));
 
       const newUser: CurrentUser = {
         id: response.id.toString(),
-        fullName: response.fullName,
-        email: response.email,
+        fullName: registrationData.fullName,
+        email: registrationData.email,
       };
 
       localStorage.setItem('currentUser', JSON.stringify(newUser));
@@ -88,21 +88,21 @@ export class UserStore {
       this.setLoading(true);
       this.clearError();
 
-      console.log('🔐 Attempting login:', email);
+      // Backend uses email as username (set during registration)
       const response = await firstValueFrom(this.usersApi.authenticate(email, password));
 
       if (response?.token) {
-        const { id, fullName, token: authToken } = response;
+        const { id, username, token: authToken } = response;
         this.setToken(authToken);
+
+        const storedUser = localStorage.getItem('currentUser');
+        const fullName = storedUser ? (JSON.parse(storedUser).fullName ?? username) : username;
 
         const user: CurrentUser = { id: id.toString(), fullName, email, token: authToken };
         localStorage.setItem('currentUser', JSON.stringify(user));
         localStorage.setItem('userId', user.id);
         this.currentUser.set(user);
 
-        console.log('✅ Login successful:', fullName);
-
-        // Cargar el perfil del usuario después del login
         await this.loadUserProfile(user.id);
 
         return user;
