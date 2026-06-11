@@ -31,7 +31,7 @@ export class MilestoneApiEndpoint extends BaseApiEndpoint<
       new MilestoneAssembler()
     );
     this.milestonesUrl = `${environment.platformProviderApiBaseUrl}${environment.platformMilestoneEndpointPath}`;
-    this.milestoneTasksUrl = `${environment.platformProviderApiBaseUrl}/milestone-tasks`;
+    this.milestoneTasksUrl = `${environment.platformProviderApiBaseUrl}${environment.platformMilestoneTaskEndpointPath}`;
   }
 
   // Get milestone by ID

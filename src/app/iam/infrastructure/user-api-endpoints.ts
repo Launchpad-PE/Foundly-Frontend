@@ -3,12 +3,12 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { UserApiData } from './user.assembler';
-
-const BASE_URL = 'https://json-server-qmbj.onrender.com'; // Replace with your API base URL
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class UsersApi {
-  private readonly endpointPath = '/users';
+  private readonly baseUrl = environment.platformProviderApiBaseUrl;
+  private readonly endpointPath = environment.platformUserEndpointPath;
 
   constructor(private http: HttpClient) {}
 
@@ -25,7 +25,7 @@ export class UsersApi {
    */
   authenticate(email: string, password: string): Observable<any> {
     return this.http
-      .post(`${BASE_URL}/authentication/sign-in`, { email, password }, { headers: this.getHeaders() })
+      .post(`${this.baseUrl}/api/v1/authentication/sign-in`, { email, password }, { headers: this.getHeaders() })
       .pipe(tap((res) => console.log(' API Response:', res)));
   }
 
@@ -34,7 +34,7 @@ export class UsersApi {
    */
   register(userData: UserApiData): Observable<any> {
     return this.http
-      .post(`${BASE_URL}${this.endpointPath}`, userData, { headers: this.getHeaders() })
+      .post(`${this.baseUrl}/api/v1/authentication/sign-up`, userData, { headers: this.getHeaders() })
       .pipe(tap((res) => console.log(' Register Response:', res)));
   }
 
@@ -42,7 +42,7 @@ export class UsersApi {
    * Get user by email
    */
   getByEmail(email: string): Observable<any> {
-    return this.http.get(`${BASE_URL}${this.endpointPath}?email=${encodeURIComponent(email)}`, {
+    return this.http.get(`${this.baseUrl}${this.endpointPath}/email/${encodeURIComponent(email)}`, {
       headers: this.getHeaders(),
     });
   }
@@ -51,7 +51,7 @@ export class UsersApi {
    * Update user profile
    */
   updateProfile(id: string, userData: Partial<UserApiData>): Observable<any> {
-    return this.http.put(`${BASE_URL}${this.endpointPath}/${id}`, userData, {
+    return this.http.put(`${this.baseUrl}${this.endpointPath}/${id}`, userData, {
       headers: this.getHeaders(),
     });
   }
