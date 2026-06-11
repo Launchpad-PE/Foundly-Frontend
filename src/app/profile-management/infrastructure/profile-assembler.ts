@@ -30,8 +30,8 @@ export class ProfileAssembler implements BaseAssembler<
     const experiences = (resource.experiences || []).map((exp) => this.experienceFromResource(exp));
 
     return new Profile({
-      id: resource.id,
-      userId: resource.userId,
+      id: String(resource.id),
+      userId: String(resource.userId),
       username: resource.username,
       avatar: resource.avatar,
       bio: resource.bio,
@@ -51,7 +51,7 @@ export class ProfileAssembler implements BaseAssembler<
   toResourceFromEntity(entity: Profile): ProfileResource {
     return {
       id: entity.id!,
-      userId: entity.userId,
+      userId: String(entity.userId),
       username: entity.username,
       avatar: entity.avatar,
       bio: entity.bio,
