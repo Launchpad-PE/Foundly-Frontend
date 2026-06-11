@@ -34,17 +34,12 @@ export class ProfileApiEndpoint extends BaseApiEndpoint<
   }
 
   /**
-   * Get profile by user ID (json-server usa query params)
+   * Get profile by user ID
    */
   getByUserId(userId: string): Observable<ProfileResponse> {
-    return this.http.get<ProfileResource[]>(`${this.profilesUrl}?userId=${userId}`).pipe(
-      map((profiles) => {
-        if (profiles && profiles.length > 0) {
-          return { profile: profiles[0] } as ProfileResponse;
-        }
-        throw new Error('Profile not found');
-      }),
-    );
+    return this.http
+      .get<ProfileResource>(`${this.profilesUrl}/user/${userId}`)
+      .pipe(map((profile) => ({ profile }) as ProfileResponse));
   }
 
   /**
