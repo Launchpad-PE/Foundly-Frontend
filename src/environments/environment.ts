@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  platformProviderApiBaseUrl: 'https://json-server-qmbj.onrender.com',
+  platformProviderApiBaseUrl: 'http://localhost:8080',
   platformProfileEndpointPath: '/api/v1/profiles',
   platformUserEndpointPath: '/api/v1/users',
   platformProjectEndpointPath: '/api/v1/projects',
