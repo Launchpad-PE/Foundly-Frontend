@@ -91,6 +91,9 @@ export class UserStore {
       // Backend uses email as username (set during registration)
       const response = await firstValueFrom(this.usersApi.authenticate(email, password));
 
+      console.log('📡 Respuesta del login:', response);  // ← Agrega esto
+
+
       if (response?.token) {
         const { id, username, token: authToken } = response;
         this.setToken(authToken);
@@ -107,6 +110,7 @@ export class UserStore {
 
         return user;
       } else {
+        console.error('❌ No hay token en la respuesta:', response);
         throw new Error('Respuesta de autenticación inválida');
       }
     } catch (err: any) {
