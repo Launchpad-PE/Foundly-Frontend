@@ -68,6 +68,8 @@ export class Project  {
     this.authorName = authorName;
   }
 
+  // project.entity.ts - Reemplazar el método create()
+
   static create(props: {
     id?: string;
     name: string;
@@ -78,12 +80,13 @@ export class Project  {
     academicLevel?: string | null;
     benefits: string[];
     requiredSkills: string[];
-    duration: { amount: number; type: DurationType };
+    durationAmount: number;
+    durationType: DurationType;
     roles: Array<{
       name: string;
       cardInfo: { title: string; items: string[] };
     }>;
-    authorId: string;
+    authorId: string | number;  // ✅ Permitir string o número
     authorName?: string | null;
     status?: ProjectStatus;
     createdAt?: string;
@@ -101,7 +104,7 @@ export class Project  {
       props.academicLevel !== undefined ? new AcademicLevel(props.academicLevel) : null,
       props.benefits.map(benefit => new Benefit(benefit)),
       props.requiredSkills.map(skill => new Skill(skill)),
-      new Duration(props.duration.amount, props.duration.type),
+      new Duration(props.durationAmount, props.durationType),
       props.roles.map(role => new Role(
         new RoleName(role.name),
         new RoleCardInfo(
@@ -112,7 +115,7 @@ export class Project  {
       props.status !== undefined ? props.status : ProjectStatus.DRAFT,
       props.createdAt ? new Date(props.createdAt) : new Date(),
       props.updatedAt ? new Date(props.updatedAt) : new Date(),
-      new UserId(props.authorId),
+      new UserId(props.authorId),  // ✅ Ahora UserId acepta string | number
       props.authorName || null
     );
   }

@@ -1,8 +1,8 @@
-// project-assembler.ts (versión corregida)
 import { BaseAssembler } from '../../shared/infrastructure/base-assembler';
 import { Project } from '../domain/entities/project.entity';
-import { ProjectResource, ProjectResponse, ProjectsResponse, RoleResource } from './project-response';
+import { ProjectResource, ProjectResponse, ProjectsResponse, RoleResource, DurationResource } from './project-response';
 import { CardItem, CardTitle, Role, RoleCardInfo, RoleName } from '../domain/value-objects/role.vo';
+import { DurationType } from '../domain/value-objects/duration.vo';
 
 
 export class ProjectAssembler implements BaseAssembler<Project, ProjectResource, ProjectResponse | ProjectsResponse> {
@@ -34,7 +34,20 @@ export class ProjectAssembler implements BaseAssembler<Project, ProjectResource,
       }
     }));
 
-    // Usar el método estático create en lugar del constructor privado
+    // Soporte para ambos formatos
+    let durationAmount = 0;
+    let durationType: DurationType = DurationType.MONTHS;  // ✅ Usar el enum
+
+    if (resource.duration !== undefined) {
+      // Viene del GET del backend (formato anidado)
+      durationAmount = resource.duration.amount;
+      durationType = resource.duration.type;
+    } else if (resource.durationAmount !== undefined && resource.durationType !== undefined) {
+      // Viene del POST u otro lugar (campos planos)
+      durationAmount = resource.durationAmount;
+      durationType = resource.durationType;
+    }
+
     return Project.create({
       id: resource.id,
       name: resource.name,
@@ -45,10 +58,8 @@ export class ProjectAssembler implements BaseAssembler<Project, ProjectResource,
       academicLevel: resource.academicLevel || undefined,
       benefits: resource.benefits,
       requiredSkills: resource.requiredSkills,
-      duration: {
-        amount: resource.duration.amount,
-        type: resource.duration.type
-      },
+      durationAmount: durationAmount,
+      durationType: durationType,
       roles: roles,
       authorId: resource.authorId,
       authorName: resource.authorName || null,
@@ -72,10 +83,8 @@ export class ProjectAssembler implements BaseAssembler<Project, ProjectResource,
       academicLevel: entity.academicLevel ? entity.academicLevel.getValue() : null,
       benefits: entity.benefits.map(benefit => benefit.getDescription()),
       requiredSkills: entity.requiredSkills.map(skill => skill.getValue()),
-      duration: {
-        amount: entity.duration.getAmount(),
-        type: entity.duration.getType()
-      },
+      durationAmount: entity.duration.getAmount(),
+      durationType: entity.duration.getType(),
       roles: entity.roles.map(role => this.roleToResource(role)),
       status: entity.status,
       createdAt: entity.createdAt.toISOString(),

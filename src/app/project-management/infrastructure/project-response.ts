@@ -13,6 +13,12 @@ export interface RoleResource extends BaseResource {
   };
 }
 
+// Interfaz para el objeto duration que devuelve el backend en las respuestas GET
+export interface DurationResource {
+  amount: number;
+  type: DurationType;
+}
+
 export interface ProjectResource extends BaseResource {
   id: string;
   name: string;
@@ -23,10 +29,11 @@ export interface ProjectResource extends BaseResource {
   academicLevel: string | null;
   benefits: string[];
   requiredSkills: string[];
-  duration: {
-    amount: number;
-    type: DurationType;
-  };
+  // ✅ Para enviar al backend (POST/PATCH)
+  durationAmount?: number;
+  durationType?: DurationType;
+  // ✅ Para recibir del backend (GET)
+  duration?: DurationResource;
   roles: RoleResource[];
   status: ProjectStatus;
   createdAt: string;

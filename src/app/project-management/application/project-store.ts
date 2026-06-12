@@ -9,6 +9,7 @@ import { ProjectStatus } from '../domain/enum/project-status.enum';
 import { EnvironmentalMetric } from '../domain/value-objects/environmental-impact.vo';
 import { DurationType } from '../domain/value-objects/duration.vo';
 import { ProfileApi } from '../../profile-management/infrastructure/profile-api';
+// project-store.ts - Reemplazar la interfaz CreateProjectData
 
 export interface CreateProjectData {
   name: string;
@@ -19,7 +20,8 @@ export interface CreateProjectData {
   academicLevel?: string | null;
   benefits: string[];
   requiredSkills: string[];
-  duration: { amount: number; type: DurationType };
+  durationAmount: number;      // ✅ Cambiado: campo plano
+  durationType: DurationType;  // ✅ Cambiado: campo plano
   roles: Array<{
     name: string;
     cardInfo: { title: string; items: string[] };
@@ -109,6 +111,8 @@ export class ProjectStore {
    * Create a new project
    */
 
+  // project-store.ts - Reemplazar el método createProject
+
   async createProject(projectData: CreateProjectData, authorId: string): Promise<Project> {
     this.setLoading(true);
     this.clearError();
@@ -123,49 +127,58 @@ export class ProjectStore {
         console.warn('Could not fetch author profile:', err);
       }
 
+      // ✅ Pasar durationAmount y durationType directamente
       const project = Project.create({
-        ...projectData,
+        name: projectData.name,
+        area: projectData.area,
+        tags: projectData.tags,
+        summary: projectData.summary,
+        environmentalImpact: projectData.environmentalImpact,
+        academicLevel: projectData.academicLevel,
+        benefits: projectData.benefits,
+        requiredSkills: projectData.requiredSkills,
+        durationAmount: projectData.durationAmount,
+        durationType: projectData.durationType,
+        roles: projectData.roles,
         authorId: authorId,
-        authorName: authorName, // ✅ Incluir el authorName
+        authorName: authorName,
       });
 
       const savedProject = await firstValueFrom(this.projectApi.createProject(project));
 
-      // ✅ Enriquecer el proyecto guardado con el authorName si es necesario
+      // Enriquecer el proyecto guardado con el authorName si es necesario
       const enrichedProject = authorName
         ? Project.create({
-            id: savedProject.id,
-            name: savedProject.name.getValue(),
-            area: savedProject.area.getValue(),
-            tags: savedProject.tags.map((t) => t.getValue()),
-            summary: savedProject.summary.getValue(),
-            environmentalImpact: savedProject.environmentalImpact?.getMetrics(),
-            academicLevel: savedProject.academicLevel?.getValue(),
-            benefits: savedProject.benefits.map((b) => b.getDescription()),
-            requiredSkills: savedProject.requiredSkills.map((s) => s.getValue()),
-            duration: {
-              amount: savedProject.duration.getAmount(),
-              type: savedProject.duration.getType(),
+          id: savedProject.id,
+          name: savedProject.name.getValue(),
+          area: savedProject.area.getValue(),
+          tags: savedProject.tags.map((t) => t.getValue()),
+          summary: savedProject.summary.getValue(),
+          environmentalImpact: savedProject.environmentalImpact?.getMetrics(),
+          academicLevel: savedProject.academicLevel?.getValue(),
+          benefits: savedProject.benefits.map((b) => b.getDescription()),
+          requiredSkills: savedProject.requiredSkills.map((s) => s.getValue()),
+          durationAmount: savedProject.duration.getAmount(),
+          durationType: savedProject.duration.getType(),
+          roles: savedProject.roles.map((r) => ({
+            name: r.name.getValue(),
+            cardInfo: {
+              title: r.cardInfo.title.getValue(),
+              items: r.cardInfo.items.map((i) => i.getDescription()),
             },
-            roles: savedProject.roles.map((r) => ({
-              name: r.name.getValue(),
-              cardInfo: {
-                title: r.cardInfo.title.getValue(),
-                items: r.cardInfo.items.map((i) => i.getDescription()),
-              },
-            })),
-            authorId: savedProject.authorId.toString(),
-            authorName: authorName,
-            status: savedProject.status,
-            createdAt: savedProject.createdAt.toISOString(),
-            updatedAt: savedProject.updatedAt.toISOString(),
-          })
+          })),
+          authorId: savedProject.authorId.toString(),
+          authorName: authorName,
+          status: savedProject.status,
+          createdAt: savedProject.createdAt.toISOString(),
+          updatedAt: savedProject.updatedAt.toISOString(),
+        })
         : savedProject;
 
       // Update stores
       this.currentProject.set(enrichedProject);
       this.userProjects.update((projects) => [enrichedProject, ...projects]);
-      this.allProjects.update((projects) => [enrichedProject, ...projects]); // ✅ También actualizar allProjects
+      this.allProjects.update((projects) => [enrichedProject, ...projects]);
 
       console.log('✅ Project created successfully', enrichedProject);
       return enrichedProject;
@@ -288,9 +301,9 @@ export class ProjectStore {
     }
   }
 
+  // project-store.ts - Reemplazar el método addAuthorNameToProject
+
   private addAuthorNameToProject(project: Project, authorName: string): Project {
-    // Método temporal para agregar el nombre - idealmente deberías
-    // tener un método en Project.updateAuthorName()
     return Project.create({
       id: project.id,
       name: project.name.getValue(),
@@ -301,10 +314,8 @@ export class ProjectStore {
       academicLevel: project.academicLevel?.getValue(),
       benefits: project.benefits.map((b) => b.getDescription()),
       requiredSkills: project.requiredSkills.map((s) => s.getValue()),
-      duration: {
-        amount: project.duration.getAmount(),
-        type: project.duration.getType(),
-      },
+      durationAmount: project.duration.getAmount(),
+      durationType: project.duration.getType(),
       roles: project.roles.map((r) => ({
         name: r.name.getValue(),
         cardInfo: {

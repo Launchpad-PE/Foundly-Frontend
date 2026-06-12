@@ -3,7 +3,7 @@ import { environment } from '../../../environments/environment';
 import { Project } from '../domain/entities/project.entity';
 import { ProjectResource, ProjectResponse, ProjectsResponse } from './project-response';
 import { ProjectAssembler } from './project-assembler';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { ProjectStatus } from '../domain/enum/project-status.enum';
 import { HttpClient } from '@angular/common/http';
@@ -58,8 +58,21 @@ export class ProjectApiEndpoint extends BaseApiEndpoint<Project, ProjectResource
    */
   createProject(project: Project): Observable<ProjectResponse> {
     const resource = this.assembler.toResourceFromEntity(project);
+
+    // 🔍 Logs para depurar
+    console.log('📡 ProjectApiEndpoint.createProject - URL:', this.projectsUrl);
+    console.log('📡 ProjectApiEndpoint.createProject - Token existe:', !!localStorage.getItem('authToken'));
+    console.log('📡 ProjectApiEndpoint.createProject - Payload:', resource);
+
     return this.http.post<ProjectResource>(this.projectsUrl, resource).pipe(
-      map(created => ({ project: created }) as ProjectResponse)
+      map(created => {
+        console.log('📡 ProjectApiEndpoint.createProject - Respuesta:', created);
+        return ({ project: created }) as ProjectResponse;
+      }),
+      catchError(error => {
+        console.error('📡 ProjectApiEndpoint.createProject - Error:', error);
+        return throwError(() => error);
+      })
     );
   }
 
