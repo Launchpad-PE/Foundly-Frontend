@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { firstValueFrom, Observable, of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import {
   Alert,
@@ -33,64 +33,30 @@ const DAYS = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
 
 @Injectable({ providedIn: 'root' })
 export class EnvironmentalApi {
-  private useMock = true; // Cambiar a false cuando el backend esté listo
-  private baseUrl = '/api/environmental';
+  private http = inject(HttpClient);
+  private baseUrl = '/api/v1/environmental'; // ← Apunta al backend real
 
-  constructor(private http: HttpClient) {}
+  async getDashboardData(projectId: string, days: number = 7): Promise<DashboardData> {
+    console.log('📡 Llamando al backend:', `${this.baseUrl}/projects/${projectId}/dashboard?days=${days}`);
 
-  getMetrics(projectId: string): Observable<EnvironmentalMetric[]> {
-    if (this.useMock) {
-      return of(MOCK_METRICS).pipe(delay(300));
-    }
-    return this.http.get<EnvironmentalMetric[]>(`${this.baseUrl}/projects/${projectId}/metrics`);
+    const response = await firstValueFrom(
+      this.http.get<DashboardData>(`${this.baseUrl}/projects/${projectId}/dashboard`, {
+        params: { days: days.toString() }
+      })
+    );
+
+    console.log('📡 Respuesta del backend:', response);
+    return response;
   }
 
-  getDashboardData(projectId: string, days: number = 7): Observable<DashboardData> {
-    if (this.useMock) {
-      // Construir métricas
-      const metrics: MetricCard[] = MOCK_METRICS.map(metric => {
-        const data = MOCK_METRIC_VALUES[metric];
-        return {
-          metric,
-          value: data.value.toString(),
-          unit: data.unit,
-          status: data.status as 'good' | 'moderate' | 'normal' | 'active',
-          icon: this.getIconForMetric(metric),
-          color: this.getColorForMetric(metric)
-        };
-      });
+  async getMetrics(projectId: string): Promise<EnvironmentalMetric[]> {
+    console.log('📡 Llamando al backend:', `${this.baseUrl}/projects/${projectId}/metrics`);
 
-      const trends: MetricTrend[] = MOCK_METRICS.map(metric => ({
-        metric,
-        values: MOCK_METRIC_VALUES[metric].trend,
-        days: DAYS
-      }));
+    const response = await firstValueFrom(
+      this.http.get<EnvironmentalMetric[]>(`${this.baseUrl}/projects/${projectId}/metrics`)
+    );
 
-      return of({ metrics, trends, alerts: MOCK_ALERTS }).pipe(delay(500));
-    }
-
-    return this.http.get<DashboardData>(`${this.baseUrl}/projects/${projectId}/dashboard`, {
-      params: { days: days.toString() }
-    });
-  }
-
-  private getIconForMetric(metric: EnvironmentalMetric): string {
-    const icons: Record<EnvironmentalMetric, string> = {
-      'AIR_QUALITY': '🌬️',
-      'HUMIDITY': '💧',
-      'TEMPERATURE': '🌡️',
-      'CITIZEN_PARTICIPATION': '👥'
-    };
-    return icons[metric];
-  }
-
-  private getColorForMetric(metric: EnvironmentalMetric): string {
-    const colors: Record<EnvironmentalMetric, string> = {
-      'AIR_QUALITY': '#667eea',
-      'HUMIDITY': '#3b82f6',
-      'TEMPERATURE': '#10b981',
-      'CITIZEN_PARTICIPATION': '#8b5cf6'
-    };
-    return colors[metric];
+    console.log('📡 Respuesta del backend:', response);
+    return response;
   }
 }
