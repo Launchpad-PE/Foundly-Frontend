@@ -1,9 +1,18 @@
+// domain/value-objects/duration.vo.ts
 export enum DurationType {
-  WEEKS = 'semanas',
-  MONTHS = 'meses',
-  SEMESTERS = 'semestres',
-  YEARS = 'años'
+  WEEKS = 'WEEKS',      // ← Cambiado de 'semanas'
+  MONTHS = 'MONTHS',    // ← Cambiado de 'meses'
+  SEMESTERS = 'SEMESTERS', // ← Cambiado de 'semestres'
+  YEARS = 'YEARS'       // ← Cambiado de 'años'
 }
+
+// Para mostrar en la UI, crea un array aparte
+export const DurationTypeDisplay = [
+  { value: DurationType.WEEKS, label: 'Semanas' },
+  { value: DurationType.MONTHS, label: 'Meses' },
+  { value: DurationType.SEMESTERS, label: 'Semestres' },
+  { value: DurationType.YEARS, label: 'Años' }
+];
 
 export class Duration {
   constructor(
@@ -19,7 +28,9 @@ export class Duration {
   }
 
   toString(): string {
-    return `${this.amount} ${this.type}`;
+    // Para mostrar, usar el display label
+    const display = DurationTypeDisplay.find(d => d.value === this.type);
+    return `${this.amount} ${display?.label || this.type}`;
   }
 
   getAmount(): number {
