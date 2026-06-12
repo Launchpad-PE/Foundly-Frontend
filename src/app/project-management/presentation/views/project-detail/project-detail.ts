@@ -5,7 +5,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ProjectStore } from '../../../application/project-store';
 import { Project } from '../../../domain/entities/project.entity';
 import { EnvironmentalMetric } from '../../../domain/value-objects/environmental-impact.vo';
-import { IotDashboardComponent } from '../../../../environmental-monitoring/presentation/views/iot-dashboard/iot-dashboard';
+import { IotDashboardComponent } from '../../../../environmental-monitoring/presentation/views/iot-dashboard/iot-dashboard.component';
 import { PostulantListComponent } from '../../../../applications/presentation/components/postulant-list/postulant-list';
 import { TaskListComponent, AssigneeOption } from '../../../../task-management/presentation/components/task-list/task-list';
 import { ApplicationStore } from '../../../../applications/application/application.store';

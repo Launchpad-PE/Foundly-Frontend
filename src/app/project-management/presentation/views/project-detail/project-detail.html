@@ -232,7 +232,10 @@
 
     <!-- ════════════════ IOT ════════════════ -->
     <div class="iot-tab-wrapper" *ngIf="activeTab() === 'iot'">
-      <app-iot-dashboard [metrics]="iotMetrics"></app-iot-dashboard>
+      <app-iot-dashboard
+        [projectId]="projectId"
+        [metrics]="iotMetrics">
+      </app-iot-dashboard>
     </div>
 
     <!-- ════════════════ HITOS ════════════════ -->

@@ -1,0 +1,114 @@
+<div class="iot-container">
+
+  <!-- ════ RESUMEN DE MONITOREO ════ -->
+  <section class="iot-card monitor-section">
+    <div class="section-header">
+      <span class="section-tag">RESUMEN DE MONITOREO</span>
+      <button *ngIf="!loading() && !isLegacyMode" class="refresh-btn" (click)="refresh()" title="Actualizar">
+        ↻
+      </button>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="loading()" class="state-center">
+      <div class="spinner"></div>
+      <p>Cargando métricas...</p>
+    </div>
+
+    <!-- Error -->
+    <div *ngIf="error() && !loading()" class="state-center error">
+      <span class="error-icon">⚠️</span>
+      <p>{{ error() }}</p>
+      <button class="retry-btn" (click)="refresh()">Reintentar</button>
+    </div>
+
+    <!-- Metrics (modo store) -->
+    <div class="metrics-grid" *ngIf="!loading() && !error() && metricsData().length > 0 && !isLegacyMode">
+      <div class="metric-card" [ngClass]="'metric-' + card.status" *ngFor="let card of metricsData()">
+        <div class="metric-top-row">
+          <span class="metric-emoji">{{ card.icon }}</span>
+          <span class="status-badge" [ngClass]="card.status">{{ StatusLabel[card.status] }}</span>
+        </div>
+        <span class="metric-name">{{ getMetricLabel(card.metric) }}</span>
+        <div class="metric-value-row">
+          <span class="value">{{ card.value }}</span>
+          <span class="unit">{{ card.unit }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Metrics (modo legacy - compatible con código existente) -->
+    <div class="metrics-grid" *ngIf="!loading() && isLegacyMode && metrics.length > 0">
+      <!-- Aquí va la implementación legacy si quieres mantenerla -->
+    </div>
+
+    <!-- Empty -->
+    <div class="state-center" *ngIf="!loading() && !error() && metricsData().length === 0 && !isLegacyMode">
+      <span class="empty-icon">📊</span>
+      <p>No hay métricas configuradas para este proyecto</p>
+    </div>
+  </section>
+
+  <!-- ════ TENDENCIA Y ALERTAS ════ -->
+  <div class="bottom-row" *ngIf="!isLegacyMode">
+    <!-- Tendencia -->
+    <section class="iot-card trend-section">
+      <div class="section-header">
+        <span class="section-tag">TENDENCIA ÚLTIMAS 7 DÍAS</span>
+      </div>
+
+      <div class="charts-list" *ngIf="trendsData().length > 0">
+        <div class="chart-item" *ngFor="let trend of trendsData()">
+          <span class="chart-label" [style.color]="getMetricColor(trend.metric)">
+            {{ getMetricLabel(trend.metric) }}
+          </span>
+          <div class="chart-area">
+            <div class="bar-chart">
+              <div
+                class="bar"
+                *ngFor="let val of trend.values; let i = index"
+                [style.height.%]="getBarHeightPct(val, trend)"
+                [style.background]="getMetricColor(trend.metric)"
+                [style.opacity]="getBarOpacity(val, trend)"
+                [title]="trend.days[i] + ': ' + val">
+              </div>
+            </div>
+            <div class="day-labels">
+              <span *ngFor="let day of DAYS">{{ day }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="state-center" *ngIf="trendsData().length === 0 && !loading()">
+        <span class="empty-icon">📈</span>
+        <p>No hay datos de tendencia</p>
+      </div>
+    </section>
+
+    <!-- Alertas -->
+    <section class="iot-card alerts-section">
+      <div class="section-header">
+        <span class="section-tag">ALERTAS RECIENTES</span>
+      </div>
+
+      <div class="alerts-list" *ngIf="alerts().length > 0">
+        <div class="alert-row" [ngClass]="'alert-' + alert.level" *ngFor="let alert of alerts()">
+          <div class="alert-left-bar"></div>
+          <div class="alert-body">
+            <div class="alert-top">
+              <span class="alert-dot" [ngClass]="alert.level"></span>
+              <span class="alert-msg">{{ alert.message }}</span>
+            </div>
+            <span class="alert-time">{{ alert.time }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="state-center" *ngIf="alerts().length === 0 && !loading()">
+        <span class="empty-icon">🔔</span>
+        <p>No hay alertas recientes</p>
+      </div>
+    </section>
+  </div>
+</div>
