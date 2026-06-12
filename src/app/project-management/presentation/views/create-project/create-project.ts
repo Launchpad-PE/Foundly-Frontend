@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { EnvironmentalMetric } from '../../../domain/value-objects/environmental-impact.vo';
 import { DurationType } from '../../../domain/value-objects/duration.vo';
-import { ProjectStore } from '../../../application/project-store';
+import { ProjectStore  } from '../../../application/project-store';
 import { UserStore } from '../../../../iam/application/user.store';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -14,30 +14,22 @@ import {StepRoles} from '../../components/steps/step-roles/step-roles';
 
 
 export interface ProjectFormData {
-  // Step 1
   name: string;
   area: string;
   tags: string[];
   summary: string;
-
-  // Step 2
   hasEnvironmentalImpact: boolean;
-  environmentalImpact?: EnvironmentalMetric[];
-
-  // Step 3
+  environmentalImpact?: EnvironmentalMetric[]; // ← Esto sigue igual
   academicLevel?: string | null;
   benefits: string[];
   requiredSkills: string[];
   durationAmount: number;
   durationType: DurationType;
-
-  // Step 4
   roles: Array<{
     name: string;
     cardInfo: { title: string; items: string[] };
   }>;
 }
-
 
 
 
@@ -179,28 +171,25 @@ export class CreateProject {
         area: this.formData.area,
         tags: this.formData.tags,
         summary: this.formData.summary,
-        environmentalImpact: this.formData.hasEnvironmentalImpact ? this.formData.environmentalImpact : undefined,
+        environmentalMetrics: this.formData.hasEnvironmentalImpact
+          ? this.formData.environmentalImpact
+          : [],
         academicLevel: this.formData.academicLevel,
         benefits: this.formData.benefits,
         requiredSkills: this.formData.requiredSkills,
-        duration: {
-          amount: this.formData.durationAmount,
-          type: this.formData.durationType
-        },
+        durationAmount: this.formData.durationAmount,
+        durationType: this.formData.durationType,
         roles: this.formData.roles
       };
 
-      console.log('Creating project:', projectData);
+      console.log('📤 Creating project:', JSON.stringify(projectData, null, 2));
 
       const createdProject = await this.projectStore.createProject(projectData, userId);
-
-      console.log('Project created successfully:', createdProject);
-
-      // Navegar a la lista de proyectos
+      console.log('✅ Project created successfully:', createdProject);
       this.router.navigate(['/projects']);
     } catch (error) {
-      console.error('Error creating project:', error);
-      alert('Error al crear el proyecto. Por favor intenta nuevamente.');
+      console.error('❌ Error creating project:', error);
+      alert('Error al crear el proyecto. Revisa la consola.');
     }
   }
 
