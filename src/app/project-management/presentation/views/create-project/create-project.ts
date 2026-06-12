@@ -19,7 +19,7 @@ export interface ProjectFormData {
   tags: string[];
   summary: string;
   hasEnvironmentalImpact: boolean;
-  environmentalImpact?: EnvironmentalMetric[]; // ← Esto sigue igual
+  environmentalImpact?: EnvironmentalMetric[];
   academicLevel?: string | null;
   benefits: string[];
   requiredSkills: string[];
@@ -102,7 +102,6 @@ export class CreateProject {
 
   nextStep(): void {
     if (this.currentStep() < 4) {
-      // Validar paso actual antes de avanzar
       if (this.validateCurrentStep()) {
         this.currentStep.update(step => step + 1);
         window.scrollTo(0, 0);
@@ -134,7 +133,6 @@ export class CreateProject {
         }
         return true;
       case 2:
-        // Paso 2 es opcional
         return true;
       case 3:
         if (this.formData.requiredSkills.length === 0) {
@@ -166,12 +164,15 @@ export class CreateProject {
     }
 
     try {
+      console.log('🔍 environmentalImpact seleccionados:', this.formData.environmentalImpact);
+      console.log('🔍 hasEnvironmentalImpact:', this.formData.hasEnvironmentalImpact);
+
       const projectData = {
         name: this.formData.name,
         area: this.formData.area,
         tags: this.formData.tags,
         summary: this.formData.summary,
-        environmentalMetrics: this.formData.hasEnvironmentalImpact
+        environmentalImpact: this.formData.hasEnvironmentalImpact
           ? this.formData.environmentalImpact
           : [],
         academicLevel: this.formData.academicLevel,
@@ -182,7 +183,8 @@ export class CreateProject {
         roles: this.formData.roles
       };
 
-      console.log('📤 Creating project:', JSON.stringify(projectData, null, 2));
+      console.log('📤 Payload a enviar:', JSON.stringify(projectData, null, 2));
+      console.log('📤 environmentalImpact en payload:', projectData.environmentalImpact);
 
       const createdProject = await this.projectStore.createProject(projectData, userId);
       console.log('✅ Project created successfully:', createdProject);
@@ -199,7 +201,6 @@ export class CreateProject {
     }
   }
 
-  // Métodos para actualizar datos desde los steps
   updateBasicInfo(data: Partial<ProjectFormData>): void {
     Object.assign(this.formData, data);
   }
