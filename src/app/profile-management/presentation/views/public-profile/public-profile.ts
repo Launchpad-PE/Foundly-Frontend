@@ -21,7 +21,7 @@ export class PublicProfileComponent implements OnInit {
   private projectApi = inject(ProjectApi);
 
   profile = signal<Profile | null>(null);
-  userProjects = signal<Project[]>([]);
+  userProjects = signal<any[]>([]);
   loading = signal(true);
   projectsLoading = signal(false);
 
@@ -38,10 +38,14 @@ export class PublicProfileComponent implements OnInit {
     try {
       const p = await firstValueFrom(this.profileApi.getProfile(profileId));
       this.profile.set(p);
+      console.log('📋 Perfil cargado:', p);
+      console.log('📋 userId del perfil:', p?.userId);
 
       // Cargar los proyectos del usuario usando su userId
       if (p && p.userId) {
         await this.loadUserProjects(p.userId);
+      } else {
+        console.warn('⚠️ El perfil no tiene userId asociado');
       }
     } catch (error) {
       console.error('Error loading profile:', error);
@@ -54,12 +58,40 @@ export class PublicProfileComponent implements OnInit {
   async loadUserProjects(userId: string): Promise<void> {
     this.projectsLoading.set(true);
     try {
-      // Usar el nuevo método que obtiene proyectos por authorId
+      console.log(`🔍 Cargando proyectos para userId: ${userId}`);
+
+      // Usar getProjectsByAuthorId que debería filtrar por authorId
       const projects = await firstValueFrom(this.projectApi.getProjectsByAuthorId(userId));
-      this.userProjects.set(projects);
-      console.log(`📊 Proyectos cargados para usuario ${userId}:`, projects.length);
+
+      console.log(`📊 Proyectos recibidos:`, projects);
+      console.log(`📊 Cantidad: ${projects.length}`);
+
+      // Verificar que los proyectos realmente pertenezcan a este usuario
+      const validProjects = projects.filter(p => {
+        const authorId = p.authorId?.toString();
+        const belongsToUser = authorId === userId;
+        if (!belongsToUser) {
+          console.warn(`⚠️ Proyecto ${p.id} - ${p.name?.getValue?.() || p.name} no pertenece al usuario ${userId} (authorId: ${authorId})`);
+        }
+        return belongsToUser;
+      });
+
+      console.log(`✅ Proyectos válidos después del filtro: ${validProjects.length}`);
+
+      // Transformar los proyectos a un formato plano para la vista
+      const formattedProjects = validProjects.map(project => ({
+        id: project.id,
+        name: project.name?.getValue ? project.name.getValue() : project.name,
+        area: project.area?.getValue ? project.area.getValue() : project.area,
+        roles: (project.roles || []).map((role: any) => ({
+          name: role.name?.getValue ? role.name.getValue() : role.name
+        }))
+      }));
+
+      this.userProjects.set(formattedProjects);
+
     } catch (err) {
-      console.error('Error cargando proyectos del usuario:', err);
+      console.error('❌ Error cargando proyectos del usuario:', err);
       this.userProjects.set([]);
     } finally {
       this.projectsLoading.set(false);

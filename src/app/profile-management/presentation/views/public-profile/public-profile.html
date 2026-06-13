@@ -145,13 +145,13 @@
             <div *ngFor="let project of userProjects()" class="pp-project-card" (click)="viewProjectDetails(project.id)">
               <div class="pp-project-info">
                 <div class="pp-project-header">
-                  <h4 class="pp-project-title">{{ project.name.getValue() }}</h4>
-                  <span class="pp-project-area">{{ project.area.getValue() }}</span>
+                  <h4 class="pp-project-title">{{ project.name }}</h4>
+                  <span class="pp-project-area">{{ project.area }}</span>
                 </div>
                 <div class="pp-project-roles">
-                  <span *ngFor="let role of project.roles.slice(0,2)" class="pp-role-chip">
-                    {{ role.name.getValue() }}
-                  </span>
+        <span *ngFor="let role of project.roles.slice(0,2)" class="pp-role-chip">
+          {{ role.name }}
+        </span>
                   <span *ngIf="project.roles.length > 2" class="pp-role-chip more">+{{ project.roles.length - 2 }}</span>
                 </div>
               </div>
