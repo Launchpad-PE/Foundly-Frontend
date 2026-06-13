@@ -43,6 +43,15 @@ export class ProjectApi extends BaseApi {
     return this.getMyProjects();
   }
 
+  /**
+   * Get projects by author ID (for viewing other users' projects)
+   */
+  getProjectsByAuthorId(authorId: string): Observable<Project[]> {
+    return this.projectEndpoint.getByAuthorId(authorId).pipe(
+      map(response => this.assembler.toEntitiesFromResponse(response))
+    );
+  }
+
   getProjectsByStatus(status: ProjectStatus): Observable<Project[]> {
     return this.projectEndpoint.getByStatus(status).pipe(
       map(response => this.assembler.toEntitiesFromResponse(response))
