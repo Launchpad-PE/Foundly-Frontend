@@ -1,42 +1,229 @@
-/* Añade estos estilos a tu CSS existente */
+/* iot-dashboard.component.css - Versión mejorada */
 
+* {
+  box-sizing: border-box;
+}
+
+.iot-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* ========== CARDS PRINCIPALES ========== */
+.iot-card {
+  background: #ffffff;
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+  padding: 1.5rem;
+  transition: all 0.2s ease;
+  border: 1px solid #eef2f6;
+}
+
+.iot-card:hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+.monitor-section {
+  margin-bottom: 1.5rem;
+}
+
+/* ========== HEADERS ========== */
 .section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.section-tag {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  background: #f0f4ff;
+  color: #4f46e5;
+  padding: 0.35rem 0.9rem;
+  border-radius: 2rem;
+  text-transform: uppercase;
+}
+
+.last-update {
+  font-size: 0.75rem;
+  color: #10b981;
+  background: #ecfdf5;
+  padding: 0.25rem 0.75rem;
+  border-radius: 2rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.last-update::before {
+  content: "●";
+  font-size: 0.6rem;
+}
+
+/* ========== BOTÓN REFRESH ========== */
 .refresh-btn {
-  background: none;
-  border: none;
-  font-size: 1.2rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  font-size: 0.85rem;
+  font-weight: 500;
   cursor: pointer;
-  color: #8f96bb;
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.5rem;
+  color: #475569;
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
   transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.refresh-btn svg {
+  width: 16px;
+  height: 16px;
 }
 
 .refresh-btn:hover {
-  background: #eef2ff;
-  color: #4F46E5;
+  background: #4f46e5;
+  border-color: #4f46e5;
+  color: white;
+  transform: scale(0.98);
 }
 
+/* ========== GRID DE MÉTRICAS ========== */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+
+.metric-card {
+  background: #ffffff;
+  border-radius: 1.25rem;
+  transition: all 0.2s ease;
+  overflow: hidden;
+  border: 1px solid #f0f2f5;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+.metric-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+}
+
+.metric-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.25rem 0.5rem 1.25rem;
+}
+
+.metric-emoji {
+  font-size: 2rem;
+}
+
+.status-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.25rem 0.7rem;
+  border-radius: 2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.status-badge.good {
+  background: #ecfdf5;
+  color: #059669;
+}
+.status-badge.moderate {
+  background: #fffbeb;
+  color: #d97706;
+}
+.status-badge.normal {
+  background: #eff6ff;
+  color: #2563eb;
+}
+.status-badge.active {
+  background: #fef3c7;
+  color: #b45309;
+}
+.status-badge.bad {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.metric-body {
+  padding: 0.5rem 1.25rem;
+}
+
+.metric-name {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #64748b;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: 0.3px;
+}
+
+.metric-value {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+}
+
+.metric-value .value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1e293b;
+  line-height: 1.2;
+}
+
+.metric-value .unit {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.metric-footer {
+  padding: 0.75rem 1.25rem;
+  margin-top: 0.5rem;
+  border-top: 1px solid #f1f5f9;
+}
+
+.metric-trend {
+  font-size: 0.7rem;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+/* ========== ESTADOS (loading, error, empty) ========== */
 .state-center {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  padding: 3rem 2rem;
   text-align: center;
-  color: #6b7280;
+  color: #64748b;
 }
 
 .spinner {
-  width: 36px;
-  height: 36px;
-  border: 3px solid #e5e7eb;
-  border-top-color: #4F46E5;
+  width: 40px;
+  height: 40px;
+  border: 3px solid #e2e8f0;
+  border-top-color: #4f46e5;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
   margin-bottom: 1rem;
@@ -47,20 +234,267 @@
 }
 
 .error-icon, .empty-icon {
-  font-size: 2rem;
-  margin-bottom: 0.75rem;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
 }
 
 .retry-btn {
   margin-top: 1rem;
-  padding: 0.5rem 1rem;
-  background: #4F46E5;
+  padding: 0.6rem 1.5rem;
+  background: #4f46e5;
   color: white;
   border: none;
-  border-radius: 0.5rem;
+  border-radius: 2rem;
   cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
 }
 
 .retry-btn:hover {
   background: #4338ca;
+  transform: scale(0.98);
+}
+
+.empty-state-content h4 {
+  margin: 0.5rem 0 0.25rem;
+  color: #1e293b;
+}
+
+.empty-state-content p {
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+/* ========== BOTTOM ROW (2 columnas) ========== */
+.bottom-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+/* ========== SECCIÓN TENDENCIA ========== */
+.trend-section, .alerts-section {
+  height: 100%;
+}
+
+.charts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.chart-item {
+  background: #fafcff;
+  border-radius: 1rem;
+  padding: 0.75rem 0;
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chart-label {
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 0.2rem 0.6rem;
+  background: #f1f5f9;
+  border-radius: 0.5rem;
+}
+
+.chart-stat {
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+
+.chart-area {
+  width: 100%;
+}
+
+.bar-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.25rem;
+  height: 100px;
+  margin-bottom: 0.5rem;
+}
+
+.bar {
+  flex: 1;
+  background: #4f46e5;
+  border-radius: 0.5rem 0.5rem 0.25rem 0.25rem;
+  transition: all 0.2s;
+  position: relative;
+  min-height: 4px;
+  cursor: pointer;
+}
+
+.bar:hover {
+  opacity: 1 !important;
+  transform: scaleY(1.02);
+}
+
+.bar-value {
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: #475569;
+  white-space: nowrap;
+}
+
+.day-labels {
+  display: flex;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+}
+
+.day-labels span {
+  flex: 1;
+  text-align: center;
+  font-size: 0.65rem;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+/* ========== SECCIÓN ALERTAS ========== */
+.alert-count {
+  background: #ef4444;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.2rem 0.6rem;
+  border-radius: 2rem;
+}
+
+.alerts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.alert-row {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.85rem;
+  border-radius: 1rem;
+  background: #fafcff;
+  transition: all 0.2s;
+  border-left: 3px solid;
+}
+
+.alert-row:hover {
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.alert-red {
+  border-left-color: #ef4444;
+  background: #fef2f2;
+}
+.alert-yellow {
+  border-left-color: #f59e0b;
+  background: #fffbeb;
+}
+.alert-green {
+  border-left-color: #10b981;
+  background: #ecfdf5;
+}
+
+.alert-icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.alert-content {
+  flex: 1;
+}
+
+.alert-message {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #1e293b;
+  margin-bottom: 0.25rem;
+}
+
+.alert-time {
+  font-size: 0.7rem;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 900px) {
+  .bottom-row {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .metrics-grid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+
+  .iot-container {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .metric-value .value {
+    font-size: 1.5rem;
+  }
+
+  .metric-emoji {
+    font-size: 1.5rem;
+  }
+
+  .alert-row {
+    padding: 0.7rem;
+  }
+}
+
+/* ========== MEJORAS VISUALES ADICIONALES ========== */
+.metric-card.metric-good {
+  border-top: 3px solid #10b981;
+}
+.metric-card.metric-moderate {
+  border-top: 3px solid #f59e0b;
+}
+.metric-card.metric-normal {
+  border-top: 3px solid #3b82f6;
+}
+.metric-card.metric-bad {
+  border-top: 3px solid #ef4444;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }

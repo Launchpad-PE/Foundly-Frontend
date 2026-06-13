@@ -1,18 +1,26 @@
+<!-- iot-dashboard.component.html - Versión mejorada -->
 <div class="iot-container">
-
   <!-- ════ RESUMEN DE MONITOREO ════ -->
   <section class="iot-card monitor-section">
     <div class="section-header">
-      <span class="section-tag">RESUMEN DE MONITOREO</span>
-      <button *ngIf="!loading() && !isLegacyMode" class="refresh-btn" (click)="refresh()" title="Actualizar">
-        ↻
+      <div class="header-left">
+        <span class="section-tag">🌿 MONITOREO AMBIENTAL</span>
+        <span class="last-update" *ngIf="!loading() && metricsData().length > 0">
+          Actualizado ahora
+        </span>
+      </div>
+      <button *ngIf="!loading() && shouldUseBackend" class="refresh-btn" (click)="refresh()" title="Actualizar datos">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+        </svg>
+        Actualizar
       </button>
     </div>
 
     <!-- Loading -->
     <div *ngIf="loading()" class="state-center">
       <div class="spinner"></div>
-      <p>Cargando métricas...</p>
+      <p>Cargando métricas ambientales...</p>
     </div>
 
     <!-- Error -->
@@ -22,46 +30,58 @@
       <button class="retry-btn" (click)="refresh()">Reintentar</button>
     </div>
 
-    <!-- Metrics (modo store) -->
-    <div class="metrics-grid" *ngIf="!loading() && !error() && metricsData().length > 0 && !isLegacyMode">
+    <!-- Metrics Grid -->
+    <div class="metrics-grid" *ngIf="!loading() && !error() && metricsData().length > 0 && shouldUseBackend">
       <div class="metric-card" [ngClass]="'metric-' + card.status" *ngFor="let card of metricsData()">
-        <div class="metric-top-row">
-          <span class="metric-emoji">{{ card.icon }}</span>
-          <span class="status-badge" [ngClass]="card.status">{{ StatusLabel[card.status] }}</span>
+        <div class="metric-header">
+          <span class="metric-emoji">{{ card.icon || getTrendIcon(card.metric) }}</span>
+          <span class="status-badge" [ngClass]="card.status">
+            {{ getStatusText(card.status) }}
+          </span>
         </div>
-        <span class="metric-name">{{ getMetricLabel(card.metric) }}</span>
-        <div class="metric-value-row">
-          <span class="value">{{ card.value }}</span>
-          <span class="unit">{{ card.unit }}</span>
+        <div class="metric-body">
+          <h4 class="metric-name">{{ getMetricLabel(card.metric) }}</h4>
+          <div class="metric-value">
+            <span class="value">{{ card.value }}</span>
+            <span class="unit">{{ card.unit }}</span>
+          </div>
+        </div>
+        <div class="metric-footer" [style.backgroundColor]="card.color + '10'">
+          <span class="metric-trend" *ngIf="getTrendIcon(card.metric)">
+            {{ getTrendIcon(card.metric) }} Estable
+          </span>
         </div>
       </div>
     </div>
 
-    <!-- Metrics (modo legacy - compatible con código existente) -->
-    <div class="metrics-grid" *ngIf="!loading() && isLegacyMode && metrics.length > 0">
-      <!-- Aquí va la implementación legacy si quieres mantenerla -->
-    </div>
-
-    <!-- Empty -->
-    <div class="state-center" *ngIf="!loading() && !error() && metricsData().length === 0 && !isLegacyMode">
-      <span class="empty-icon">📊</span>
-      <p>No hay métricas configuradas para este proyecto</p>
+    <!-- Empty State -->
+    <div class="state-center" *ngIf="!loading() && !error() && metricsData().length === 0 && shouldUseBackend">
+      <div class="empty-state-content">
+        <span class="empty-icon">🌱</span>
+        <h4>Sin métricas ambientales</h4>
+        <p>Este proyecto no tiene métricas ambientales configuradas.</p>
+      </div>
     </div>
   </section>
 
   <!-- ════ TENDENCIA Y ALERTAS ════ -->
-  <div class="bottom-row" *ngIf="!isLegacyMode">
-    <!-- Tendencia -->
+  <div class="bottom-row" *ngIf="shouldUseBackend && !loading() && !error()">
+    <!-- Sección de Tendencia -->
     <section class="iot-card trend-section">
       <div class="section-header">
-        <span class="section-tag">TENDENCIA ÚLTIMAS 7 DÍAS</span>
+        <span class="section-tag">📈 TENDENCIA (7 DÍAS)</span>
       </div>
 
       <div class="charts-list" *ngIf="trendsData().length > 0">
         <div class="chart-item" *ngFor="let trend of trendsData()">
-          <span class="chart-label" [style.color]="getMetricColor(trend.metric)">
-            {{ getMetricLabel(trend.metric) }}
-          </span>
+          <div class="chart-header">
+            <span class="chart-label" [style.backgroundColor]="getMetricColor(trend.metric) + '20'" [style.color]="getMetricColor(trend.metric)">
+              {{ getMetricLabel(trend.metric) }}
+            </span>
+            <span class="chart-stat" [style.color]="getMetricColor(trend.metric)">
+              {{ getTrendAverage(trend.values) }} {{ getUnitFromMetric(trend.metric) }} promedio
+            </span>
+          </div>
           <div class="chart-area">
             <div class="bar-chart">
               <div
@@ -70,44 +90,50 @@
                 [style.height.%]="getBarHeightPct(val, trend)"
                 [style.background]="getMetricColor(trend.metric)"
                 [style.opacity]="getBarOpacity(val, trend)"
-                [title]="trend.days[i] + ': ' + val">
+                [title]="trend.days[i] + ': ' + val + getUnitFromMetric(trend.metric)">
+                <span class="bar-value" *ngIf="val > getMaxValue(trend.values) * 0.7">{{ val }}</span>
               </div>
             </div>
             <div class="day-labels">
-              <span *ngFor="let day of DAYS">{{ day }}</span>
+              <span *ngFor="let day of trend.days">{{ day }}</span>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="state-center" *ngIf="trendsData().length === 0 && !loading()">
-        <span class="empty-icon">📈</span>
-        <p>No hay datos de tendencia</p>
+      <div class="state-center" *ngIf="trendsData().length === 0">
+        <span class="empty-icon">📊</span>
+        <p>No hay datos históricos disponibles</p>
       </div>
     </section>
 
-    <!-- Alertas -->
+    <!-- Sección de Alertas -->
     <section class="iot-card alerts-section">
       <div class="section-header">
-        <span class="section-tag">ALERTAS RECIENTES</span>
+        <span class="section-tag">🔔 ALERTAS ACTIVAS</span>
+        <span class="alert-count" *ngIf="alerts().length > 0">{{ alerts().length }}</span>
       </div>
 
       <div class="alerts-list" *ngIf="alerts().length > 0">
         <div class="alert-row" [ngClass]="'alert-' + alert.level" *ngFor="let alert of alerts()">
-          <div class="alert-left-bar"></div>
-          <div class="alert-body">
-            <div class="alert-top">
-              <span class="alert-dot" [ngClass]="alert.level"></span>
-              <span class="alert-msg">{{ alert.message }}</span>
-            </div>
-            <span class="alert-time">{{ alert.time }}</span>
+          <div class="alert-icon">
+            <span *ngIf="alert.level === 'red'">🔴</span>
+            <span *ngIf="alert.level === 'yellow'">🟡</span>
+            <span *ngIf="alert.level === 'green'">🟢</span>
+          </div>
+          <div class="alert-content">
+            <div class="alert-message">{{ alert.message }}</div>
+            <div class="alert-time">⏱️ {{ alert.time }}</div>
           </div>
         </div>
       </div>
 
-      <div class="state-center" *ngIf="alerts().length === 0 && !loading()">
-        <span class="empty-icon">🔔</span>
-        <p>No hay alertas recientes</p>
+      <div class="state-center" *ngIf="alerts().length === 0">
+        <div class="empty-state-content">
+          <span class="empty-icon">✅</span>
+          <h4>Todo en orden</h4>
+          <p>No hay alertas activas en este momento.</p>
+        </div>
       </div>
     </section>
   </div>

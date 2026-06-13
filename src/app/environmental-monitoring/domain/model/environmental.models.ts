@@ -1,16 +1,17 @@
+// domain/model/environmental.models.ts
 export type EnvironmentalMetric = 'AIR_QUALITY' | 'HUMIDITY' | 'TEMPERATURE' | 'CITIZEN_PARTICIPATION';
 
 export interface MetricCard {
-  metric: EnvironmentalMetric;
+  metric: string;  // ← Cambiar a string para que coincida con el backend
   value: string;
   unit: string;
-  status: 'good' | 'moderate' | 'normal' | 'active';
+  status: string;  // ← Cambiar a string
   icon: string;
   color: string;
 }
 
 export interface MetricTrend {
-  metric: EnvironmentalMetric;
+  metric: string;  // ← Cambiar a string
   values: number[];
   days: string[];
 }
@@ -28,23 +29,17 @@ export interface DashboardData {
 }
 
 // Display helpers
-export const EnvironmentalMetricDisplay: Record<EnvironmentalMetric, string> = {
+export const EnvironmentalMetricDisplay: Record<string, string> = {
   'AIR_QUALITY': 'Calidad del aire',
   'HUMIDITY': 'Humedad ambiental',
   'TEMPERATURE': 'Temperatura',
   'CITIZEN_PARTICIPATION': 'Participación ciudadana'
 };
 
-export const EnvironmentalMetricUnit: Record<EnvironmentalMetric, string> = {
-  'AIR_QUALITY': 'AQI',
-  'HUMIDITY': '%',
-  'TEMPERATURE': '°C',
-  'CITIZEN_PARTICIPATION': 'reportes'
-};
-
 export const StatusLabel: Record<string, string> = {
   'good': 'Bueno',
   'moderate': 'Moderado',
   'normal': 'Normal',
-  'active': 'Activo'
+  'active': 'Activo',
+  'bad': 'Peligroso'
 };

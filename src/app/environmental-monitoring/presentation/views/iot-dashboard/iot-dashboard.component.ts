@@ -1,5 +1,5 @@
 // presentation/views/iot-dashboard/iot-dashboard.component.ts
-import { Component, Input, OnInit, OnChanges, SimpleChanges, inject } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, inject, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EnvironmentalStore } from '../../../application/environmental.store';
 import { EnvironmentalMetricDisplay, StatusLabel } from '../../../domain/model/environmental.models';
@@ -10,15 +10,16 @@ import { MetricTrend } from '../../../domain/model/environmental.models';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './iot-dashboard.component.html',
-  styleUrls: ['./iot-dashboard.component.css']
+  styleUrls: ['./iot-dashboard.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IotDashboardComponent implements OnInit, OnChanges {
   @Input() projectId!: string;
-  @Input() metrics: string[] = []; // Modo legacy (sin backend)
+  @Input() metrics: string[] = [];
 
   private store = inject(EnvironmentalStore);
+  private cdr = inject(ChangeDetectorRef);
 
-  // Exponer signals del store
   readonly loading = this.store.loading;
   readonly error = this.store.error;
   readonly metricsData = this.store.metrics;
@@ -27,33 +28,41 @@ export class IotDashboardComponent implements OnInit, OnChanges {
 
   readonly DAYS = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
   readonly StatusLabel = StatusLabel;
-  readonly EnvironmentalMetricDisplay = EnvironmentalMetricDisplay;
 
-  // Modo legacy: si se pasan métricas directamente, usar eso
-  protected get isLegacyMode(): boolean {
-    return this.metrics.length > 0;
+  protected get shouldUseBackend(): boolean {
+    return !!this.projectId && this.projectId.length > 0;
   }
 
   ngOnInit(): void {
-    if (!this.isLegacyMode && this.projectId) {
-      this.store.loadDashboard(this.projectId);
+    console.log('🔍 [IOT] ngOnInit - projectId:', this.projectId);
+    console.log('🔍 [IOT] metrics input:', this.metrics);
+
+    if (this.shouldUseBackend) {
+      console.log('🔍 [IOT] Cargando dashboard desde backend');
+      this.store.loadDashboard(this.projectId).then(() => {
+        console.log('🔍 [IOT] Datos cargados, metricsData:', this.metricsData());
+        console.log('🔍 [IOT] trendsData:', this.trendsData());
+        this.cdr.detectChanges();
+      });
     }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['projectId'] && !this.isLegacyMode && this.projectId) {
-      this.store.loadDashboard(this.projectId);
+    console.log('🔍 [IOT] ngOnChanges:', changes);
+
+    if (changes['projectId'] && this.shouldUseBackend) {
+      console.log('🔍 [IOT] projectId cambió de', changes['projectId'].previousValue, 'a', changes['projectId'].currentValue);
+      this.store.loadDashboard(this.projectId).then(() => {
+        this.cdr.detectChanges();
+      });
     }
   }
 
   getMetricLabel(metric: string): string {
-    return EnvironmentalMetricDisplay[metric as keyof typeof EnvironmentalMetricDisplay] || metric;
+    return EnvironmentalMetricDisplay[metric] || metric;
   }
 
   getMetricColor(metric: string): string {
-    const trend = this.trendsData().find(t => t.metric === metric);
-    if (!trend) return '#667eea';
-
     const colors: Record<string, string> = {
       'AIR_QUALITY': '#667eea',
       'HUMIDITY': '#3b82f6',
@@ -64,20 +73,64 @@ export class IotDashboardComponent implements OnInit, OnChanges {
   }
 
   getBarHeightPct(value: number, trend: MetricTrend): number {
-    return this.store.getBarHeight(value, trend.values);
+    const max = Math.max(...trend.values);
+    return max > 0 ? (value / max) * 100 : 5;
   }
 
   getBarOpacity(value: number, trend: MetricTrend): number {
-    return this.store.getBarOpacity(value, trend.values);
-  }
-
-  getStatusClass(alertLevel: string): string {
-    return `alert-${alertLevel}`;
+    const max = Math.max(...trend.values);
+    const min = Math.min(...trend.values);
+    const range = max - min;
+    if (range === 0) return 0.8;
+    return 0.45 + ((value - min) / range) * 0.55;
   }
 
   refresh(): void {
-    if (!this.isLegacyMode) {
-      this.store.refresh();
+    console.log('🔍 [IOT] refresh manual llamado');
+    if (this.shouldUseBackend) {
+      this.store.loadDashboard(this.projectId).then(() => {
+        this.cdr.detectChanges();
+      });
     }
+  }
+
+  getStatusText(status: string): string {
+    const statusMap: Record<string, string> = {
+      'good': 'Óptimo',
+      'moderate': 'Moderado',
+      'normal': 'Normal',
+      'active': 'Activo',
+      'bad': 'Crítico'
+    };
+    return statusMap[status] || status;
+  }
+  getUnitFromMetric(metric: string): string {
+    const units: Record<string, string> = {
+      'AIR_QUALITY': 'AQI',
+      'HUMIDITY': '%',
+      'TEMPERATURE': '°C',
+      'CITIZEN_PARTICIPATION': 'rep'
+    };
+    return units[metric] || '';
+  }
+
+  getTrendAverage(values: number[]): string {
+    if (!values || values.length === 0) return '0';
+    const avg = values.reduce((a, b) => a + b, 0) / values.length;
+    return avg.toFixed(0);
+  }
+
+  getMaxValue(values: number[]): number {
+    return Math.max(...values);
+  }
+
+  getTrendIcon(metric: string): string {
+    const icons: Record<string, string> = {
+      'AIR_QUALITY': '🌿',
+      'HUMIDITY': '💧',
+      'TEMPERATURE': '🌡️',
+      'CITIZEN_PARTICIPATION': '👥'
+    };
+    return icons[metric] || '📊';
   }
 }
