@@ -25,7 +25,13 @@ export class ProjectAssembler implements BaseAssembler<Project, ProjectResource,
    * Convert resource to entity usando el método estático create
    */
   toEntityFromResource(resource: ProjectResource): Project {
-    // Convertir roles al formato que espera el método create
+    console.log('🔍 [ASSEMBLER] Resource recibido:', resource);
+
+    // ✅ Soporte para ambos nombres de campo
+    const environmentalMetrics = resource.environmentalImpact || resource.environmentalMetrics || [];
+    console.log('🔍 [ASSEMBLER] environmentalMetrics extraídas:', environmentalMetrics);
+
+    // Convertir roles
     const roles = (resource.roles || []).map(role => ({
       name: role.name,
       cardInfo: {
@@ -34,27 +40,25 @@ export class ProjectAssembler implements BaseAssembler<Project, ProjectResource,
       }
     }));
 
-    // Soporte para ambos formatos
+    // Soporte para duración
     let durationAmount = 0;
-    let durationType: DurationType = DurationType.MONTHS;  // ✅ Usar el enum
+    let durationType: DurationType = DurationType.MONTHS;
 
     if (resource.duration !== undefined) {
-      // Viene del GET del backend (formato anidado)
       durationAmount = resource.duration.amount;
       durationType = resource.duration.type;
     } else if (resource.durationAmount !== undefined && resource.durationType !== undefined) {
-      // Viene del POST u otro lugar (campos planos)
       durationAmount = resource.durationAmount;
       durationType = resource.durationType;
     }
 
-    return Project.create({
+    const project = Project.create({
       id: resource.id,
       name: resource.name,
       area: resource.area,
       tags: resource.tags,
       summary: resource.summary,
-      environmentalImpact: resource.environmentalImpact || undefined,
+      environmentalImpact: environmentalMetrics.length > 0 ? environmentalMetrics : undefined,
       academicLevel: resource.academicLevel || undefined,
       benefits: resource.benefits,
       requiredSkills: resource.requiredSkills,
@@ -67,6 +71,9 @@ export class ProjectAssembler implements BaseAssembler<Project, ProjectResource,
       createdAt: resource.createdAt,
       updatedAt: resource.updatedAt,
     });
+
+    console.log('🔍 [ASSEMBLER] Project creado, environmentalImpact:', project.environmentalImpact);
+    return project;
   }
 
   /**

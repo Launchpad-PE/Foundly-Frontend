@@ -86,7 +86,7 @@ export class Project  {
       name: string;
       cardInfo: { title: string; items: string[] };
     }>;
-    authorId: string | number;  // ✅ Permitir string o número
+    authorId: string | number;
     authorName?: string | null;
     status?: ProjectStatus;
     createdAt?: string;
@@ -94,13 +94,18 @@ export class Project  {
   }): Project {
     const projectId = props.id ? ProjectId.fromString(props.id) : ProjectId.generate();
 
+    // ✅ Log para debug
+    console.log('🔍 [ENTITY] Create - environmentalImpact recibido:', props.environmentalImpact);
+
     return new Project(
       projectId,
       new ProjectName(props.name),
       new Area(props.area),
       props.tags.map(tag => new Tag(tag)),
       new Summary(props.summary),
-      props.environmentalImpact ? new EnvironmentalImpact(props.environmentalImpact) : null,
+      props.environmentalImpact && props.environmentalImpact.length > 0
+        ? new EnvironmentalImpact(props.environmentalImpact)
+        : null,
       props.academicLevel !== undefined ? new AcademicLevel(props.academicLevel) : null,
       props.benefits.map(benefit => new Benefit(benefit)),
       props.requiredSkills.map(skill => new Skill(skill)),
@@ -115,11 +120,10 @@ export class Project  {
       props.status !== undefined ? props.status : ProjectStatus.DRAFT,
       props.createdAt ? new Date(props.createdAt) : new Date(),
       props.updatedAt ? new Date(props.updatedAt) : new Date(),
-      new UserId(props.authorId),  // ✅ Ahora UserId acepta string | number
+      new UserId(props.authorId),
       props.authorName || null
     );
   }
-
   // Getter para acceder al ProjectId cuando sea necesario
   getProjectId(): string {
     return this.id;

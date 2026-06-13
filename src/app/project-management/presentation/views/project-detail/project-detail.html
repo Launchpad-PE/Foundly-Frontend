@@ -13,10 +13,10 @@
     </div>
 
     <nav class="tab-nav" *ngIf="project()">
-      <button class="tab-btn" [class.active]="activeTab() === 'inicio'"      (click)="setTab('inicio')">Inicio</button>
-      <button class="tab-btn" [class.active]="activeTab() === 'tareas'"      (click)="setTab('tareas')">Tareas</button>
-      <button class="tab-btn" [class.active]="activeTab() === 'iot'"         (click)="setTab('iot')" *ngIf="hasIot">IOT</button>
-      <button class="tab-btn" [class.active]="activeTab() === 'hitos'"       (click)="setTab('hitos')">Hitos</button>
+      <button class="tab-btn" [class.active]="activeTab() === 'inicio'" (click)="setTab('inicio')">Inicio</button>
+      <button class="tab-btn" [class.active]="activeTab() === 'tareas'" (click)="setTab('tareas')">Tareas</button>
+      <button class="tab-btn" [class.active]="activeTab() === 'iot'" (click)="setTab('iot')" *ngIf="hasIot">🌱 IOT</button>
+      <button class="tab-btn" [class.active]="activeTab() === 'hitos'" (click)="setTab('hitos')">Hitos</button>
       <button class="tab-btn" [class.active]="activeTab() === 'postulantes'" (click)="setTab('postulantes')">Postulantes</button>
     </nav>
   </header>

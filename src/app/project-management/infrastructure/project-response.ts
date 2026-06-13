@@ -19,20 +19,20 @@ export interface DurationResource {
   type: DurationType;
 }
 
+// infrastructure/project-response.ts
 export interface ProjectResource extends BaseResource {
   id: string;
   name: string;
   area: string;
   tags: string[];
   summary: string;
-  environmentalImpact: EnvironmentalMetric[] | null;
+  environmentalImpact?: EnvironmentalMetric[] | null;
+  environmentalMetrics?: EnvironmentalMetric[] | null;  // ← Agregar este campo
   academicLevel: string | null;
   benefits: string[];
   requiredSkills: string[];
-  // ✅ Para enviar al backend (POST/PATCH)
   durationAmount?: number;
   durationType?: DurationType;
-  // ✅ Para recibir del backend (GET)
   duration?: DurationResource;
   roles: RoleResource[];
   status: ProjectStatus;
