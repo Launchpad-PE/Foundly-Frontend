@@ -5,6 +5,7 @@ import { RegisterRequest, UsersApi } from '../infrastructure/user-api-service';
 import { UserAssembler, RegistrationData, OnboardingData as ApiOnboardingData } from '../infrastructure/user.assembler';
 import { ProfileStore, OnboardingData as ProfileOnboardingData } from '../../profile-management/application/profile.store';
 import { Experience } from '../../profile-management/domain/entities/experience.entity';
+import { ProjectStore } from '../../project-management/application/project-store';
 
 export interface CurrentUser {
   id: string;
@@ -26,6 +27,7 @@ export class UserStore {
 
   // Dependencies
   private profileStore = inject(ProfileStore);
+  private projectStore = inject(ProjectStore);
   private router = inject(Router);
 
   constructor(private usersApi: UsersApi) {
@@ -91,8 +93,7 @@ export class UserStore {
       // Backend uses email as username (set during registration)
       const response = await firstValueFrom(this.usersApi.authenticate(email, password));
 
-      console.log('📡 Respuesta del login:', response);  // ← Agrega esto
-
+      console.log('📡 Respuesta del login:', response);
 
       if (response?.token) {
         const { id, username, token: authToken } = response;
@@ -209,6 +210,7 @@ export class UserStore {
     this.currentUser.set(null);
     this.token.set(null);
     this.profileStore.reset();
+    this.projectStore.reset(); // ← Limpiar proyectos al hacer logout
     localStorage.removeItem('currentUser');
     localStorage.removeItem('userId');
     localStorage.removeItem('authToken');

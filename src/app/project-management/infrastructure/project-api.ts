@@ -25,10 +25,22 @@ export class ProjectApi extends BaseApi {
     );
   }
 
-  getProjectsByAuthor(authorId: string): Observable<Project[]> {
-    return this.projectEndpoint.getByAuthorId(authorId).pipe(
+  /**
+   * Get current user's projects (uses /me endpoint)
+   */
+  getMyProjects(): Observable<Project[]> {
+    return this.projectEndpoint.getMyProjects().pipe(
       map(response => this.assembler.toEntitiesFromResponse(response))
     );
+  }
+
+  /**
+   * Get projects by author ID (legacy, prefer getMyProjects)
+   */
+  getProjectsByAuthor(authorId: string): Observable<Project[]> {
+    // Usar el endpoint /me que obtiene el usuario del token
+    // El authorId se ignora porque el backend usa el token
+    return this.getMyProjects();
   }
 
   getProjectsByStatus(status: ProjectStatus): Observable<Project[]> {
@@ -108,7 +120,6 @@ export class ProjectApi extends BaseApi {
     );
   }
 
-  // infrastructure/project-api.ts
   searchProjects(searchTerm: string): Observable<Project[]> {
     return this.projectEndpoint.searchProjects(searchTerm).pipe(
       map(response => this.assembler.toEntitiesFromResponse(response))

@@ -222,17 +222,19 @@ export class ProjectStore {
     this.clearError();
 
     try {
+      console.log(`🔍 [STORE] Cargando proyectos para usuario: ${userId}`);
       const projects = await firstValueFrom(this.projectApi.getProjectsByAuthor(userId));
+      console.log(`📊 [STORE] Encontrados ${projects.length} proyectos:`, projects.map(p => p.name?.getValue?.() || p.name));
       this.userProjects.set(projects);
       return projects;
     } catch (err: any) {
+      console.error(`❌ [STORE] Error cargando proyectos:`, err);
       this.setError(err.message);
       return [];
     } finally {
       this.setLoading(false);
     }
   }
-
   /**
    * Load all published projects (for discovery)
    */
