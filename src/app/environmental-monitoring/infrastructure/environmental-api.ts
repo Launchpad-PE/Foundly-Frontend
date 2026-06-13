@@ -3,14 +3,15 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { DashboardData, EnvironmentalMetric } from '../domain/model/environmental.models';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class EnvironmentalApi {
   private http = inject(HttpClient);
-  private baseUrl = 'http://localhost:8080/api/v1/environmental';
+  private baseUrl = environment.platformProviderApiBaseUrl;
 
   async getDashboardData(projectId: string, days: number = 7): Promise<DashboardData> {
-    const url = `${this.baseUrl}/projects/${projectId}/dashboard`;
+    const url = `${this.baseUrl}${environment.platformEnvironmental}/projects/${projectId}/dashboard`;
     const params = { days: days.toString() };
 
     console.log('📡 [API] ===== INICIO LLAMADA =====');

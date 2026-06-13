@@ -8,6 +8,7 @@ export const environment = {
   platformTaskEndpointPath: '/api/v1/tasks',
   platformMilestoneEndpointPath: '/api/v1/milestones',
   platformMilestoneTaskEndpointPath: '/api/v1/milestone-tasks',
+  platformEnvironmental: '/api/v1/environmental',
   logoProviderApiBaseUrl: 'https://img.logo.dev.com',
   landingPageRedirection: 'https://launchpad-pe.github.io/Foundly-Landing-Page/',
 };
