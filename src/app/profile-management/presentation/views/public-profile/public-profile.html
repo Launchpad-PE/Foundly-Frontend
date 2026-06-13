@@ -44,7 +44,8 @@
       <aside class="pp-left">
         <div class="pp-avatar-card">
           <div class="pp-avatar">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="pp-avatar-icon">
+            <img *ngIf="profile()!.avatar" [src]="profile()!.avatar" alt="avatar" class="pp-avatar-img"/>
+            <svg *ngIf="!profile()!.avatar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="pp-avatar-icon">
               <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
               <circle cx="12" cy="7" r="4"/>
             </svg>
@@ -52,7 +53,6 @@
           <h2 class="pp-name">{{ profile()!.username }}</h2>
           <p class="pp-role">{{ profile()!.role }}</p>
         </div>
-
 
         <button class="pp-btn-outline-comment">
           <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" class="pp-btn-icon">
@@ -72,7 +72,7 @@
             <span class="pp-stat-label">Points</span>
           </div>
           <div class="pp-stat">
-            <span class="pp-stat-value">0</span>
+            <span class="pp-stat-value">{{ userProjects().length }}</span>
             <span class="pp-stat-label">Projects</span>
           </div>
         </div>
@@ -123,8 +123,49 @@
       </div>
 
       <div class="pp-tab-content">
-        <p class="pp-no-data center" *ngIf="activeTab === 'projects'">No hay proyectos públicos aún.</p>
-        <p class="pp-no-data center" *ngIf="activeTab === 'comments'">No comments yet for this profile.</p>
+        <!-- Projects Tab -->
+        <ng-container *ngIf="activeTab === 'projects'">
+          <!-- Loading state -->
+          <div *ngIf="projectsLoading()" class="pp-loading-projects">
+            <div class="spinner-small"></div>
+            <p>Cargando proyectos...</p>
+          </div>
+
+          <!-- Empty state -->
+          <div *ngIf="!projectsLoading() && userProjects().length === 0" class="pp-no-data center">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" class="pp-empty-projects-icon">
+              <rect x="8" y="12" width="32" height="28" rx="4"/>
+              <path d="M16 12V9a2 2 0 012-2h12a2 2 0 012 2v3"/>
+            </svg>
+            <p>Este usuario aún no tiene proyectos públicos.</p>
+          </div>
+
+          <!-- Projects list - Versión compacta -->
+          <div *ngIf="!projectsLoading() && userProjects().length > 0" class="pp-projects-list">
+            <div *ngFor="let project of userProjects()" class="pp-project-card" (click)="viewProjectDetails(project.id)">
+              <div class="pp-project-info">
+                <div class="pp-project-header">
+                  <h4 class="pp-project-title">{{ project.name.getValue() }}</h4>
+                  <span class="pp-project-area">{{ project.area.getValue() }}</span>
+                </div>
+                <div class="pp-project-roles">
+                  <span *ngFor="let role of project.roles.slice(0,2)" class="pp-role-chip">
+                    {{ role.name.getValue() }}
+                  </span>
+                  <span *ngIf="project.roles.length > 2" class="pp-role-chip more">+{{ project.roles.length - 2 }}</span>
+                </div>
+              </div>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="pp-project-arrow">
+                <path d="M9 18l6-6-6-6"/>
+              </svg>
+            </div>
+          </div>
+        </ng-container>
+
+        <!-- Comments Tab -->
+        <ng-container *ngIf="activeTab === 'comments'">
+          <p class="pp-no-data center">No comments yet for this profile.</p>
+        </ng-container>
       </div>
     </div>
 
