@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -6,6 +6,9 @@ import { ProfileStore } from '../../../application/profile.store';
 import { UserStore } from '../../../../iam/application/user.store';
 import { ProjectStore } from '../../../../project-management/application/project-store';
 import { Experience } from '../../../domain/entities/experience.entity';
+import { firstValueFrom } from 'rxjs';
+import { CommentApi } from '../../../../comment-management/infrastructure/comment-api';
+import { ProfileApi } from '../../../infrastructure/profile-api';
 
 @Component({
   selector: 'app-profile',
@@ -18,6 +21,9 @@ export class ProfileComponent implements OnInit {
   private profileStore = inject(ProfileStore);
   private userStore = inject(UserStore);
   private projectStore = inject(ProjectStore);
+  private commentApi = inject(CommentApi);
+  private profileApi = inject(ProfileApi);
+  private cdr = inject(ChangeDetectorRef);
   private router = inject(Router);
 
   profile = this.profileStore.currentProfile;
@@ -30,6 +36,7 @@ export class ProfileComponent implements OnInit {
   activeSection: 'projects' | 'comments' = 'projects';
   activeProjectTab: 'mine' | 'favorites' = 'mine';
   showExperiences = false;
+  comments: any[] = [];
 
   // ── Edición de perfil ──────────────────────────────
   editMode = false;
@@ -63,11 +70,59 @@ export class ProfileComponent implements OnInit {
 
     // Load favorites
     await this.loadFavorites();
+
+    // Load comments left on my profile
+    await this.loadComments();
   }
 
   private async loadFavorites(): Promise<void> {
     const ids = this.profile()?.favoriteProjectIds ?? [];
     await this.projectStore.loadFavoriteProjects(ids);
+  }
+
+  /** Carga los comentarios que han dejado en mi perfil. */
+  async loadComments(): Promise<void> {
+    const userId = this.userStore.currentUser()?.id;
+    if (!userId) return;
+
+    try {
+      const list = await firstValueFrom(this.commentApi.getComments(userId));
+      const mapped = list.map((c) => ({
+        authorId: c.authorId,
+        authorName: `Usuario ${c.authorId}`,
+        content: c.content,
+        createdAt: c.createdAt,
+      }));
+      this.comments = mapped;
+      this.cdr.detectChanges();
+      await this.resolveAuthorNames(mapped);
+    } catch (err) {
+      console.error('❌ Error cargando comentarios:', err);
+      this.comments = [];
+      this.cdr.detectChanges();
+    }
+  }
+
+  /** Reemplaza "Usuario {id}" por el nombre del perfil de cada autor (best-effort). */
+  private async resolveAuthorNames(list: any[]): Promise<void> {
+    const uniqueIds = [...new Set(list.map((c) => c.authorId))];
+    await Promise.all(
+      uniqueIds.map(async (id) => {
+        try {
+          const authorProfile = await firstValueFrom(this.profileApi.getProfileByUserId(String(id)));
+          const name = authorProfile?.username?.trim();
+          if (name) {
+            list.forEach((c) => {
+              if (c.authorId === id) c.authorName = name;
+            });
+          }
+        } catch {
+          // El autor no tiene perfil: se queda con el fallback "Usuario {id}"
+        }
+      }),
+    );
+    this.comments = [...list];
+    this.cdr.detectChanges();
   }
 
   toggleExperiences(): void {

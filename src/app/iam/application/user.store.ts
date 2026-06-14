@@ -117,7 +117,8 @@ export class UserStore {
     } catch (err: any) {
       let msg = 'Error al iniciar sesión';
       if (err?.status === 401) msg = 'Credenciales incorrectas';
-      else if (err?.error) msg = err.error;
+      else if (err?.error?.message) msg = err.error.message;
+      else if (typeof err?.error === 'string') msg = err.error;
       else if (err?.message) msg = err.message;
 
       this.setError(msg);

@@ -90,17 +90,17 @@
       <div class="stats-row">
         <div class="stat-card">
           <span class="stat-value">0</span>
-          <span class="stat-label">Points</span>
+          <span class="stat-label">Puntos</span>
         </div>
         <div class="stat-card">
           <span class="stat-value">{{ projectCount }}</span>
-          <span class="stat-label">Projects</span>
+          <span class="stat-label">Proyectos</span>
         </div>
       </div>
 
       <!-- Personal Description -->
       <div class="info-card">
-        <h3 class="info-title">Personal Description</h3>
+        <h3 class="info-title">Descripción personal</h3>
         <p class="info-body" *ngIf="!editMode">{{ profile()?.bio || 'Sin descripción' }}</p>
         <textarea *ngIf="editMode" class="edit-textarea" [(ngModel)]="editBio" rows="3"
                   maxlength="280" placeholder="Cuéntanos sobre ti..."></textarea>
@@ -108,7 +108,7 @@
 
       <!-- Skills -->
       <div class="info-card">
-        <h3 class="info-title">Skills</h3>
+        <h3 class="info-title">Habilidades</h3>
         <div class="skills-list">
           <span *ngFor="let skill of profile()?.skills" class="skill-chip" [class.removable]="editMode">
             {{ skill }}
@@ -127,7 +127,7 @@
       <!-- Experiences Accordion -->
       <div class="info-card accordion">
         <button class="accordion-header" (click)="toggleExperiences()">
-          <span>Experiences</span>
+          <span>Experiencias</span>
           <svg [class.rotated]="showExperiences" viewBox="0 0 24 24" fill="currentColor" class="chevron-icon">
             <path d="M7 10l5 5 5-5z"/>
           </svg>
@@ -190,8 +190,8 @@
   <!-- Bottom Tabs: Projects / Comments -->
   <div class="bottom-section" *ngIf="!loading()">
     <div class="section-tabs">
-      <button class="section-tab" [class.active]="activeSection === 'projects'" (click)="activeSection = 'projects'">Projects</button>
-      <button class="section-tab" [class.active]="activeSection === 'comments'" (click)="activeSection = 'comments'">Comments</button>
+      <button class="section-tab" [class.active]="activeSection === 'projects'" (click)="activeSection = 'projects'">Proyectos</button>
+      <button class="section-tab" [class.active]="activeSection === 'comments'" (click)="activeSection = 'comments'">Comentarios</button>
     </div>
 
     <!-- Projects Sub-section -->
@@ -237,7 +237,14 @@
     <!-- Comments Sub-section -->
     <div *ngIf="activeSection === 'comments'">
       <div class="projects-list-card">
-        <p class="no-data center">No hay comentarios aún</p>
+        <div *ngIf="comments.length === 0" class="no-data center">No hay comentarios aún</div>
+        <div *ngFor="let comment of comments" class="comment-row">
+          <div class="comment-row-header">
+            <strong class="comment-author">{{ comment.authorName }}</strong>
+            <span class="comment-date">{{ formatDate(comment.createdAt) }}</span>
+          </div>
+          <p class="comment-content">{{ comment.content }}</p>
+        </div>
       </div>
     </div>
   </div>
