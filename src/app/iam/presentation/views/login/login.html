@@ -21,25 +21,25 @@
 
       <!-- Headline -->
       <div class="ln-headline">
-        <h2 class="ln-tagline">Bienvenido de vuelta<br>a tu comunidad</h2>
-        <p class="ln-sub">Retoma tus proyectos, conecta con tu equipo y sigue construyendo.</p>
+        <h2 class="ln-tagline">{{ 'login.tagline1' | translate }}<br>{{ 'login.tagline2' | translate }}</h2>
+        <p class="ln-sub">{{ 'login.sub' | translate }}</p>
       </div>
 
       <!-- Stats -->
       <div class="ln-stats">
         <div class="ln-stat">
           <span class="ln-stat-value">500+</span>
-          <span class="ln-stat-label">Colaboradores</span>
+          <span class="ln-stat-label">{{ 'login.stat.collaborators' | translate }}</span>
         </div>
         <div class="ln-stat-divider"></div>
         <div class="ln-stat">
           <span class="ln-stat-value">200+</span>
-          <span class="ln-stat-label">Proyectos activos</span>
+          <span class="ln-stat-label">{{ 'login.stat.projects' | translate }}</span>
         </div>
         <div class="ln-stat-divider"></div>
         <div class="ln-stat">
           <span class="ln-stat-value">95%</span>
-          <span class="ln-stat-label">Tasa de éxito</span>
+          <span class="ln-stat-label">{{ 'login.stat.success' | translate }}</span>
         </div>
       </div>
 
@@ -75,9 +75,22 @@
   <div class="ln-right">
     <div class="ln-form-wrap">
 
+      <div style="display:flex; justify-content:flex-end; margin-bottom:0.75rem;">
+        <div style="display:inline-flex; border:1px solid #e2e8f0; border-radius:8px; overflow:hidden;">
+          <button type="button" (click)="setLang('es')"
+                  [style.background]="lang() === 'es' ? '#6c63ff' : '#fff'"
+                  [style.color]="lang() === 'es' ? '#fff' : '#999'"
+                  style="border:none; padding:0.3rem 0.6rem; font-size:0.72rem; font-weight:700; cursor:pointer;">ES</button>
+          <button type="button" (click)="setLang('en')"
+                  [style.background]="lang() === 'en' ? '#6c63ff' : '#fff'"
+                  [style.color]="lang() === 'en' ? '#fff' : '#999'"
+                  style="border:none; padding:0.3rem 0.6rem; font-size:0.72rem; font-weight:700; cursor:pointer;">EN</button>
+        </div>
+      </div>
+
       <div class="ln-form-header">
-        <h1 class="ln-title">Iniciar sesión</h1>
-        <p class="ln-subtitle">Ingresa tus credenciales para continuar</p>
+        <h1 class="ln-title">{{ 'login.title' | translate }}</h1>
+        <p class="ln-subtitle">{{ 'login.subtitle' | translate }}</p>
       </div>
 
       <!-- Error -->
@@ -91,7 +104,7 @@
       <form (ngSubmit)="handleLogin()" class="ln-form" [class.ln-form-disabled]="userStore.loading()">
 
         <div class="ln-field">
-          <label class="ln-label" for="email">Correo electrónico</label>
+          <label class="ln-label" for="email">{{ 'login.email' | translate }}</label>
           <div class="ln-input-wrap">
             <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" class="ln-input-icon">
               <path d="M3 8l7 5 7-5M3 8v8a1 1 0 001 1h12a1 1 0 001-1V8M3 8l1-1h12l1 1"/>
@@ -104,9 +117,9 @@
 
         <div class="ln-field">
           <div class="ln-label-row">
-            <label class="ln-label" for="password">Contraseña</label>
+            <label class="ln-label" for="password">{{ 'login.password' | translate }}</label>
             <a href="#" class="ln-forgot" (click)="openForgotPasswordModal(); $event.preventDefault()">
-              ¿Olvidaste tu contraseña?
+              {{ 'login.forgot' | translate }}
             </a>
           </div>
           <div class="ln-input-wrap">
@@ -114,31 +127,31 @@
               <rect x="3" y="9" width="14" height="10" rx="2"/><path d="M7 9V6a3 3 0 016 0v3"/>
             </svg>
             <input type="password" id="password" [(ngModel)]="password" name="password"
-                   placeholder="Tu contraseña" required class="ln-input"
+                   [placeholder]="'login.passwordPlaceholder' | translate" required class="ln-input"
                    [disabled]="userStore.loading()"/>
           </div>
         </div>
 
         <button type="submit" class="ln-submit"
                 [disabled]="userStore.loading() || !email || !password">
-          <span *ngIf="!userStore.loading()">Iniciar sesión</span>
+          <span *ngIf="!userStore.loading()">{{ 'login.submit' | translate }}</span>
           <span *ngIf="userStore.loading()" class="ln-loading">
             <svg class="ln-spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="10" stroke-opacity="0.25"/>
               <path d="M12 2a10 10 0 0110 10" stroke-linecap="round"/>
             </svg>
-            Iniciando sesión...
+            {{ 'login.loading' | translate }}
           </span>
         </button>
 
       </form>
 
       <p class="ln-register-link">
-        ¿No tienes cuenta?
-        <a routerLink="/register" class="ln-link">Regístrate gratis</a>
+        {{ 'login.noAccount' | translate }}
+        <a routerLink="/register" class="ln-link">{{ 'login.register' | translate }}</a>
       </p>
 
-      <p class="ln-copyright">© 2026 Foundly. Todos los derechos reservados.</p>
+      <p class="ln-copyright">{{ 'login.copyright' | translate }}</p>
     </div>
   </div>
 

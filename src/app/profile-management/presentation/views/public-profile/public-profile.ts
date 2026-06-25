@@ -128,6 +128,14 @@ export class PublicProfileComponent implements OnInit {
     this.router.navigate(['/home']);
   }
 
+  /** Abre el chat con el dueño de este perfil. */
+  messageUser(): void {
+    const userId = this.profile()?.userId;
+    if (userId) {
+      this.router.navigate(['/messages'], { queryParams: { to: userId } });
+    }
+  }
+
   viewProjectDetails(projectId: string): void {
     this.router.navigate(['/projects/info', projectId]);
   }

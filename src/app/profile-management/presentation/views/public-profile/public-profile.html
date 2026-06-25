@@ -113,6 +113,23 @@
         </div>
 
 
+        <!-- BOTÓN ENVIAR MENSAJE -->
+
+        <button
+          *ngIf="!isOwnProfile()"
+          class="pp-btn-solid"
+          (click)="messageUser()">
+
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" class="pp-btn-icon">
+            <path d="M18 2L9 11"/>
+            <path d="M18 2l-6 16-3-7-7-3 16-6z"/>
+          </svg>
+
+          Enviar mensaje
+
+        </button>
+
+
         <!-- BOTÓN COMENTAR -->
 
         <button
