@@ -4,11 +4,12 @@ import { CommonModule } from '@angular/common';
 import { EnvironmentalStore } from '../../../application/environmental.store';
 import { EnvironmentalMetricDisplay, StatusLabel } from '../../../domain/model/environmental.models';
 import { MetricTrend } from '../../../domain/model/environmental.models';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-iot-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslatePipe],
   templateUrl: './iot-dashboard.component.html',
   styleUrls: ['./iot-dashboard.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush

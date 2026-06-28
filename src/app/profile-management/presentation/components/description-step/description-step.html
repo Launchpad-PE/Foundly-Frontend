@@ -1,17 +1,17 @@
 <div class="step-card">
   <div class="step-header">
-    <h1 class="main-title">Tu Descripción</h1>
-    <p class="subtitle">Cuéntale a la comunidad un poco sobre ti y tu experiencia.</p>
+    <h1 class="main-title">{{ 'onboarding.descTitle' | translate }}</h1>
+    <p class="subtitle">{{ 'onboarding.descSubtitle' | translate }}</p>
   </div>
 
   <div class="step-content">
     <div class="form-group">
-      <label for="bio" class="form-label">Biografía</label>
+      <label for="bio" class="form-label">{{ 'onboarding.bio' | translate }}</label>
       <textarea
         id="bio"
         [(ngModel)]="bioText"
         rows="6"
-        placeholder="Cuéntanos sobre tu experiencia, habilidades y lo que te apasiona..."
+        [placeholder]="'onboarding.bioPlaceholder' | translate"
         class="bio-textarea"
         (ngModelChange)="emitUpdate()"
       ></textarea>
@@ -20,22 +20,22 @@
         [class.warning]="bioText.length > 400"
         [class.error]="bioText.length >= 500"
       >
-        {{ bioText.length }} / 500 caracteres
+        {{ bioText.length }} / 500 {{ 'onboarding.chars' | translate }}
       </div>
-      <p class="input-hint">Esta información será visible en tu perfil público.</p>
+      <p class="input-hint">{{ 'onboarding.bioHint' | translate }}</p>
     </div>
   </div>
 
   <div class="card-footer">
     <button class="back-button" (click)="prev.emit()">Atrás</button>
     <div class="right-buttons">
-      <button class="skip-button" (click)="complete.emit()">Omitir</button>
+      <button class="skip-button" (click)="complete.emit()">{{ 'onboarding.skip' | translate }}</button>
       <button
         class="continue-button"
         (click)="complete.emit()"
         [disabled]="!bioText.trim()"
       >
-        Completar
+        {{ 'onboarding.complete' | translate }}
       </button>
     </div>
   </div>

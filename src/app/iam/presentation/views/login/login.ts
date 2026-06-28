@@ -1,12 +1,11 @@
-import { Component, signal, inject } from '@angular/core';
+import { Component, signal, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { UserStore } from '../../../application/user.store';
 import { ModalForgetPasswordComponent } from '../../components/modal-forget-password/modal-forget-password';
 import { environment } from '../../../../../environments/environment';
-import { TranslatePipe } from '../../../../../../server/i18n/translate.pipe';
-import { TranslationService, Lang } from '../../../../../../server/i18n/translation.service';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-login',
@@ -16,8 +15,9 @@ import { TranslationService, Lang } from '../../../../../../server/i18n/translat
   styleUrls: ['./login.css']
 })
 export class LoginComponent {
-  private i18n = inject(TranslationService);
-  lang = this.i18n.lang;
+  private translate = inject(TranslateService);
+
+  currentLang = computed(() => this.translate.currentLang() ?? 'es');
 
   email = '';
   password = '';
@@ -27,8 +27,9 @@ export class LoginComponent {
 
   constructor(public userStore: UserStore, private router: Router) {}
 
-  setLang(lang: Lang): void {
-    this.i18n.setLang(lang);
+  setLang(lang: string): void {
+    this.translate.use(lang);
+    localStorage.setItem('lang', lang);
   }
 
   goBack(): void {
@@ -56,7 +57,6 @@ export class LoginComponent {
     try {
       await this.userStore.login(this.email, this.password);
 
-      // Después del login, verificar si necesita onboarding
       if (this.userStore.needsOnboarding()) {
         console.log('📝 Needs onboarding, redirecting...');
         await this.router.navigate(['/onboarding']);

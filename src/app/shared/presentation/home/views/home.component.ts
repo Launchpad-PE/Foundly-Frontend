@@ -11,6 +11,7 @@ import { ProfileApi } from '../../../../profile-management/infrastructure/profil
 import { Profile } from '../../../../profile-management/domain/entities/profile.entity';
 import { ProjectStore } from '../../../../project-management/application/project-store';
 import { Project as DomainProject } from '../../../../project-management/domain/entities/project.entity';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-home',
@@ -21,6 +22,7 @@ import { Project as DomainProject } from '../../../../project-management/domain/
     ProjectCardComponent,
     CollaboratorCardComponent,
     RouterLink,
+    TranslatePipe,
   ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
