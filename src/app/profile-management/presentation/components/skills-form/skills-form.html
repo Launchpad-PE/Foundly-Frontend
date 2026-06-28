@@ -1,22 +1,22 @@
 <div class="step-card">
   <div class="step-header">
-    <h1 class="main-title">Define tus Habilidades y Experiencias</h1>
-    <p class="subtitle">Agrega tus principales competencias o experiencias para que otros usuarios te conozcan mejor.</p>
+    <h1 class="main-title">{{ 'onboarding.skillsTitle' | translate }}</h1>
+    <p class="subtitle">{{ 'onboarding.skillsSubtitle' | translate }}</p>
   </div>
 
   <div class="step-content">
     <!-- Skills Section -->
     <div class="section">
-      <label class="section-label">Escribe una Habilidad</label>
+      <label class="section-label">{{ 'onboarding.writeSkill' | translate }}</label>
       <div class="add-skill">
         <input
           type="text"
           [(ngModel)]="newSkill"
-          placeholder="Ej: JavaScript, Angular, UX Design"
+          [placeholder]="'onboarding.skillPlaceholder' | translate"
           class="skill-input"
           (keyup.enter)="addSkill()"
         />
-        <button class="add-btn" (click)="addSkill()">+ Agregar</button>
+        <button class="add-btn" (click)="addSkill()">{{ 'common.add' | translate }}</button>
       </div>
 
       <div class="skills-list">
@@ -29,34 +29,34 @@
 
     <!-- Experiences Section -->
     <div class="section">
-      <label class="section-label">Añadir Experiencia</label>
+      <label class="section-label">{{ 'onboarding.addExperience' | translate }}</label>
 
       <div *ngIf="!showExperienceForm" class="add-experience-btn">
-        <button (click)="showExperienceForm = true">+ Añadir experiencia</button>
+        <button (click)="showExperienceForm = true">{{ 'onboarding.addExperienceBtn' | translate }}</button>
       </div>
 
       <div *ngIf="showExperienceForm" class="experience-form">
         <input
           type="text"
           [(ngModel)]="newExperience.title"
-          placeholder="Cargo/Puesto"
+          [placeholder]="'onboarding.expTitlePlaceholder' | translate"
           class="exp-input"
         />
         <input
           type="text"
           [(ngModel)]="newExperience.company"
-          placeholder="Empresa/Institución"
+          [placeholder]="'onboarding.expCompanyPlaceholder' | translate"
           class="exp-input"
         />
         <input
           type="text"
           [(ngModel)]="newExperience.period"
-          placeholder="Tiempo (Ej: 2022 - Presente)"
+          [placeholder]="'onboarding.expPeriodPlaceholder' | translate"
           class="exp-input"
         />
         <div class="exp-actions">
-          <button class="cancel-btn" (click)="showExperienceForm = false">Cancelar</button>
-          <button class="save-btn" (click)="addExperience()">Guardar</button>
+          <button class="cancel-btn" (click)="showExperienceForm = false">{{ 'common.cancel' | translate }}</button>
+          <button class="save-btn" (click)="addExperience()">{{ 'common.save' | translate }}</button>
         </div>
       </div>
 
@@ -74,7 +74,7 @@
   <div class="card-footer">
     <button class="back-button" (click)="prev.emit()">Atrás</button>
     <button class="continue-button" (click)="onSubmit()">
-      Guardar
+      {{ 'common.save' | translate }}
     </button>
   </div>
 </div>

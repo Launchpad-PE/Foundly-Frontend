@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 
 export interface RoleFormData {
   selectedRole: string;
@@ -10,7 +11,7 @@ export interface RoleFormData {
 @Component({
   selector: 'app-role-form',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './role-form.html',
   styleUrls: ['./role-form.css']
 })

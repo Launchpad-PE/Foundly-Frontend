@@ -1,7 +1,7 @@
 <div class="step-card">
   <div class="step-header">
-    <h1 class="main-title">¿Cómo te gustaría Presentarte?</h1>
-    <p class="subtitle">Los colaboradores suelen buscar personas con distintas habilidades y roles. ¿Qué rol te gustaría asumir?</p>
+    <h1 class="main-title">{{ 'onboarding.roleTitle' | translate }}</h1>
+    <p class="subtitle">{{ 'onboarding.roleSubtitle' | translate }}</p>
   </div>
 
   <div class="step-content">
@@ -17,18 +17,18 @@
     </div>
 
     <div class="custom-role-section">
-      <label class="custom-role-label">Escribe tu propio rol</label>
+      <label class="custom-role-label">{{ 'onboarding.customRole' | translate }}</label>
       <input
         type="text"
         [(ngModel)]="customRoleValue"
-        placeholder="Ej: Especialista en ciberseguridad"
+        [placeholder]="'onboarding.customRolePlaceholder' | translate"
         class="custom-role-input"
         (ngModelChange)="updateCustomRole($event)"
       />
     </div>
 
     <p class="info-message">
-      Tu rol entre los otros datos ingresados los puedes editar en tu perfil.
+      {{ 'onboarding.roleHint' | translate }}
     </p>
   </div>
 
@@ -39,7 +39,7 @@
       (click)="onSubmit()"
       [disabled]="!modelValue.selectedRole && !modelValue.customRole"
     >
-      Guardar
+      {{ 'common.save' | translate }}
     </button>
   </div>
 </div>
