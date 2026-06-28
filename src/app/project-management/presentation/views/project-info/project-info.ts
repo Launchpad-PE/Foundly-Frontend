@@ -8,11 +8,12 @@ import { UserStore } from '../../../../iam/application/user.store';
 import { ProfileStore } from '../../../../profile-management/application/profile.store';
 import { Project } from '../../../domain/entities/project.entity';
 import { ProjectStatus } from '../../../domain/enum/project-status.enum';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-project-info',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslatePipe],
   templateUrl: './project-info.html',
   styleUrls: ['./project-info.css'],
 })

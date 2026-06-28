@@ -7,11 +7,11 @@
       <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" class="pp-back-icon">
         <path d="M12 5l-5 5 5 5"/>
       </svg>
-      Volver
+      {{ 'common.back' | translate }}
     </button>
 
     <h1 class="pp-banner-title">
-      Perfil de Colaborador
+      {{ 'publicProfile.title' | translate }}
     </h1>
   </div>
 
@@ -44,11 +44,11 @@
 
     </svg>
 
-    <p>No se encontró este perfil.</p>
+    <p>{{ 'publicProfile.notFound' | translate }}</p>
 
     <button class="pp-btn-primary" (click)="goBack()">
 
-      Volver al inicio
+      {{ 'common.backToHome' | translate }}
 
     </button>
 
@@ -125,7 +125,7 @@
             <path d="M18 2l-6 16-3-7-7-3 16-6z"/>
           </svg>
 
-          Enviar mensaje
+          {{ 'publicProfile.sendMessage' | translate }}
 
         </button>
 
@@ -156,7 +156,7 @@
 
           </svg>
 
-          Dejar Comentario
+          {{ 'publicProfile.leaveComment' | translate }}
 
         </button>
 
@@ -175,7 +175,7 @@
 
             rows="4"
 
-            placeholder="Escribe un comentario sobre este colaborador...">
+            [placeholder]="'publicProfile.commentPlaceholder' | translate">
 
           </textarea>
 
@@ -188,7 +188,7 @@
 
             [disabled]="sendingComment || !newComment.trim()">
 
-            {{ sendingComment ? 'Enviando...' : 'Publicar' }}
+            {{ sendingComment ? ('common.sending' | translate) : ('publicProfile.publish' | translate) }}
 
           </button>
 
@@ -246,7 +246,7 @@
 
           <h3 class="pp-info-title">
 
-            Descripción personal
+            {{ 'profile.bio' | translate }}
 
           </h3>
 
@@ -265,7 +265,7 @@
 
           <h3 class="pp-info-title">
 
-            Habilidades
+            {{ 'profile.skills' | translate }}
 
           </h3>
 
@@ -298,7 +298,7 @@
 
             <span>
 
-              Experiencias
+              {{ 'profile.experiences' | translate }}
 
             </span>
 
@@ -371,7 +371,7 @@
 
               *ngIf="!profile()!.experiences?.length">
 
-              Sin experiencias registradas
+              {{ 'profile.noExperiences' | translate }}
 
             </p>
 
@@ -398,7 +398,7 @@
 
           (click)="activeTab = 'projects'">
 
-          Proyectos
+          {{ 'profile.tabProjects' | translate }}
 
         </button>
 
@@ -410,7 +410,7 @@
 
           (click)="activeTab = 'comments'">
 
-          Comentarios
+          {{ 'profile.tabComments' | translate }}
 
         </button>
 
@@ -438,7 +438,7 @@
 
             class="pp-no-data center">
 
-            Este perfil aún no tiene comentarios.
+            {{ 'publicProfile.noComments' | translate }}
 
           </div>
 

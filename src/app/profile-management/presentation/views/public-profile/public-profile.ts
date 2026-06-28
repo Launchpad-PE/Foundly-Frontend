@@ -9,11 +9,12 @@ import { Project } from '../../../../project-management/domain/entities/project.
 import { FormsModule } from '@angular/forms';
 import { CommentApi } from '../../../../comment-management/infrastructure/comment-api';
 import { UserStore } from '../../../../iam/application/user.store';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-public-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './public-profile.html',
   styleUrl: './public-profile.css',
 })

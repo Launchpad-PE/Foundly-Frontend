@@ -7,11 +7,12 @@ import { UserStore } from '../../../../iam/application/user.store';
 import { Project } from '../../../../project-management/domain/entities/project.entity';
 import { MyProjects } from '../components/my-projects/my-projects';
 import { ProjectStore } from '../../../../project-management/application/project-store';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-projects',
   standalone: true,
-  imports: [MyProjects, CommonModule, RouterModule, FormsModule],
+  imports: [MyProjects, CommonModule, RouterModule, FormsModule, TranslatePipe],
   templateUrl: './project-view.html',
   styleUrls: ['./project-view.css']
 })

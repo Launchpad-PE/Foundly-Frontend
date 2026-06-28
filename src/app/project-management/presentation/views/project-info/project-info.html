@@ -7,7 +7,7 @@
       <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" class="pi-back-icon">
         <path d="M12 5l-5 5 5 5"/>
       </svg>
-      Volver
+      {{ 'common.back' | translate }}
     </button>
   </div>
 
@@ -30,7 +30,7 @@
       <circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>
     </svg>
     <p>{{ error }}</p>
-    <button class="pi-error-dismiss" (click)="error = null">Cerrar</button>
+    <button class="pi-error-dismiss" (click)="error = null">{{ 'common.close' | translate }}</button>
   </div>
 
   <!-- ── Main content ── -->
@@ -44,14 +44,14 @@
         [disabled]="favoriteBusy || !hasProfile"
         (click)="toggleFavorite()"
         [attr.aria-pressed]="isFavorite"
-        [attr.aria-label]="isFavorite ? 'Quitar de favoritos' : 'Guardar en favoritos'"
-        [title]="hasProfile ? (isFavorite ? 'Quitar de favoritos' : 'Guardar en favoritos') : 'Completa tu perfil para guardar favoritos'">
+        [attr.aria-label]="isFavorite ? ('projectInfo.removeFav' | translate) : ('projectInfo.addFav' | translate)"
+        [title]="hasProfile ? (isFavorite ? ('projectInfo.removeFav' | translate) : ('projectInfo.addFav' | translate)) : ('projectInfo.completeProfile' | translate)">
         <svg viewBox="0 0 24 24" class="pi-fav-icon"
              [attr.fill]="isFavorite ? 'currentColor' : 'none'"
              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 10-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"/>
         </svg>
-        <span class="pi-fav-label">{{ isFavorite ? 'En favoritos' : 'Favorito' }}</span>
+        <span class="pi-fav-label">{{ isFavorite ? ('projectInfo.inFav' | translate) : ('projectInfo.fav' | translate) }}</span>
       </button>
 
       <div class="pi-hero-meta">
@@ -97,13 +97,13 @@
 
         <!-- Summary -->
         <section class="pi-section">
-          <h2 class="pi-section-title">Sobre el proyecto</h2>
+          <h2 class="pi-section-title">{{ 'projectInfo.about' | translate }}</h2>
           <p class="pi-summary">{{ project.summary.getValue() }}</p>
         </section>
 
         <!-- Roles -->
         <section class="pi-section">
-          <h2 class="pi-section-title">Roles disponibles</h2>
+          <h2 class="pi-section-title">{{ 'projectInfo.roles' | translate }}</h2>
           <div class="pi-roles-grid">
             <div *ngFor="let role of project.roles" class="pi-role-card">
               <div class="pi-role-header">
@@ -116,11 +116,11 @@
               </div>
               <p class="pi-role-desc">{{ role.cardInfo.title.getValue() }}</p>
               <div class="pi-role-actions">
-                <button class="pi-btn-ghost" (click)="openRoleModal(role)">Ver detalles</button>
+                <button class="pi-btn-ghost" (click)="openRoleModal(role)">{{ 'projectInfo.viewDetails' | translate }}</button>
                 <button class="pi-btn-primary"
                         *ngIf="!isAuthor && project.status === ProjectStatus.PUBLISHED"
                         (click)="openApplyForm(role)">
-                  Postular
+                  {{ 'projectInfo.apply' | translate }}
                 </button>
               </div>
             </div>
@@ -134,7 +134,7 @@
 
         <!-- Required skills -->
         <div class="pi-widget" *ngIf="project.requiredSkills.length > 0">
-          <h4 class="pi-widget-title">Habilidades requeridas</h4>
+          <h4 class="pi-widget-title">{{ 'projectInfo.skills' | translate }}</h4>
           <div class="pi-chips">
             <span *ngFor="let skill of project.requiredSkills" class="pi-chip skill">
               {{ skill.toString() }}
@@ -144,7 +144,7 @@
 
         <!-- Benefits -->
         <div class="pi-widget" *ngIf="project.benefits.length > 0">
-          <h4 class="pi-widget-title">Beneficios</h4>
+          <h4 class="pi-widget-title">{{ 'projectInfo.benefits' | translate }}</h4>
           <ul class="pi-benefit-list">
             <li *ngFor="let benefit of project.benefits" class="pi-benefit-item">
               <svg viewBox="0 0 16 16" fill="currentColor" class="pi-check">
@@ -157,7 +157,7 @@
 
         <!-- Environmental impact -->
         <div class="pi-widget" *ngIf="getEnvironmentalMetrics().length > 0">
-          <h4 class="pi-widget-title">Impacto ambiental</h4>
+          <h4 class="pi-widget-title">{{ 'projectInfo.environmental' | translate }}</h4>
           <div class="pi-chips">
             <span *ngFor="let metric of getEnvironmentalMetrics()" class="pi-chip green">
               {{ metric }}
@@ -168,11 +168,11 @@
         <!-- Metadata -->
         <div class="pi-widget muted">
           <div class="pi-meta-row">
-            <span class="pi-meta-label">Publicado</span>
+            <span class="pi-meta-label">{{ 'projectInfo.published' | translate }}</span>
             <span class="pi-meta-val">{{ formatDate(project.createdAt) }}</span>
           </div>
           <div class="pi-meta-row">
-            <span class="pi-meta-label">Actualizado</span>
+            <span class="pi-meta-label">{{ 'projectInfo.updated' | translate }}</span>
             <span class="pi-meta-val">{{ formatDate(project.updatedAt) }}</span>
           </div>
         </div>
@@ -188,20 +188,18 @@
       <rect x="8" y="12" width="32" height="28" rx="4"/>
       <path d="M16 12V9a2 2 0 012-2h12a2 2 0 012 2v3"/>
     </svg>
-    <p>No se encontró este proyecto.</p>
-    <button class="pi-btn-primary" (click)="goBack()">Volver al inicio</button>
+    <p>{{ 'projectInfo.notFound' | translate }}</p>
+    <button class="pi-btn-primary" (click)="goBack()">{{ 'common.backToHome' | translate }}</button>
   </div>
 
 </div>
 
-<!-- ══════════════════════════════
-     Modal: Role details
-══════════════════════════════ -->
+<!-- Modal: Role details -->
 <div class="pi-overlay" *ngIf="showRoleModal" (click)="closeRoleModal()">
   <div class="pi-modal" (click)="$event.stopPropagation()">
     <div class="pi-modal-header">
       <h2 class="pi-modal-title">{{ selectedRole?.name?.getValue() }}</h2>
-      <button class="pi-modal-close" (click)="closeRoleModal()" aria-label="Cerrar">
+      <button class="pi-modal-close" (click)="closeRoleModal()" [attr.aria-label]="'common.close' | translate">
         <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M6 6l8 8M14 6l-8 8"/>
         </svg>
@@ -209,7 +207,7 @@
     </div>
     <div class="pi-modal-body" *ngIf="selectedRole">
       <p class="pi-modal-subtitle">{{ selectedRole.cardInfo.title.getValue() }}</p>
-      <h4 class="pi-modal-section">Responsabilidades</h4>
+      <h4 class="pi-modal-section">{{ 'projectInfo.responsibilities' | translate }}</h4>
       <ul class="pi-resp-list">
         <li *ngFor="let item of selectedRole.cardInfo.items" class="pi-resp-item">
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" class="pi-resp-dot">
@@ -220,38 +218,34 @@
       </ul>
       <div class="pi-modal-cta" *ngIf="!isAuthor && project?.status === ProjectStatus.PUBLISHED">
         <button class="pi-btn-primary full" (click)="openApplyForm(selectedRole); closeRoleModal()">
-          Postular a este rol
+          {{ 'projectInfo.applyRole' | translate }}
         </button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════
-     Modal: Apply
-══════════════════════════════ -->
+<!-- Modal: Apply -->
 <div class="pi-overlay" *ngIf="showApplyForm" (click)="closeApplyForm()">
   <div class="pi-modal" (click)="$event.stopPropagation()">
     <div class="pi-modal-header">
       <div>
-        <h2 class="pi-modal-title">Postular al proyecto</h2>
+        <h2 class="pi-modal-title">{{ 'projectInfo.applyProject' | translate }}</h2>
         <p class="pi-modal-subtitle" *ngIf="selectedRole">
-          Rol: {{ selectedRole.name.getValue() }}
+          {{ 'projectInfo.role' | translate }} {{ selectedRole.name.getValue() }}
         </p>
       </div>
-      <button class="pi-modal-close" (click)="closeApplyForm()" aria-label="Cerrar">
+      <button class="pi-modal-close" (click)="closeApplyForm()" [attr.aria-label]="'common.close' | translate">
         <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M6 6l8 8M14 6l-8 8"/>
         </svg>
       </button>
     </div>
     <div class="pi-modal-body">
-      <p class="pi-apply-note">
-        El equipo revisará tu perfil y se pondrá en contacto contigo si hay compatibilidad.
-      </p>
+      <p class="pi-apply-note">{{ 'projectInfo.applyNote' | translate }}</p>
       <div class="pi-modal-cta">
-        <button class="pi-btn-ghost" (click)="closeApplyForm()">Cancelar</button>
-        <button class="pi-btn-primary" (click)="closeApplyForm()">Confirmar postulación</button>
+        <button class="pi-btn-ghost" (click)="closeApplyForm()">{{ 'common.cancel' | translate }}</button>
+        <button class="pi-btn-primary" (click)="closeApplyForm()">{{ 'projectInfo.confirmApply' | translate }}</button>
       </div>
     </div>
   </div>

@@ -9,11 +9,12 @@ import { Experience } from '../../../domain/entities/experience.entity';
 import { firstValueFrom } from 'rxjs';
 import { CommentApi } from '../../../../comment-management/infrastructure/comment-api';
 import { ProfileApi } from '../../../infrastructure/profile-api';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './profile.html',
   styleUrl: './profile.css',
 })

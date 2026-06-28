@@ -20,6 +20,7 @@ import {
 import { UserStore } from '../../../../iam/application/user.store';
 import { Milestone } from '../../../../milestones-management/domain/entities/milestone.entity';
 import { MilestoneStore } from '../../../../milestones-management/application/milestone-store';
+import { TranslatePipe } from '@ngx-translate/core';
 
 type Tab = 'inicio' | 'tareas' | 'iot' | 'hitos' | 'postulantes';
 
@@ -34,7 +35,8 @@ type Tab = 'inicio' | 'tareas' | 'iot' | 'hitos' | 'postulantes';
     PostulantListComponent,
     TaskListComponent,
     MilestoneListComponent,
-    MilestoneDetailComponent
+    MilestoneDetailComponent,
+    TranslatePipe
   ],
   templateUrl: './project-detail.html',
   styleUrls: ['./project-detail.css']

@@ -9,29 +9,29 @@
         </svg>
       </button>
       <h1 class="project-title" *ngIf="project()">{{ projectName }}</h1>
-      <span class="project-title loading-name" *ngIf="loading()">Cargando...</span>
+      <span class="project-title loading-name" *ngIf="loading()">{{ 'common.loading' | translate }}</span>
     </div>
 
     <nav class="tab-nav" *ngIf="project()">
-      <button class="tab-btn" [class.active]="activeTab() === 'inicio'" (click)="setTab('inicio')">Inicio</button>
-      <button class="tab-btn" [class.active]="activeTab() === 'tareas'" (click)="setTab('tareas')">Tareas</button>
-      <button class="tab-btn" [class.active]="activeTab() === 'iot'" (click)="setTab('iot')" *ngIf="hasIot">🌱 IOT</button>
-      <button class="tab-btn" [class.active]="activeTab() === 'hitos'" (click)="setTab('hitos')">Hitos</button>
-      <button class="tab-btn" [class.active]="activeTab() === 'postulantes'" (click)="setTab('postulantes')">Postulantes</button>
+      <button class="tab-btn" [class.active]="activeTab() === 'inicio'" (click)="setTab('inicio')">{{ 'project.detail.tabInit' | translate }}</button>
+      <button class="tab-btn" [class.active]="activeTab() === 'tareas'" (click)="setTab('tareas')">{{ 'project.detail.tabTasks' | translate }}</button>
+      <button class="tab-btn" [class.active]="activeTab() === 'iot'" (click)="setTab('iot')" *ngIf="hasIot">{{ 'project.detail.tabIot' | translate }}</button>
+      <button class="tab-btn" [class.active]="activeTab() === 'hitos'" (click)="setTab('hitos')">{{ 'project.detail.tabMilestones' | translate }}</button>
+      <button class="tab-btn" [class.active]="activeTab() === 'postulantes'" (click)="setTab('postulantes')">{{ 'project.detail.tabApplicants' | translate }}</button>
     </nav>
   </header>
 
   <!-- ── Loading ── -->
   <div class="state-center" *ngIf="loading()">
     <span class="spinner"></span>
-    <p class="state-msg">Cargando proyecto...</p>
+    <p class="state-msg">{{ 'project.loading' | translate }}</p>
   </div>
 
   <!-- ── Not found ── -->
   <div class="state-center" *ngIf="!loading() && !project()">
     <div class="not-found-icon">🔍</div>
-    <p class="state-msg">Proyecto no encontrado.</p>
-    <button class="btn-outline" (click)="goBack()">← Volver</button>
+    <p class="state-msg">{{ 'project.notFound' | translate }}</p>
+    <button class="btn-outline" (click)="goBack()">{{ 'common.backArrow' | translate }}</button>
   </div>
 
   <!-- ── Tab content ── -->
@@ -44,41 +44,41 @@
       <div class="card progress-card">
         <div class="card-header-strip progress-strip">
           <div class="card-header-content">
-      <span class="card-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-          <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
-        </svg>
-      </span>
-            <h3 class="card-heading">Progreso del Proyecto</h3>
+            <span class="card-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+              </svg>
+            </span>
+            <h3 class="card-heading">{{ 'project.detail.progress' | translate }}</h3>
           </div>
-          <span class="pct-chip">{{ overallCompletionPct() }}% completado</span>
+          <span class="pct-chip">{{ overallCompletionPct() }}% {{ 'common.completed' | translate }}</span>
         </div>
         <div class="card-body">
           <div class="progress-track-wrap">
             <div class="progress-track">
               <div class="progress-fill" [style.width.%]="overallCompletionPct()"></div>
             </div>
-            <span class="progress-track-label">Progreso general</span>
+            <span class="progress-track-label">{{ 'project.detail.generalProgress' | translate }}</span>
           </div>
           <div class="circles-row">
             <div class="circle-item">
               <div class="ring ring--tasks" [style.background]="tasksRingStyle()">
                 <div class="ring-inner">
                   <span class="ring-pct">{{ tasksCompletionPct() }}%</span>
-                  <span class="ring-sub">de tareas</span>
+                  <span class="ring-sub">{{ 'project.detail.ofTasks' | translate }}</span>
                 </div>
               </div>
-              <span class="circle-desc">Tareas Completadas</span>
+              <span class="circle-desc">{{ 'project.detail.completedTasks' | translate }}</span>
             </div>
             <div class="ring-divider"></div>
             <div class="circle-item">
               <div class="ring ring--milestones" [style.background]="milestonesRingStyle()">
                 <div class="ring-inner">
                   <span class="ring-pct">{{ milestonesCompletionPct() }}%</span>
-                  <span class="ring-sub">de hitos</span>
+                  <span class="ring-sub">{{ 'project.detail.ofMilestones' | translate }}</span>
                 </div>
               </div>
-              <span class="circle-desc">Hitos Completados</span>
+              <span class="circle-desc">{{ 'project.detail.completedMilestones' | translate }}</span>
             </div>
           </div>
         </div>
@@ -88,12 +88,12 @@
       <div class="card hitos-card">
         <div class="card-header-strip hitos-strip">
           <div class="card-header-content">
-      <span class="card-icon">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-          <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
-        </svg>
-      </span>
-            <h3 class="card-heading">Próximos Hitos</h3>
+            <span class="card-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
+              </svg>
+            </span>
+            <h3 class="card-heading">{{ 'project.detail.upcomingMilestones' | translate }}</h3>
           </div>
         </div>
         <div class="card-body flex-col">
@@ -105,10 +105,10 @@
                 <span class="hito-date">📅 {{ formatDate(milestone.dueDate) }}</span>
               </div>
               <div class="hito-progress">
-                <span class="hito-tasks">{{ getCompletedTasksCount(milestone.tasks) }}/{{ milestone.tasks.length }} tareas</span>
+                <span class="hito-tasks">{{ getCompletedTasksCount(milestone.tasks) }}/{{ milestone.tasks.length }} {{ 'project.detail.ofTasks' | translate }}</span>
               </div>
             </div>
-            <button class="btn-action btn-hitos" (click)="setTab('hitos')">Ver Todos los Hitos ({{ totalMilestones() }})</button>
+            <button class="btn-action btn-hitos" (click)="setTab('hitos')">{{ 'project.detail.viewAllMilestones' | translate }} ({{ totalMilestones() }})</button>
           </div>
 
           <!-- Sin hitos -->
@@ -118,15 +118,15 @@
                 <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/>
               </svg>
             </div>
-            <p class="empty-title">Sin hitos programados</p>
-            <p class="empty-hint">Los hitos de tu proyecto aparecerán aquí.</p>
-            <button class="btn-action btn-hitos" (click)="setTab('hitos')">Ver Todos los Hitos</button>
+            <p class="empty-title">{{ 'project.detail.noMilestones' | translate }}</p>
+            <p class="empty-hint">{{ 'project.detail.noMilestonesHint' | translate }}</p>
+            <button class="btn-action btn-hitos" (click)="setTab('hitos')">{{ 'project.detail.viewAllMilestones' | translate }}</button>
           </div>
 
           <!-- Loading -->
           <div class="loading-small" *ngIf="loadingMilestones()">
             <span class="spinner-small"></span>
-            <span>Cargando hitos...</span>
+            <span>{{ 'common.loading' | translate }}</span>
           </div>
         </div>
       </div>
@@ -141,7 +141,7 @@
                 <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
               </svg>
             </span>
-            <h3 class="card-heading">Colaboradores de tu proyecto</h3>
+            <h3 class="card-heading">{{ 'project.detail.collaborators' | translate }}</h3>
           </div>
           <span class="count-chip">{{ acceptedCollaborators().length }}</span>
         </div>
@@ -165,8 +165,8 @@
                   <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
                 </svg>
               </div>
-              <p class="empty-title">Sin colaboradores aún</p>
-              <p class="empty-hint">Cuando alguien postule y sea aceptado, aparecerá aquí.</p>
+              <p class="empty-title">{{ 'project.detail.noCollaborators' | translate }}</p>
+              <p class="empty-hint">{{ 'project.detail.noCollaboratorsHint' | translate }}</p>
             </div>
           </ng-template>
         </div>
@@ -182,7 +182,7 @@
                 <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
               </svg>
             </span>
-            <h3 class="card-heading">Tareas Urgentes</h3>
+            <h3 class="card-heading">{{ 'project.detail.urgentTasks' | translate }}</h3>
           </div>
           <span class="count-chip count-chip--urgent">{{ urgentTasksCount() }}</span>
         </div>
@@ -195,8 +195,8 @@
                 <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
               </svg>
             </div>
-            <p class="empty-title">Todo al día</p>
-            <p class="empty-hint">No hay tareas urgentes pendientes.</p>
+            <p class="empty-title">{{ 'project.detail.upToDate' | translate }}</p>
+            <p class="empty-hint">{{ 'project.detail.noUrgentTasks' | translate }}</p>
           </div>
 
           <!-- Lista de urgentes -->
@@ -210,13 +210,13 @@
               </div>
               <div class="urgent-info">
                 <span class="urgent-title">{{ task.title.getValue() }}</span>
-                <span class="urgent-meta urgent-overdue">Atrasada · Vencía el {{ formatDate(task.dueDate) }}</span>
+                <span class="urgent-meta urgent-overdue">{{ 'task.status.overdue' | translate }} · {{ 'task.due' | translate }} {{ formatDate(task.dueDate) }}</span>
               </div>
-              <span class="urgent-badge urgent-badge--overdue">Atrasada</span>
+              <span class="urgent-badge urgent-badge--overdue">{{ 'task.status.overdue' | translate }}</span>
             </li>
           </ul>
 
-          <button class="btn-action btn-tareas" (click)="setTab('tareas')">Ver Todas las Tareas</button>
+          <button class="btn-action btn-tareas" (click)="setTab('tareas')">{{ 'project.detail.viewAllTasks' | translate }}</button>
         </div>
       </div>
 
