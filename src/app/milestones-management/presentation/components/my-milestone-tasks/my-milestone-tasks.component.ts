@@ -5,11 +5,12 @@ import { MilestoneTask } from '../../../domain/entities/milestone-task.entity';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-my-milestone-tasks',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './my-milestone-tasks.component.html',
   styleUrl: './my-milestone-tasks.component.css',
 })

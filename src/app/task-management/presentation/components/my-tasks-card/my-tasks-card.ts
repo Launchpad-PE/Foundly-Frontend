@@ -5,11 +5,12 @@ import { firstValueFrom } from 'rxjs';
 
 import { TaskApi } from '../../../infrastructure/task-api';
 import { Task } from '../../../domain/entities/task.entity';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-my-tasks-card',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslatePipe],
   templateUrl: './my-tasks-card.html',
   styleUrls: ['./my-tasks-card.css']
 })
