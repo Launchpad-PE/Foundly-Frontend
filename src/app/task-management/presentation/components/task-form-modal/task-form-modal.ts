@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { AssigneeOption } from '../task-list/task-list';
 
@@ -18,7 +19,7 @@ export interface TaskFormSubmit {
 @Component({
   selector: 'app-task-form-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './task-form-modal.html',
   styleUrls: ['./task-form-modal.css']
 })

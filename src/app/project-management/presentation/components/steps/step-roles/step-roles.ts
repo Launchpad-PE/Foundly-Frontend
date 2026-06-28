@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProjectFormData } from '../../../views/create-project/create-project';
+import { TranslatePipe } from '@ngx-translate/core';
 
 interface RoleFormItem {
   id: string;
@@ -14,7 +15,7 @@ interface RoleFormItem {
 @Component({
   selector: 'app-step-roles',
   standalone: true,  // ← Asegurar que está standalone
-  imports: [CommonModule, FormsModule],  // ← CommonModule importado
+  imports: [CommonModule, FormsModule, TranslatePipe],  // ← CommonModule importado
   templateUrl: './step-roles.html',
   styleUrls: ['./step-roles.css']
 })

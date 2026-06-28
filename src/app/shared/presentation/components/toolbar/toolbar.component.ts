@@ -1,10 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, computed } from '@angular/core';
 import { UserStore } from '../../../../iam/application/user.store';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { filter } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { TranslatePipe } from '../../../../../../server/i18n/translate.pipe';
-import { TranslationService, Lang } from '../../../../../../server/i18n/translation.service';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-toolbar',
@@ -15,12 +14,14 @@ import { TranslationService, Lang } from '../../../../../../server/i18n/translat
 export class ToolbarComponent {
   private userStore = inject(UserStore);
   private router = inject(Router);
-  private i18n = inject(TranslationService);
-  lang = this.i18n.lang;
+  private translate = inject(TranslateService);
+
+  currentLang = computed(() => this.translate.currentLang() ?? 'es');
   showToolbar = true;
 
-  setLang(lang: Lang): void {
-    this.i18n.setLang(lang);
+  setLang(lang: string): void {
+    this.translate.use(lang);
+    localStorage.setItem('lang', lang);
   }
 
   constructor() {

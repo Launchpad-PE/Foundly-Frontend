@@ -9,11 +9,12 @@ import { Task } from '../../../domain/entities/task.entity';
 import { TaskStatus } from '../../../domain/enum/task-status.enum';
 import { ProjectStore } from '../../../../project-management/application/project-store';
 import { ApplicationApi } from '../../../../applications/infrastructure/application-api';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-task-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './task-detail.html',
   styleUrls: ['./task-detail.css']
 })

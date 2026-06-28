@@ -3,10 +3,11 @@ import { ProjectFormData } from '../../../views/create-project/create-project';
 import { EnvironmentalMetric, EnvironmentalMetricDisplay } from '../../../../domain/value-objects/environmental-impact.vo';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-step-evironmental',
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, TranslatePipe],
   templateUrl: './step-evironmental.html',
   styleUrl: './step-evironmental.css',
 })
