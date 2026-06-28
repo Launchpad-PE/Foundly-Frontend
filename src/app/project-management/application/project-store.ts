@@ -604,8 +604,8 @@ export class ProjectStore {
       this.participatedProjects.set(projects);
       return projects;
     } catch (err: any) {
-      const msg = err?.message || 'Error al cargar proyectos participados';
-      this.setError(msg);
+      console.warn('Could not load participated projects:', err?.message ?? err);
+      this.participatedProjects.set([]);
       return [];
     } finally {
       this.setLoading(false);
