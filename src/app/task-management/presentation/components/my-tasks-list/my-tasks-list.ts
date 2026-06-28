@@ -7,11 +7,12 @@ import { firstValueFrom } from 'rxjs';
 import { TaskApi } from '../../../infrastructure/task-api';
 import { TaskStore } from '../../../application/task.store';
 import { Task } from '../../../domain/entities/task.entity';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-my-tasks-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './my-tasks-list.html',
   styleUrls: ['./my-tasks-list.css']
 })

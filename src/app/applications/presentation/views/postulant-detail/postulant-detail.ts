@@ -5,11 +5,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ApplicationStore } from '../../../application/application.store';
 import { Application } from '../../../domain/entities/application.entity';
 import { ApplicationStatus } from '../../../domain/enum/application-status.enum';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-postulant-detail',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslatePipe],
   templateUrl: './postulant-detail.html',
   styleUrls: ['./postulant-detail.css']
 })
