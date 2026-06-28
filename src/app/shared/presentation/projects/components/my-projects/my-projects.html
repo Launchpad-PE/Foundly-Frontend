@@ -3,7 +3,7 @@
   <!-- Status Badge (opcional) -->
   @if (project.status && project.status !== 'publicado') {
     <div class="status-badge" [class.draft]="project.status === 'borrador'">
-      {{ project.status === 'borrador' ? 'Borrador' : project.status }}
+      {{ project.status === 'borrador' ? ('projects.draft' | translate) : project.status }}
     </div>
   }
 
@@ -18,7 +18,7 @@
 
   <div class="project-actions">
     <button class="btn-view" (click)="onViewDetails()">
-      Ver más
+      {{ 'projects.viewMore' | translate }}
     </button>
   </div>
 </div>

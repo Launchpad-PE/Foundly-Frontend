@@ -492,6 +492,9 @@
   "projects.explore": "Explorar Proyectos",
   "projects.draft": "Borrador",
   "projects.viewMore": "Ver más",
+  "projects.ownBadge": "Tu proyecto",
+  "projects.participatingBadge": "Participando",
+  "projects.availableRoles": "Puestos disponibles",
 
   "home.searchPlaceholder": "Nombre o palabra clave",
   "home.filterRole": "Tipo de puesto",

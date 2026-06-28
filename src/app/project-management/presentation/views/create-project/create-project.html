@@ -5,10 +5,10 @@
       <h1>CollabUs</h1>
     </div>
     <div class="header-title">
-      <h2>Crear Proyecto</h2>
+      <h2>{{ 'project.create.title' | translate }}</h2>
     </div>
     <div class="header-actions">
-      <button class="btn-cancel" (click)="cancel()">Cancelar</button>
+      <button class="btn-cancel" (click)="cancel()">{{ 'common.cancel' | translate }}</button>
     </div>
   </header>
 
@@ -16,22 +16,22 @@
   <div class="steps-progress">
     <div class="step" [class.active]="currentStep() >= 1" [class.completed]="currentStep() > 1">
       <div class="step-number">1</div>
-      <div class="step-label">Información Básica</div>
+      <div class="step-label">{{ 'project.create.step1' | translate }}</div>
     </div>
     <div class="step-line" [class.active]="currentStep() > 1"></div>
     <div class="step" [class.active]="currentStep() >= 2" [class.completed]="currentStep() > 2">
       <div class="step-number">2</div>
-      <div class="step-label">Impacto Ambiental</div>
+      <div class="step-label">{{ 'project.create.step2' | translate }}</div>
     </div>
     <div class="step-line" [class.active]="currentStep() > 2"></div>
     <div class="step" [class.active]="currentStep() >= 3" [class.completed]="currentStep() > 3">
       <div class="step-number">3</div>
-      <div class="step-label">Habilidades y Duración</div>
+      <div class="step-label">{{ 'project.create.step3' | translate }}</div>
     </div>
     <div class="step-line" [class.active]="currentStep() > 3"></div>
     <div class="step" [class.active]="currentStep() >= 4">
       <div class="step-number">4</div>
-      <div class="step-label">Roles</div>
+      <div class="step-label">{{ 'project.create.step4' | translate }}</div>
     </div>
   </div>
 
@@ -76,7 +76,7 @@
       *ngIf="currentStep() > 1"
       class="btn-prev"
       (click)="prevStep()">
-      ← Volver
+      {{ 'common.backArrow' | translate }}
     </button>
 
     <div class="nav-right">
@@ -84,7 +84,7 @@
         *ngIf="currentStep() < 4"
         class="btn-next"
         (click)="nextStep()">
-        Siguiente →
+        {{ 'common.next' | translate }}
       </button>
 
       <button
@@ -92,7 +92,7 @@
         class="btn-submit"
         (click)="submitProject()"
         [disabled]="loading()">
-        {{ loading() ? 'Creando...' : 'Publicar Proyecto' }}
+        {{ loading() ? ('project.create.loading' | translate) : ('project.create.submit' | translate) }}
       </button>
     </div>
   </div>

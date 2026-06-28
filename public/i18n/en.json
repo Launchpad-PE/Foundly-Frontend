@@ -492,6 +492,9 @@
   "projects.explore": "Explore Projects",
   "projects.draft": "Draft",
   "projects.viewMore": "View more",
+  "projects.ownBadge": "Your project",
+  "projects.participatingBadge": "Participating",
+  "projects.availableRoles": "Available roles",
 
   "home.searchPlaceholder": "Name or keyword",
   "home.filterRole": "Position type",
