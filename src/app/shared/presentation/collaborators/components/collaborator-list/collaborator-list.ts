@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Profile } from '../../../../../profile-management/domain/entities/profile.entity';
+import { TranslatePipe } from '@ngx-translate/core';
 
 const AVATAR_GRADIENTS = [
   'linear-gradient(135deg, #667eea, #764ba2)',
@@ -13,7 +14,7 @@ const AVATAR_GRADIENTS = [
 
 @Component({
   selector: 'app-collaborator-list',
-  imports: [CommonModule],
+  imports: [CommonModule, TranslatePipe],
   templateUrl: './collaborator-list.html',
   styleUrl: './collaborator-list.css',
 })

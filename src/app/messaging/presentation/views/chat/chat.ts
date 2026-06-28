@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { ChatStore } from '../../../application/chat.store';
 import { ProfileApi } from '../../../../profile-management/infrastructure/profile-api';
-import { TranslatePipe } from '../../../../../../server/i18n/translate.pipe';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-chat',
