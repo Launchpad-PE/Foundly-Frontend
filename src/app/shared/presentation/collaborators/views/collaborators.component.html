@@ -6,42 +6,42 @@
     <div class="collab-filters">
 
       <div class="cf-field">
-        <label class="cf-label">Buscar por nombre o habilidad</label>
+        <label class="cf-label">{{ 'collaborators.searchLabel' | translate }}</label>
         <div class="cf-input-wrap">
           <svg class="cf-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="9" cy="9" r="6"/><path d="M15 15l3 3"/>
           </svg>
-          <input type="text" [(ngModel)]="searchTerm" placeholder="Ej: Juan Pérez o JavaScript" class="cf-input"/>
+          <input type="text" [(ngModel)]="searchTerm" [placeholder]="'collaborators.searchPlaceholder' | translate" class="cf-input"/>
         </div>
       </div>
 
       <div class="cf-field">
-        <label class="cf-label">Filtrar por rol</label>
+        <label class="cf-label">{{ 'collaborators.filterRole' | translate }}</label>
         <div class="cf-input-wrap">
           <svg class="cf-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M10 2a4 4 0 100 8 4 4 0 000-8zM3 18a7 7 0 0114 0"/>
           </svg>
-          <input type="text" [(ngModel)]="filterRole" placeholder="Ej: Ingeniero, Marketing, Gerente" class="cf-input"/>
+          <input type="text" [(ngModel)]="filterRole" [placeholder]="'collaborators.filterRolePlaceholder' | translate" class="cf-input"/>
         </div>
       </div>
 
       <div class="cf-field cf-field-sm">
-        <label class="cf-label">Puntuación mínima</label>
+        <label class="cf-label">{{ 'collaborators.minScore' | translate }}</label>
         <div class="cf-input-wrap">
-          <input type="number" [(ngModel)]="minScore" placeholder="Mínimo" class="cf-input"/>
+          <input type="number" [(ngModel)]="minScore" [placeholder]="'collaborators.minScorePlaceholder' | translate" class="cf-input"/>
         </div>
       </div>
 
       <div class="cf-field cf-field-sm">
-        <label class="cf-label">Puntuación máxima</label>
+        <label class="cf-label">{{ 'collaborators.maxScore' | translate }}</label>
         <div class="cf-input-wrap">
-          <input type="number" [(ngModel)]="maxScore" placeholder="Máximo" class="cf-input"/>
+          <input type="number" [(ngModel)]="maxScore" [placeholder]="'collaborators.maxScorePlaceholder' | translate" class="cf-input"/>
         </div>
       </div>
 
       <div class="cf-actions">
-        <button class="cf-btn-search" (click)="onSearch()">Buscar</button>
-        <button class="cf-btn-clear" (click)="onClear()">Limpiar</button>
+        <button class="cf-btn-search" (click)="onSearch()">{{ 'common.search' | translate }}</button>
+        <button class="cf-btn-clear" (click)="onClear()">{{ 'common.clear' | translate }}</button>
       </div>
 
     </div>
@@ -52,49 +52,35 @@
 
     <!-- Left: welcome card -->
     <aside class="collab-welcome-card">
-      <h2 class="cw-title">Bienvenido a<br>la sección<br>colaboradores</h2>
+      <h2 class="cw-title">{{ 'collaborators.welcome' | translate }}</h2>
+      <p class="cw-desc">{{ 'collaborators.desc' | translate }}</p>
       <p class="cw-desc">
-        Aquí podrás buscar los colaboradores con distintas habilidades y un rol específico.
-      </p>
-      <p class="cw-desc">
-        También puedes ver en qué ranking te encuentras de los mejores colaboradores de
+        {{ 'collaborators.rankingDesc' | translate }}
         <strong class="cw-brand">Foundly.</strong>
       </p>
       <div class="cw-illustration">
         <svg viewBox="0 0 200 160" fill="none" xmlns="http://www.w3.org/2000/svg" class="cw-svg">
-          <!-- Connection lines -->
           <line x1="100" y1="80" x2="40" y2="36" stroke="#c8c4f8" stroke-width="1.5" stroke-dasharray="4 3"/>
           <line x1="100" y1="80" x2="160" y2="36" stroke="#c8c4f8" stroke-width="1.5" stroke-dasharray="4 3"/>
           <line x1="100" y1="80" x2="40" y2="130" stroke="#c8c4f8" stroke-width="1.5" stroke-dasharray="4 3"/>
           <line x1="100" y1="80" x2="160" y2="130" stroke="#c8c4f8" stroke-width="1.5" stroke-dasharray="4 3"/>
           <line x1="40" y1="36" x2="160" y2="36" stroke="#e0deff" stroke-width="1" stroke-dasharray="3 4"/>
           <line x1="40" y1="130" x2="160" y2="130" stroke="#e0deff" stroke-width="1" stroke-dasharray="3 4"/>
-
-          <!-- Top-left node -->
           <circle cx="40" cy="36" r="22" fill="#ede9ff"/>
           <circle cx="40" cy="30" r="8" fill="#a89ff8"/>
           <path d="M22 50a18 18 0 0136 0" fill="#b8b0f8"/>
-
-          <!-- Top-right node -->
           <circle cx="160" cy="36" r="22" fill="#ede9ff"/>
           <circle cx="160" cy="30" r="8" fill="#6c63ff"/>
           <path d="M142 50a18 18 0 0136 0" fill="#8b83f8"/>
-
-          <!-- Bottom-left node -->
           <circle cx="40" cy="130" r="22" fill="#ede9ff"/>
           <circle cx="40" cy="124" r="8" fill="#9b8ff8"/>
           <path d="M22 144a18 18 0 0136 0" fill="#b0a8f8"/>
-
-          <!-- Bottom-right node -->
           <circle cx="160" cy="130" r="22" fill="#ede9ff"/>
           <circle cx="160" cy="124" r="8" fill="#5a52d5"/>
           <path d="M142 144a18 18 0 0136 0" fill="#7a72e8"/>
-
-          <!-- Center hub -->
           <circle cx="100" cy="80" r="28" fill="#6c63ff" opacity="0.12"/>
           <circle cx="100" cy="80" r="20" fill="#6c63ff" opacity="0.2"/>
           <circle cx="100" cy="80" r="13" fill="#6c63ff"/>
-          <!-- Center icon: handshake / connect -->
           <path d="M94 77l4 4 8-8" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </div>
@@ -102,18 +88,18 @@
 
     <!-- Center: collaborator list -->
     <main class="collab-main">
-      <h2 class="collab-list-title">Lista de Colaboradores</h2>
+      <h2 class="collab-list-title">{{ 'collaborators.listTitle' | translate }}</h2>
 
       <!-- Loading -->
       <div class="collab-loading" *ngIf="loading">
         <div class="cl-spinner"></div>
-        <p>Cargando colaboradores...</p>
+        <p>{{ 'collaborators.loading' | translate }}</p>
       </div>
 
       <!-- Error -->
       <div class="collab-error" *ngIf="error && !loading">
         <span>{{ error }}</span>
-        <button class="cf-btn-search" (click)="loadAllCollaborators()">Reintentar</button>
+        <button class="cf-btn-search" (click)="loadAllCollaborators()">{{ 'common.retry' | translate }}</button>
       </div>
 
       <!-- List -->
@@ -130,7 +116,7 @@
             <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" class="collab-no-icon">
               <circle cx="24" cy="18" r="10"/><path d="M6 42a18 18 0 0136 0"/>
             </svg>
-            <p>No se encontraron colaboradores con esos filtros.</p>
+            <p>{{ 'collaborators.noResults' | translate }}</p>
           </div>
         </ng-template>
       </div>
@@ -140,26 +126,26 @@
     <aside class="collab-sidebar">
 
       <div class="cs-stats-card">
-        <h3 class="cs-title">Estadísticas personales</h3>
+        <h3 class="cs-title">{{ 'collaborators.myStats' | translate }}</h3>
         <div class="cs-stat-row">
-          <span class="cs-stat-label">Tu puntuación actual:</span>
+          <span class="cs-stat-label">{{ 'collaborators.myScore' | translate }}</span>
           <span class="cs-stat-value accent">{{ userPoints }} pts</span>
         </div>
         <div class="cs-stat-row">
-          <span class="cs-stat-label">Ranking:</span>
+          <span class="cs-stat-label">{{ 'collaborators.myRanking' | translate }}</span>
           <span class="cs-stat-value accent">#{{ userRanking }}</span>
         </div>
         <div class="cs-stat-row">
-          <span class="cs-stat-label">Proyectos activos:</span>
+          <span class="cs-stat-label">{{ 'collaborators.activeProjects' | translate }}</span>
           <span class="cs-stat-value accent">{{ activeProjects }}</span>
         </div>
       </div>
 
       <div class="cs-ranking-card">
         <div class="cs-ranking-circle">
-          <span class="cs-ranking-text">Ranking De<br>Colaboradores</span>
+          <span class="cs-ranking-text">{{ 'collaborators.rankingTitle' | translate }}</span>
         </div>
-        <p class="cs-ranking-link" (click)="goToRanking()">Ver ranking completo</p>
+        <p class="cs-ranking-link" (click)="goToRanking()">{{ 'collaborators.viewRanking' | translate }}</p>
       </div>
 
     </aside>

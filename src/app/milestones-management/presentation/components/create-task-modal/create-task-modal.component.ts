@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MilestoneStore } from '../../../application/milestone-store';
 import { MilestoneTask } from '../../../domain/entities/milestone-task.entity';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-create-task-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './create-task-modal.component.html',
   styleUrls: ['./create-task-modal.component.css']
 })

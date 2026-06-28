@@ -11,7 +11,7 @@ import { StepInfo } from '../../components/steps/step-info/step-info';
 import {StepEvironmental} from '../../components/steps/step-evironmental/step-evironmental';
 import {StepSkillsDuration} from '../../components/steps/step-skills-duration/step-skills-duration';
 import {StepRoles} from '../../components/steps/step-roles/step-roles';
-
+import { TranslatePipe } from '@ngx-translate/core';
 
 export interface ProjectFormData {
   name: string;
@@ -43,6 +43,7 @@ export interface ProjectFormData {
     CommonModule,
     FormsModule,
     RouterModule,
+    TranslatePipe,
   ],
   templateUrl: './create-project.html',
   styleUrl: './create-project.css',

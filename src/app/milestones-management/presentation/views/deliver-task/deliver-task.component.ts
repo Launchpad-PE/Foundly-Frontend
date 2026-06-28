@@ -4,13 +4,15 @@ import { MilestoneStore } from '../../../application/milestone-store';
 import { MilestoneTask } from '../../../domain/entities/milestone-task.entity';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-deliver-task',
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    TranslatePipe
   ],
   templateUrl: './deliver-task.component.html',
   styleUrl: './deliver-task.component.css',
