@@ -34,6 +34,8 @@ export class MyMilestoneTasksComponent implements OnInit {
 
     for (const milestone of this.allMilestones()) {
       for (const task of milestone.tasks) {
+        console.log('assigneeId del task:', task.assigneeId.toString());
+        console.log('assigneeId del input:', this.assigneeId());
         if (task.assigneeId.toString() === this.assigneeId()) {
           tasks.push({
             task,
@@ -65,6 +67,7 @@ export class MyMilestoneTasksComponent implements OnInit {
 
   async loadData(): Promise<void> {
     await this.milestoneStore.loadMilestonesByProject(this.projectId());
+    console.log('Milestones cargados:', this.allMilestones());
   }
 
   async toggleTaskStatus(task: MilestoneTask): Promise<void> {
