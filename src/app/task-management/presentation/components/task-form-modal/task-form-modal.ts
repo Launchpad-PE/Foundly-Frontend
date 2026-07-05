@@ -95,6 +95,19 @@ export class TaskFormModalComponent {
 
   onCancel(): void { this.close.emit(); }
 
+  /**
+   * Evita que la tecla Enter dispare el envio implicito del formulario
+   * (por ejemplo mientras se escribe un paso del checklist, un enlace o
+   * una herramienta). Solo el boton "Enviar" o los textarea (para permitir
+   * saltos de linea) quedan exentos de este bloqueo.
+   */
+  onFormKeydownEnter(event: Event): void {
+    const target = event.target as HTMLElement;
+    const tag = target?.tagName;
+    if (tag === 'TEXTAREA' || tag === 'BUTTON') return;
+    event.preventDefault();
+  }
+
   private validate(): string | null {
     if (!this.assigneeId()) return 'Selecciona un colaborador.';
     if (this.title().trim().length < 3) return 'El título debe tener al menos 3 caracteres.';
