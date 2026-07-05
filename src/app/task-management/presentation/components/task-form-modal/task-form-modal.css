@@ -25,15 +25,16 @@
 .modal-header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 0.6rem;
   margin-bottom: 1.25rem;
 }
 
-.back-button {
-  background: transparent; border: none; color: #6C63FF; cursor: pointer; padding: 0.25rem;
-  display: inline-flex; align-items: center;
+.close-button {
+  background: transparent; border: none; color: #6C63FF; cursor: pointer; padding: 0.35rem;
+  display: inline-flex; align-items: center; border-radius: 6px;
 }
-.back-button:hover { color: #4d44d4; }
+.close-button:hover { color: #4d44d4; background: rgba(108, 99, 255, 0.08); }
 
 .modal-title {
   margin: 0;
