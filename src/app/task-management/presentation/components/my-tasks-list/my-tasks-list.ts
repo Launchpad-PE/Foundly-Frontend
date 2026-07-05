@@ -74,7 +74,11 @@ export class MyTasksListComponent implements OnInit, OnChanges {
     this.router.navigate(['/projects', this.projectId, 'tasks', task.id]);
   }
 
+  // "Hacer Tarea" navega a la misma vista de detalle, pero con el flag
+  // `accion=entregar` para habilitar la sección de entrega (solo colaborador).
   doTask(task: Task): void {
-    this.router.navigate(['/projects', this.projectId, 'tasks', task.id]);
+    this.router.navigate(['/projects', this.projectId, 'tasks', task.id], {
+      queryParams: { accion: 'entregar' }
+    });
   }
 }
