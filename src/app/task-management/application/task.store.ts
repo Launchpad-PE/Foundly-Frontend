@@ -93,7 +93,13 @@ export class TaskStore {
       this.currentTask.set(task);
       return task;
     } catch (err: any) {
-      if (err?.status === 404) return null;
+      if (err?.status === 404) {
+        this.setError('La tarea no existe');
+        return null;
+      } else if (err?.status === 403) {
+        this.setError('No tienes permisos para ver esta tarea');
+        return null;
+      }
       this.setError(err?.message || 'Error al cargar la tarea');
       return null;
     } finally {
@@ -151,13 +157,8 @@ export class TaskStore {
     this.setLoading(true);
     this.clearError();
     try {
-      const cached = this.projectTasks().find(t => t.id === taskId)
-        ?? this.userTasks().find(t => t.id === taskId)
-        ?? (this.currentTask()?.id === taskId ? this.currentTask() : null);
-      const entity = cached ?? await firstValueFrom(this.taskApi.getTask(taskId));
-
-      entity.complete(deliveryUrl, deliveryNotes);
-      const saved = await firstValueFrom(this.taskApi.updateTask(entity));
+      // ✅ USAR EL NUEVO ENDPOINT COMPLETE
+      const saved = await firstValueFrom(this.taskApi.completeTask(taskId, deliveryUrl, deliveryNotes));
 
       this.projectTasks.update(list => list.map(t => t.id === taskId ? saved : t));
       this.userTasks.update(list => list.map(t => t.id === taskId ? saved : t));
