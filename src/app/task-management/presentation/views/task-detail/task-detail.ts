@@ -30,6 +30,10 @@ export class TaskDetailComponent implements OnInit {
   projectName = signal<string>('');
   collaboratorName = signal<string>('');
 
+  // Solo es true cuando se llega desde "Hacer Tarea" (colaborador).
+  // Al entrar por "Ver Tarea" (emprendedor o colaborador) la vista es de solo lectura.
+  private deliverMode = signal<boolean>(false);
+
   private projectId: string = '';
 
   readonly displayStatus = computed<TaskStatus>(() => {
@@ -49,6 +53,10 @@ export class TaskDetailComponent implements OnInit {
     return this.task()?.isCompleted() ?? false;
   });
 
+  readonly canDeliver = computed<boolean>(() => {
+    return this.deliverMode() && !this.isCompleted();
+  });
+
   readonly collaboratorInitials = computed<string>(() => {
     const name = this.collaboratorName();
     if (!name) return '?';
@@ -65,6 +73,7 @@ export class TaskDetailComponent implements OnInit {
       return;
     }
     this.projectId = projectId;
+    this.deliverMode.set(this.route.snapshot.queryParamMap.get('accion') === 'entregar');
 
     const [task, project] = await Promise.all([
       this.taskStore.loadTask(taskId),
