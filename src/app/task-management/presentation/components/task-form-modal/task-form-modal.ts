@@ -93,12 +93,6 @@ export class TaskFormModalComponent {
     this.tools.update(list => list.filter((_, idx) => idx !== i));
   }
 
-  onBackdropClick(ev: MouseEvent): void {
-    if ((ev.target as HTMLElement).classList.contains('modal-backdrop')) {
-      this.close.emit();
-    }
-  }
-
   onCancel(): void { this.close.emit(); }
 
   private validate(): string | null {
