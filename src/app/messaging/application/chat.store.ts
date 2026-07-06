@@ -62,12 +62,24 @@ export class ChatStore {
   async send(content: string): Promise<void> {
     const to = this.activeUserId();
     const text = content.trim();
-    if (!to || !text) return;
-    const saved = await firstValueFrom(this.api.sendMessage(to, text));
-    this.appendIfNew(saved);
-    this.bumpConversation(saved);
-  }
 
+    console.log('📤 ChatStore.send - to:', to, 'text:', text);
+
+    if (!to || !text) {
+      console.warn('⚠️ No se puede enviar: destinatario o contenido vacío');
+      return;
+    }
+
+    try {
+      const saved = await firstValueFrom(this.api.sendMessage(to, text));
+      console.log('✅ Mensaje enviado:', saved);
+      this.appendIfNew(saved);
+      this.bumpConversation(saved);
+    } catch (error) {
+      console.error('❌ Error enviando mensaje:', error);
+      throw error;
+    }
+  }
   // ── tiempo real ───────────────────────────────────────────────
 
   private onIncoming(msg: DirectMessage): void {

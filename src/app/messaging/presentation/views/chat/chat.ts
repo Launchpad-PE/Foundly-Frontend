@@ -48,7 +48,19 @@ export class ChatComponent implements OnInit {
 
   async sendMessage(): Promise<void> {
     const text = this.draft.trim();
-    if (!text) return;
+    if (!text) {
+      console.warn('⚠️ Mensaje vacío');
+      return;
+    }
+
+    const to = this.activeUserId();
+    if (!to) {
+      console.warn('⚠️ No hay destinatario seleccionado');
+      return;
+    }
+
+    console.log('📤 Enviando mensaje a:', to, 'contenido:', text);
+
     this.draft = '';
     await this.chat.send(text);
   }

@@ -16,7 +16,17 @@ export class MessageApi {
 
   /** Sends a message; the backend also pushes it over WebSocket to both participants. */
   sendMessage(recipientId: number, content: string): Observable<DirectMessage> {
-    return this.http.post<DirectMessage>(`${this.baseUrl}${this.path}`, { recipientId, content });
+    console.log('📤 Enviando mensaje a:', recipientId, 'contenido:', content);
+
+    // ✅ Asegurar que recipientId sea un número
+    const payload = {
+      recipientId: Number(recipientId),
+      content: content.trim()
+    };
+
+    console.log('📤 Payload completo:', payload);
+
+    return this.http.post<DirectMessage>(`${this.baseUrl}${this.path}`, payload);
   }
 
   /** Full message history with another user, oldest first. */

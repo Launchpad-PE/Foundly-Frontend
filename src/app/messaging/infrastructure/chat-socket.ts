@@ -23,22 +23,38 @@ export class ChatSocket {
     if (this.client?.active) return;
 
     const token = localStorage.getItem('authToken') ?? '';
-    const wsUrl = environment.platformProviderApiBaseUrl.replace(/^http/, 'ws') + '/ws';
+
+    // ✅ Usar la URL correcta
+    const wsUrl = environment.platformProviderApiBaseUrl
+      .replace(/^http/, 'ws')  // http → ws, https → wss
+      .replace(/\/$/, '') + '/ws';
+
+    console.log('🔌 Conectando a WebSocket:', wsUrl);
 
     this.client = new Client({
       brokerURL: wsUrl,
       connectHeaders: { Authorization: `Bearer ${token}` },
       reconnectDelay: 4000,
       onConnect: () => {
+        console.log('✅ WebSocket conectado');
         this.client?.subscribe('/user/queue/messages', (frame: IMessage) => {
           try {
+            console.log('📩 Mensaje WS recibido:', frame.body);
             this.incomingSubject.next(JSON.parse(frame.body) as DirectMessage);
           } catch (error) {
             console.error('Mensaje WS no parseable', error);
           }
         });
       },
-      onStompError: (frame) => console.error('STOMP error:', frame.headers['message']),
+      onStompError: (frame) => {
+        console.error('❌ STOMP error:', frame.headers['message']);
+      },
+      onWebSocketClose: () => {
+        console.log('🔌 WebSocket desconectado');
+      },
+      onWebSocketError: (error) => {
+        console.error('❌ WebSocket error:', error);
+      }
     });
 
     this.client.activate();
