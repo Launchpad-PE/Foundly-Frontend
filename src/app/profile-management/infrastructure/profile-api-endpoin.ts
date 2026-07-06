@@ -4,7 +4,7 @@ import { environment } from '../../../environments/environment';
 import { Profile } from '../domain/entities/profile.entity';
 import { ProfileResource, ProfileResponse, ProfilesResponse } from './profile-response';
 import { ProfileAssembler } from './profile-assembler';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
 export class ProfileApiEndpoint extends BaseApiEndpoint<
@@ -37,11 +37,24 @@ export class ProfileApiEndpoint extends BaseApiEndpoint<
    * Get profile by user ID
    */
   getByUserId(userId: string): Observable<ProfileResponse> {
+    console.log('📡 ProfileApiEndpoint: Solicitando perfil para userId:', userId);
     return this.http
       .get<ProfileResource>(`${this.profilesUrl}/user/${userId}`)
-      .pipe(map((profile) => ({ profile }) as ProfileResponse));
+      .pipe(
+        map((profile) => {
+          console.log('📡 ProfileApiEndpoint: Perfil recibido:', profile);
+          if (!profile) {
+            console.warn('📡 ProfileApiEndpoint: Perfil vacío');
+            throw new Error('Perfil no encontrado');
+          }
+          return { profile } as ProfileResponse;
+        }),
+        catchError((error) => {
+          console.error('📡 ProfileApiEndpoint - Error:', error);
+          return throwError(() => error);
+        })
+      );
   }
-
   /**
    * Create profile
    */

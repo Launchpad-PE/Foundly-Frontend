@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  platformProviderApiBaseUrl: 'http://localhost:8080',
+  platformProviderApiBaseUrl: 'https://foundly-backend-production-eeec.up.railway.app',
   platformProfileEndpointPath: '/api/v1/profiles',
   platformUserEndpointPath: '/api/v1/users',
   platformProjectEndpointPath: '/api/v1/projects',

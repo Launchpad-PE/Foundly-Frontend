@@ -44,6 +44,7 @@ export class LoginComponent {
     this.router.navigate(['/register']);
   }
 
+
   async handleLogin(): Promise<void> {
     this.loginError.set('');
     this.isLoading = true;
@@ -57,7 +58,20 @@ export class LoginComponent {
     try {
       await this.userStore.login(this.email, this.password);
 
-      if (this.userStore.needsOnboarding()) {
+      // ✅ Esperar a que cargue el perfil
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // ✅ Forzar recarga del perfil
+      const userId = this.userStore.currentUser()?.id;
+      if (userId) {
+        console.log('📋 Forzando recarga de perfil para userId:', userId);
+        await this.userStore.loadUserProfile(userId);
+      }
+
+      const needsOnboarding = this.userStore.needsOnboarding();
+      console.log('🔍 Login - needsOnboarding:', needsOnboarding);
+
+      if (needsOnboarding) {
         console.log('📝 Needs onboarding, redirecting...');
         await this.router.navigate(['/onboarding']);
       } else {
@@ -65,11 +79,13 @@ export class LoginComponent {
         await this.router.navigate(['/home']);
       }
     } catch (error: any) {
+      console.error('❌ Error en login:', error);
       this.loginError.set(error.message || 'Error al iniciar sesión');
     } finally {
       this.isLoading = false;
     }
   }
+
 
   handlePasswordRecovery(email: string): void {
     console.log('Password recovery for:', email);

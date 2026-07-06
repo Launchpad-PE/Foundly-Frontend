@@ -48,23 +48,33 @@ export class RegisterComponent {
     this.isLoading = true;
 
     try {
-      // Registrar usuario
+      // ✅ PASO 1: Registrar usuario
       await this.userStore.register({
         fullName: this.fullName,
         email: this.email,
         password: this.password
       });
 
-      // Login automático después del registro
+      console.log('✅ Usuario registrado, esperando 1 segundo...');
+
+      // ✅ PASO 2: Esperar 1 segundo antes del login
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // ✅ PASO 3: Login automático
       await this.userStore.login(this.email, this.password);
 
-      // Verificar si está autenticado y redirigir a onboarding
+      console.log('✅ Login exitoso');
+
+      // ✅ PASO 4: Verificar autenticación
       if (this.userStore.isAuthenticated()) {
-        console.log('✅ Registro exitoso, redirigiendo a onboarding...');
+        console.log('✅ Usuario autenticado, redirigiendo a onboarding...');
         await this.router.navigate(['/onboarding']);
+      } else {
+        console.error('❌ No autenticado después del login');
+        this.errorMessage = 'Error al iniciar sesión automáticamente';
       }
     } catch (error: any) {
-      console.error('Registration error:', error);
+      console.error('❌ Registration error:', error);
       this.errorMessage = error.message || 'Error en el registro';
     } finally {
       this.isLoading = false;

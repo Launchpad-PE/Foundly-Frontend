@@ -73,12 +73,29 @@ export class ProfileStore {
     this.error.set(null);
 
     try {
+      console.log('📋 ProfileStore: Cargando perfil para userId:', userId);
       const profile = await firstValueFrom(this.profileApi.getProfileByUserId(userId));
-      this.currentProfile.set(profile);
-      return profile;
+      console.log('📋 ProfileStore: Perfil recibido:', profile);
+
+      if (profile) {
+        // ✅ Si el perfil tiene datos, marcarlo como completo
+        if (profile.bio || profile.role || (profile.skills && profile.skills.length > 0)) {
+          profile.isComplete = true;
+          console.log('📋 ProfileStore: Marcando perfil como completo');
+        }
+        this.currentProfile.set(profile);
+        console.log('✅ ProfileStore: Perfil guardado en store');
+        return profile;
+      } else {
+        console.log('⚠️ ProfileStore: No se encontró perfil');
+        this.currentProfile.set(null);
+        return null;
+      }
     } catch (err: any) {
+      console.error('❌ ProfileStore: Error cargando perfil:', err);
       if (err.status === 404) {
-        console.log('📋 No profile found for user');
+        console.log('📋 Perfil no encontrado (404)');
+        this.currentProfile.set(null);
         return null;
       }
       this.error.set(err.message);
