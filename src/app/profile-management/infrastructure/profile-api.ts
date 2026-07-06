@@ -199,30 +199,36 @@ export class ProfileApi extends BaseApi {
   // ─── Favorites ────────────────────────────────────────────────
 
   addFavorite(profileId: string, projectId: string): Observable<Profile> {
+    console.log(`📡 addFavorite - profileId: ${profileId}, projectId: ${projectId}`);
     return this.profileEndpoint
       .addFavorite(profileId, projectId)
       .pipe(
         map((response) => {
-          console.log('📡 addFavorite - Respuesta:', response);
+          console.log('📡 addFavorite - Respuesta recibida:', response);
           return this.assembler.toEntityFromResponse(response);
         }),
         catchError((error) => {
           console.error('❌ addFavorite - Error:', error);
+          console.error('❌ addFavorite - Status:', error.status);
+          console.error('❌ addFavorite - Message:', error.message);
           return throwError(() => error);
         })
       );
   }
 
   removeFavorite(profileId: string, projectId: string): Observable<Profile> {
+    console.log(`📡 removeFavorite - profileId: ${profileId}, projectId: ${projectId}`);
     return this.profileEndpoint
       .removeFavorite(profileId, projectId)
       .pipe(
         map((response) => {
-          console.log('📡 removeFavorite - Respuesta:', response);
+          console.log('📡 removeFavorite - Respuesta recibida:', response);
           return this.assembler.toEntityFromResponse(response);
         }),
         catchError((error) => {
           console.error('❌ removeFavorite - Error:', error);
+          console.error('❌ removeFavorite - Status:', error.status);
+          console.error('❌ removeFavorite - Message:', error.message);
           return throwError(() => error);
         })
       );

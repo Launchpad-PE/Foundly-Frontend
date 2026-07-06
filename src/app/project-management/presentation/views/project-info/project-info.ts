@@ -1,5 +1,4 @@
-// project-management/presentation/views/project-info/project-info.ts
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
@@ -24,9 +23,10 @@ export class ProjectInfo implements OnInit {
   private userStore = inject(UserStore);
   private profileStore = inject(ProfileStore);
   private fb = inject(FormBuilder);
+  private cdr = inject(ChangeDetectorRef);
 
   project: Project | null = null;
-  loading = true; // ✅ Inicia en true para mostrar spinner
+  loading = true;
   error: string | null = null;
   isAuthor = false;
   showApplyForm = false;
@@ -49,7 +49,6 @@ export class ProjectInfo implements OnInit {
     const projectId = this.route.snapshot.params['id'];
     console.log('🔍 ProjectInfo - ID recibido:', projectId);
 
-    // Aseguramos que el perfil esté cargado para saber qué proyectos son favoritos
     const userId = this.userStore.currentUser()?.id;
     if (userId && !this.profileStore.currentProfile()) {
       await this.profileStore.loadProfile(userId.toString());
@@ -68,7 +67,6 @@ export class ProjectInfo implements OnInit {
     this.error = null;
 
     try {
-      // 1. Primero intentar obtener de la caché del store
       let project = this.projectStore.currentProject();
 
       if (project && project.id === projectId) {
@@ -79,7 +77,6 @@ export class ProjectInfo implements OnInit {
         return;
       }
 
-      // 2. Buscar en allProjects (si ya están cargados)
       const allProjects = this.projectStore.allProjects();
       project = allProjects.find((p) => p.id === projectId) || null;
 
@@ -91,7 +88,6 @@ export class ProjectInfo implements OnInit {
         return;
       }
 
-      // 3. Último recurso: cargar todos los proyectos y buscar
       console.log('📡 Cargando todos los proyectos desde API...');
       const loadedProjects = await this.projectStore.loadAllProjects();
       console.log('📡 Proyectos cargados:', loadedProjects.length);
@@ -208,17 +204,31 @@ export class ProjectInfo implements OnInit {
 
     if (!this.profileStore.currentProfile()) {
       this.error = 'Debes completar tu perfil para guardar favoritos';
+      setTimeout(() => this.error = null, 3000);
       return;
     }
 
     this.favoriteBusy = true;
+
     try {
       await this.profileStore.toggleFavorite(this.project.id);
+      this.cdr.detectChanges();
+      console.log('✅ Favorito actualizado correctamente');
     } catch (err: any) {
       console.error('❌ Error al actualizar favorito:', err);
-      this.error = err?.message || 'No se pudo actualizar el favorito';
+
+      if (err.status === 500) {
+        this.error = 'Error del servidor al actualizar favorito. Intenta nuevamente.';
+      } else if (err.status === 404) {
+        this.error = 'Perfil no encontrado. Por favor, completa tu perfil.';
+      } else {
+        this.error = err?.message || 'No se pudo actualizar el favorito';
+      }
+
+      setTimeout(() => this.error = null, 4000);
     } finally {
       this.favoriteBusy = false;
+      this.cdr.detectChanges();
     }
   }
 }

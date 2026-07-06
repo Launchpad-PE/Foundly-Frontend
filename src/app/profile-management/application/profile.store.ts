@@ -32,7 +32,6 @@ export class ProfileStore {
     this.error.set(null);
 
     try {
-      //  Usar el constructor directamente en lugar de Profile.create()
       const profile = new Profile({
         userId: userId,
         username: data.username,
@@ -44,17 +43,13 @@ export class ProfileStore {
         isComplete: true,
       });
 
-      // Validate profile
       const validation = profile.validateOnboarding();
       if (!validation.isValid) {
         throw new Error(validation.errors.join(', '));
       }
 
-      // Send to API
       const savedProfile = await firstValueFrom(this.profileApi.createProfile(profile));
-
       this.currentProfile.set(savedProfile);
-
       console.log('✅ Profile created successfully', savedProfile);
       return savedProfile;
     } catch (err: any) {
@@ -78,11 +73,17 @@ export class ProfileStore {
       console.log('📋 ProfileStore: Perfil recibido:', profile);
 
       if (profile) {
-        // ✅ Si el perfil tiene datos, marcarlo como completo
+        if (!profile.favoriteProjectIds) {
+          profile.favoriteProjectIds = [];
+          console.log('📋 ProfileStore: Inicializando favoriteProjectIds como array vacío');
+        }
+
         if (profile.bio || profile.role || (profile.skills && profile.skills.length > 0)) {
           profile.isComplete = true;
           console.log('📋 ProfileStore: Marcando perfil como completo');
         }
+
+        console.log('📋 ProfileStore: Favoritos cargados:', profile.favoriteProjectIds);
         this.currentProfile.set(profile);
         console.log('✅ ProfileStore: Perfil guardado en store');
         return profile;
@@ -164,7 +165,7 @@ export class ProfileStore {
   }
 
   /**
-   * Update avatar (si la página asigna uno automáticamente)
+   * Update avatar
    */
   async updateAvatar(avatarUrl: string | null): Promise<void> {
     const profile = this.currentProfile();
@@ -211,7 +212,6 @@ export class ProfileStore {
       throw new Error('No profile loaded');
     }
 
-    // Convertir Experience a formato para la API
     const expData = {
       title: experience.title,
       company: experience.company,
@@ -240,8 +240,7 @@ export class ProfileStore {
   }
 
   /**
-   * Reemplaza el array completo de experiencias (usado para agregar/eliminar
-   * de forma segura, evitando el problema de ids nulos).
+   * Reemplaza el array completo de experiencias
    */
   async setExperiences(experiences: Experience[]): Promise<void> {
     const profile = this.currentProfile();
@@ -304,18 +303,45 @@ export class ProfileStore {
   async toggleFavorite(projectId: string): Promise<boolean> {
     const profile = this.currentProfile();
     if (!profile || !profile.id) {
+      console.error('❌ No hay perfil cargado');
       throw new Error('No profile loaded');
     }
 
     const id = projectId.toString();
     const willBeFavorite = !profile.isFavorite(id);
 
-    const updated = willBeFavorite
-      ? await firstValueFrom(this.profileApi.addFavorite(profile.id, id))
-      : await firstValueFrom(this.profileApi.removeFavorite(profile.id, id));
+    console.log(`🔄 ${willBeFavorite ? 'Agregando' : 'Quitando'} favorito: ${id}`);
+    console.log('📋 Perfil antes:', {
+      id: profile.id,
+      userId: profile.userId,
+      favorites: profile.favoriteProjectIds
+    });
 
-    this.currentProfile.set(updated);
-    return willBeFavorite;
+    try {
+      let updated: Profile;
+
+      if (willBeFavorite) {
+        updated = await firstValueFrom(this.profileApi.addFavorite(profile.id, id));
+      } else {
+        updated = await firstValueFrom(this.profileApi.removeFavorite(profile.id, id));
+      }
+
+      console.log('✅ Favorito actualizado, perfil recibido:', {
+        id: updated.id,
+        userId: updated.userId,
+        favorites: updated.favoriteProjectIds
+      });
+
+      this.currentProfile.set(updated);
+
+      const isNowFavorite = updated.isFavorite(id);
+      console.log(`📊 Estado final: ${isNowFavorite ? '⭐ Favorito' : '☆ No favorito'}`);
+
+      return isNowFavorite;
+    } catch (err: any) {
+      console.error('❌ Error en toggleFavorite:', err);
+      throw new Error(`Error al ${willBeFavorite ? 'agregar' : 'quitar'} favorito: ${err.message || err.status}`);
+    }
   }
 
   /**
