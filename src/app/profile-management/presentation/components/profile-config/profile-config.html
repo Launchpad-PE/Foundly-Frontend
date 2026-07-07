@@ -1,20 +1,20 @@
 <div class="step-card">
   <div class="step-header">
-    <h1 class="main-title">Configura tu Perfil</h1>
+    <h1 class="main-title">{{ 'onboarding.configTitle' | translate }}</h1>
   </div>
 
   <div class="step-content">
     <div class="form-group">
-      <label for="username">Nombre de Perfil</label>
+      <label for="username">{{ 'onboarding.profileName' | translate }}</label>
       <input
         type="text"
         id="username"
         [(ngModel)]="username"
-        placeholder="Ingresa tu nombre de usuario"
+        [placeholder]="'onboarding.profileNamePlaceholder' | translate"
         class="text-input"
         (ngModelChange)="emitUpdate()"
       />
-      <p class="input-hint">Este nombre será visible para la comunidad.</p>
+      <p class="input-hint">{{ 'onboarding.profileNameHint' | translate }}</p>
     </div>
   </div>
 
@@ -24,7 +24,7 @@
       (click)="onSubmit()"
       [disabled]="!username.trim()"
     >
-      Guardar
+      {{ 'common.save' | translate }}
     </button>
   </div>
 </div>

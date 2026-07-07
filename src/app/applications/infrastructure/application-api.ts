@@ -59,4 +59,14 @@ export class ApplicationApi extends BaseApi {
   deleteApplication(id: string): Observable<void> {
     return this.applicationEndpoint.deleteApplication(id);
   }
+
+  /**
+   * Check if a user has already applied to a project
+   * @param projectId - The project ID (numeric string)
+   * @param userId - The user ID (numeric string)
+   * @returns Observable<boolean> - true if already applied
+   */
+  checkIfApplied(projectId: string, userId: string): Observable<boolean> {
+    return this.applicationEndpoint.checkIfApplied(projectId, userId);
+  }
 }

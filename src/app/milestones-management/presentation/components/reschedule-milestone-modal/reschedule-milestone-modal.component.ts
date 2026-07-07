@@ -3,10 +3,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MilestoneStore } from '../../../application/milestone-store';
 import { Milestone } from '../../../domain/entities/milestone.entity';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-reschedule-milestone-modal',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './reschedule-milestone-modal.component.html',
   styleUrl: './reschedule-milestone-modal.component.css',
 })

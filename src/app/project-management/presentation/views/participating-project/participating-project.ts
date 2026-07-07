@@ -13,13 +13,14 @@ import {
 } from '../../../../milestones-management/presentation/components/my-milestone-tasks/my-milestone-tasks.component';
 import { MilestoneStore } from '../../../../milestones-management/application/milestone-store';
 import { Milestone } from '../../../../milestones-management/domain/entities/milestone.entity';
+import { TranslatePipe } from '@ngx-translate/core';
 
 type ParticipatingTab = 'inicio' | 'tareas' | 'hitos';
 
 @Component({
   selector: 'app-participating-project',
   standalone: true,
-  imports: [CommonModule, MyTasksCardComponent, MyTasksListComponent, MyMilestoneTasksComponent],
+  imports: [CommonModule, MyTasksCardComponent, MyTasksListComponent, MyMilestoneTasksComponent, TranslatePipe],
   templateUrl: './participating-project.html',
   styleUrls: ['./participating-project.css']
 })

@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  platformProviderApiBaseUrl: 'http://localhost:8080',
+  platformProviderApiBaseUrl: 'https://foundly-backend-production-eeec.up.railway.app',
   platformProfileEndpointPath: '/api/v1/profiles',
   platformUserEndpointPath: '/api/v1/users',
   platformProjectEndpointPath: '/api/v1/projects',
@@ -8,6 +8,7 @@ export const environment = {
   platformTaskEndpointPath: '/api/v1/tasks',
   platformMilestoneEndpointPath: '/api/v1/milestones',
   platformMilestoneTaskEndpointPath: '/api/v1/milestone-tasks',
+  platformEnvironmental: '/api/v1/environmental',
   logoProviderApiBaseUrl: 'https://img.logo.dev.com',
   landingPageRedirection: 'https://launchpad-pe.github.io/Foundly-Landing-Page/',
 };

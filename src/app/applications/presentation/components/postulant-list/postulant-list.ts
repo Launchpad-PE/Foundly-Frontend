@@ -6,11 +6,12 @@ import { Router } from '@angular/router';
 import { ApplicationStore } from '../../../application/application.store';
 import { Application } from '../../../domain/entities/application.entity';
 import { ApplicationStatus } from '../../../domain/enum/application-status.enum';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-postulant-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './postulant-list.html',
   styleUrls: ['./postulant-list.css']
 })
@@ -36,6 +37,34 @@ export class PostulantListComponent implements OnInit, OnChanges {
     const apps = this.applications();
     if (!role) return apps;
     return apps.filter(a => a.roleId === role);
+  });
+
+  // ─── Estado del Modal ──────────────────────────────────────────
+  modalVisible = signal<boolean>(false);
+  modalAction = signal<'accept' | 'reject' | null>(null);
+  selectedApp = signal<Application | null>(null);
+
+  // Computed para el título y mensaje del modal
+  modalTitle = computed(() => {
+    const action = this.modalAction();
+    const app = this.selectedApp();
+    if (!app) return '';
+    return action === 'accept'
+      ? `Aceptar a ${app.fullName.getValue()}`
+      : `Rechazar a ${app.fullName.getValue()}`;
+  });
+
+  modalMessage = computed(() => {
+    const action = this.modalAction();
+    const app = this.selectedApp();
+    if (!app) return '';
+    return action === 'accept'
+      ? `¿Estás seguro de que quieres aceptar a <strong>${app.fullName.getValue()}</strong> para el puesto <strong>"${app.roleId}"</strong>?`
+      : `¿Estás seguro de que quieres rechazar a <strong>${app.fullName.getValue()}</strong>?`;
+  });
+
+  modalButtonText = computed(() => {
+    return this.modalAction() === 'accept' ? 'Aceptar' : 'Rechazar';
   });
 
   ngOnInit(): void {
@@ -93,22 +122,47 @@ export class PostulantListComponent implements OnInit, OnChanges {
     this.router.navigate(['/projects', this.projectId, 'postulantes', app.id]);
   }
 
-  async accept(app: Application): Promise<void> {
-    if (!confirm(`¿Aceptar a ${app.fullName.getValue()} para el puesto "${app.roleId}"?`)) return;
+  // ─── Acciones con Modal ──────────────────────────────────────────
+
+  accept(app: Application): void {
+    this.selectedApp.set(app);
+    this.modalAction.set('accept');
+    this.modalVisible.set(true);
+  }
+
+  reject(app: Application): void {
+    this.selectedApp.set(app);
+    this.modalAction.set('reject');
+    this.modalVisible.set(true);
+  }
+
+  // ─── Confirmar acción del modal ─────────────────────────────────
+
+  async confirmAction(): Promise<void> {
+    const app = this.selectedApp();
+    const action = this.modalAction();
+
+    if (!app || !action) return;
+
     try {
-      await this.applicationStore.acceptApplication(app.id);
+      if (action === 'accept') {
+        await this.applicationStore.acceptApplication(app.id);
+      } else {
+        await this.applicationStore.rejectApplication(app.id);
+      }
+      // Recargar la lista después de la acción
+      await this.applicationStore.loadApplicationsByProject(this.projectId);
+      this.closeModal();
     } catch (err: any) {
-      alert(err?.message ?? 'Error al aceptar al postulante');
+      alert(err?.message ?? 'Error al procesar la acción');
     }
   }
 
-  async reject(app: Application): Promise<void> {
-    if (!confirm(`¿Rechazar a ${app.fullName.getValue()}?`)) return;
-    try {
-      await this.applicationStore.rejectApplication(app.id);
-    } catch (err: any) {
-      alert(err?.message ?? 'Error al rechazar al postulante');
-    }
-  }
+  // ─── Cerrar modal ────────────────────────────────────────────────
 
+  closeModal(): void {
+    this.modalVisible.set(false);
+    this.modalAction.set(null);
+    this.selectedApp.set(null);
+  }
 }

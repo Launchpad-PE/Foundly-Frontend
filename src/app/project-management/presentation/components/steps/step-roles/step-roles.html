@@ -1,6 +1,6 @@
 <!-- step-roles.html -->
 <div class="step-container">
-  <h2>Definir Roles</h2>
+  <h2>{{ 'project.step.roles.title' | translate }}</h2>
 
   <!-- Roles List -->
   <div class="roles-list">
@@ -28,37 +28,37 @@
   <!-- Add Role Button -->
   @if (!showRoleForm) {
     <button class="btn-add-role" (click)="showRoleForm = true">
-      + Añadir Rol
+      {{ 'project.step.roles.addBtn' | translate }}
     </button>
   }
 
   <!-- Add Role Form -->
   @if (showRoleForm) {
     <div class="role-form">
-      <h3>Nuevo Rol</h3>
+      <h3>{{ 'project.step.roles.newTitle' | translate }}</h3>
 
       <div class="form-group">
-        <label>Nombre del Rol *</label>
+        <label>{{ 'project.step.roles.nameLabel' | translate }}</label>
         <input
           type="text"
           [(ngModel)]="newRole.name"
-          placeholder="Ej: Desarrollador Frontend"
+          [placeholder]="'project.step.roles.namePlaceholder' | translate"
           class="form-control"
         />
       </div>
 
       <div class="form-group">
-        <label>Título de la Tarjeta *</label>
+        <label>{{ 'project.step.roles.cardTitle' | translate }}</label>
         <input
           type="text"
           [(ngModel)]="newRole.cardTitle"
-          placeholder="Ej: Responsabilidades del Rol"
+          [placeholder]="'project.step.roles.cardTitlePlaceholder' | translate"
           class="form-control"
         />
       </div>
 
       <div class="form-group">
-        <label>Items del Rol</label>
+        <label>{{ 'project.step.roles.items' | translate }}</label>
         <div class="items-list">
           @for (item of newRole.items; track $index; let i = $index) {
             <div class="item-tag">
@@ -72,23 +72,23 @@
             type="text"
             [(ngModel)]="newRole.newItem"
             (keyup.enter)="addRoleItem(newRole)"
-            placeholder="Ej: Experiencia en Angular"
+            [placeholder]="'project.step.roles.itemPlaceholder' | translate"
             class="item-input"
           />
-          <button type="button" class="btn-add-item" (click)="addRoleItem(newRole)">+ Añadir</button>
+          <button type="button" class="btn-add-item" (click)="addRoleItem(newRole)">{{ 'project.step.roles.addBtn' | translate }}</button>
         </div>
       </div>
 
       <div class="role-form-actions">
-        <button type="button" class="btn-cancel" (click)="cancelAddRole()">Cancelar</button>
-        <button type="button" class="btn-save" (click)="saveRole()">Guardar Rol</button>
+        <button type="button" class="btn-cancel" (click)="cancelAddRole()">{{ 'common.cancel' | translate }}</button>
+        <button type="button" class="btn-save" (click)="saveRole()">{{ 'project.step.roles.save' | translate }}</button>
       </div>
     </div>
   }
 
   @if (formData.roles.length === 0 && !showRoleForm) {
     <div class="empty-roles">
-      <p>No hay roles definidos. Haz clic en "Añadir Rol" para comenzar.</p>
+      <p>{{ 'project.step.roles.empty' | translate }}</p>
     </div>
   }
 </div>

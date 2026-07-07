@@ -8,13 +8,13 @@
         class="tab-btn"
         [class.active]="activeTab === 'my-projects'"
         (click)="setActiveTab('my-projects')">
-        Mis Proyectos
+        {{ 'projects.myProjects' | translate }}
       </button>
       <button
         class="tab-btn"
         [class.active]="activeTab === 'participated'"
         (click)="setActiveTab('participated')">
-        Participados
+        {{ 'projects.participated' | translate }}
       </button>
     </div>
 
@@ -24,37 +24,33 @@
         type="text"
         [(ngModel)]="searchTerm"
         (keyup.enter)="onSearch()"
-        placeholder="Buscar por nombre, palabra clave o habilidad..."
+        [placeholder]="'projects.searchPlaceholder' | translate"
         class="search-input"
       />
       <button class="btn-search" (click)="onSearch()">
         <span class="search-icon">🔍</span>
-        Buscar
+        {{ 'common.search' | translate }}
       </button>
     </div>
 
     <!-- Loading State -->
     <div *ngIf="loading()" class="loading-state">
       <div class="spinner"></div>
-      <p>Cargando proyectos...</p>
+      <p>{{ 'projects.loading' | translate }}</p>
     </div>
 
     <!-- Empty State -->
     <div *ngIf="!loading() && getCurrentProjects().length === 0" class="empty-state">
       <div class="empty-icon">📁</div>
-      <h3 *ngIf="activeTab === 'my-projects'">No tienes proyectos creados</h3>
-      <h3 *ngIf="activeTab === 'participated'">No has participado en proyectos</h3>
-      <p *ngIf="activeTab === 'my-projects'">
-        Crea tu primer proyecto y comienza a colaborar
-      </p>
-      <p *ngIf="activeTab === 'participated'">
-        Explora proyectos y postula para comenzar a colaborar
-      </p>
+      <h3 *ngIf="activeTab === 'my-projects'">{{ 'projects.noMyProjects' | translate }}</h3>
+      <h3 *ngIf="activeTab === 'participated'">{{ 'projects.noParticipated' | translate }}</h3>
+      <p *ngIf="activeTab === 'my-projects'">{{ 'projects.noMyProjectsHint' | translate }}</p>
+      <p *ngIf="activeTab === 'participated'">{{ 'projects.noParticipatedHint' | translate }}</p>
       <button *ngIf="activeTab === 'my-projects'" class="btn-primary" (click)="createNewProject()">
-        + Crear Proyecto
+        {{ 'projects.createBtn' | translate }}
       </button>
       <button *ngIf="activeTab === 'participated'" class="btn-primary" (click)="goToHome()">
-        Explorar Proyectos
+        {{ 'projects.explore' | translate }}
       </button>
     </div>
 
@@ -74,7 +70,7 @@
     *ngIf="activeTab === 'my-projects'"
     class="fab"
     (click)="createNewProject()"
-    title="Crear nuevo proyecto">
+    [title]="'projects.createBtn' | translate">
     <span class="fab-icon">+</span>
   </button>
 </div>

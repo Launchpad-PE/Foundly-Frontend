@@ -4,8 +4,8 @@
   <!-- Header Banner -->
   <div class="profile-banner">
     <div class="banner-text">
-      <h1>Mi Perfil</h1>
-      <p>Gestiona tu información y proyectos</p>
+      <h1>{{ 'profile.myProfile' | translate }}</h1>
+      <p>{{ 'profile.subtitle' | translate }}</p>
     </div>
     <div class="banner-actions">
       <button class="btn-edit" *ngIf="!editMode" (click)="enterEditMode()" [disabled]="!profile()">
@@ -13,19 +13,19 @@
           <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
           <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
         </svg>
-        Editar perfil
+        {{ 'profile.editProfile' | translate }}
       </button>
       <button class="btn-edit done" *ngIf="editMode" (click)="cancelEditMode()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="edit-icon">
           <path d="M5 13l4 4L19 7"/>
         </svg>
-        Listo
+        {{ 'common.done' | translate }}
       </button>
       <button class="btn-logout" (click)="logout()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="logout-icon">
           <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1"/>
         </svg>
-        Cerrar Sesión
+        {{ 'profile.logout' | translate }}
       </button>
     </div>
   </div>
@@ -60,7 +60,7 @@
         </div>
 
         <button class="avatar-remove" *ngIf="editMode && profile()?.avatar" (click)="removeAvatar()">
-          Quitar foto
+          {{ 'profile.removePhoto' | translate }}
         </button>
 
         <!-- Username / Role -->
@@ -71,18 +71,16 @@
 
         <ng-container *ngIf="editMode">
           <div class="edit-field">
-            <label>Nombre de usuario</label>
+            <label>{{ 'profile.username' | translate }}</label>
             <input type="text" [(ngModel)]="editUsername" maxlength="30" placeholder="Tu nombre de usuario"/>
           </div>
           <div class="edit-field">
-            <label>Rol</label>
+            <label>{{ 'profile.role' | translate }}</label>
             <input type="text" [(ngModel)]="editRole" maxlength="40" placeholder="Ej: Desarrollador Frontend"/>
           </div>
         </ng-container>
       </div>
 
-      <button class="btn-outline">See CV</button>
-      <button class="btn-primary-outline">Portfolio</button>
     </aside>
 
     <!-- Right Column -->
@@ -92,44 +90,44 @@
       <div class="stats-row">
         <div class="stat-card">
           <span class="stat-value">0</span>
-          <span class="stat-label">Points</span>
+          <span class="stat-label">{{ 'profile.points' | translate }}</span>
         </div>
         <div class="stat-card">
           <span class="stat-value">{{ projectCount }}</span>
-          <span class="stat-label">Projects</span>
+          <span class="stat-label">{{ 'profile.projects' | translate }}</span>
         </div>
       </div>
 
       <!-- Personal Description -->
       <div class="info-card">
-        <h3 class="info-title">Personal Description</h3>
-        <p class="info-body" *ngIf="!editMode">{{ profile()?.bio || 'Sin descripción' }}</p>
+        <h3 class="info-title">{{ 'profile.bio' | translate }}</h3>
+        <p class="info-body" *ngIf="!editMode">{{ profile()?.bio || ('common.noDescription' | translate) }}</p>
         <textarea *ngIf="editMode" class="edit-textarea" [(ngModel)]="editBio" rows="3"
-                  maxlength="280" placeholder="Cuéntanos sobre ti..."></textarea>
+                  maxlength="280" [placeholder]="'profile.bioPlaceholder' | translate"></textarea>
       </div>
 
       <!-- Skills -->
       <div class="info-card">
-        <h3 class="info-title">Skills</h3>
+        <h3 class="info-title">{{ 'profile.skills' | translate }}</h3>
         <div class="skills-list">
           <span *ngFor="let skill of profile()?.skills" class="skill-chip" [class.removable]="editMode">
             {{ skill }}
             <button *ngIf="editMode" class="chip-remove" (click)="removeSkill(skill)" aria-label="Quitar">✕</button>
           </span>
-          <span *ngIf="!profile()?.skills?.length && !editMode" class="no-data">Sin habilidades registradas</span>
+          <span *ngIf="!profile()?.skills?.length && !editMode" class="no-data">{{ 'profile.noSkills' | translate }}</span>
         </div>
 
         <div class="skill-add-row" *ngIf="editMode">
-          <input type="text" [(ngModel)]="newSkill" placeholder="Agregar habilidad"
+          <input type="text" [(ngModel)]="newSkill" [placeholder]="'profile.addSkillPlaceholder' | translate"
                  (keyup.enter)="addSkill()" maxlength="30"/>
-          <button class="btn-add-sm" (click)="addSkill()" [disabled]="!newSkill.trim() || saving">+ Agregar</button>
+          <button class="btn-add-sm" (click)="addSkill()" [disabled]="!newSkill.trim() || saving">{{ 'common.add' | translate }}</button>
         </div>
       </div>
 
       <!-- Experiences Accordion -->
       <div class="info-card accordion">
         <button class="accordion-header" (click)="toggleExperiences()">
-          <span>Experiences</span>
+          <span>{{ 'profile.experiences' | translate }}</span>
           <svg [class.rotated]="showExperiences" viewBox="0 0 24 24" fill="currentColor" class="chevron-icon">
             <path d="M7 10l5 5 5-5z"/>
           </svg>
@@ -142,23 +140,23 @@
             <div class="exp-period">{{ exp.period }}</div>
             <p *ngIf="exp.description" class="exp-desc">{{ exp.description }}</p>
           </div>
-          <p *ngIf="!profile()?.experiences?.length" class="no-data">Sin experiencias registradas</p>
+          <p *ngIf="!profile()?.experiences?.length" class="no-data">{{ 'profile.noExperiences' | translate }}</p>
 
           <!-- Agregar experiencia -->
           <ng-container *ngIf="editMode">
-            <button class="btn-add-exp" *ngIf="!showExpForm" (click)="openExpForm()">+ Agregar experiencia</button>
+            <button class="btn-add-exp" *ngIf="!showExpForm" (click)="openExpForm()">{{ 'profile.addExperience' | translate }}</button>
 
             <div class="exp-form" *ngIf="showExpForm">
               <div class="edit-field">
-                <label>Cargo / Puesto *</label>
+                <label>{{ 'profile.expTitle' | translate }}</label>
                 <input type="text" [(ngModel)]="expDraft.title" placeholder="Ej: Desarrollador Backend"/>
               </div>
               <div class="edit-field">
-                <label>Empresa / Institución *</label>
+                <label>{{ 'profile.expCompany' | translate }}</label>
                 <input type="text" [(ngModel)]="expDraft.company" placeholder="Ej: Acme Corp"/>
               </div>
               <div class="edit-field">
-                <label>Periodo</label>
+                <label>{{ 'profile.expPeriod' | translate }}</label>
                 <input type="text" [(ngModel)]="expDraft.period" placeholder="Ej: Ene 2023 - Presente"/>
               </div>
               <div class="edit-field">
@@ -167,11 +165,11 @@
               </div>
               <label class="checkbox-row">
                 <input type="checkbox" [(ngModel)]="expDraft.current"/>
-                Trabajo actual
+                {{ 'profile.currentJob' | translate }}
               </label>
               <div class="exp-form-actions">
-                <button class="btn-ghost-sm" (click)="cancelExpForm()">Cancelar</button>
-                <button class="btn-add-sm" (click)="saveExperience()" [disabled]="saving">Guardar</button>
+                <button class="btn-ghost-sm" (click)="cancelExpForm()">{{ 'common.cancel' | translate }}</button>
+                <button class="btn-add-sm" (click)="saveExperience()" [disabled]="saving">{{ 'common.save' | translate }}</button>
               </div>
             </div>
           </ng-container>
@@ -180,9 +178,9 @@
 
       <!-- Guardar cambios básicos -->
       <div class="edit-save-bar" *ngIf="editMode">
-        <button class="btn-ghost-sm" (click)="cancelEditMode()">Cancelar</button>
+        <button class="btn-ghost-sm" (click)="cancelEditMode()">{{ 'common.cancel' | translate }}</button>
         <button class="btn-save" (click)="saveBasicInfo()" [disabled]="saving">
-          {{ saving ? 'Guardando...' : 'Guardar cambios' }}
+          {{ saving ? ('common.saving' | translate) : ('common.save' | translate) }}
         </button>
       </div>
 
@@ -192,15 +190,15 @@
   <!-- Bottom Tabs: Projects / Comments -->
   <div class="bottom-section" *ngIf="!loading()">
     <div class="section-tabs">
-      <button class="section-tab" [class.active]="activeSection === 'projects'" (click)="activeSection = 'projects'">Projects</button>
-      <button class="section-tab" [class.active]="activeSection === 'comments'" (click)="activeSection = 'comments'">Comments</button>
+      <button class="section-tab" [class.active]="activeSection === 'projects'" (click)="activeSection = 'projects'">{{ 'profile.tabProjects' | translate }}</button>
+      <button class="section-tab" [class.active]="activeSection === 'comments'" (click)="activeSection = 'comments'">{{ 'profile.tabComments' | translate }}</button>
     </div>
 
     <!-- Projects Sub-section -->
     <div *ngIf="activeSection === 'projects'">
       <div class="sub-tabs">
-        <button class="sub-tab" [class.active]="activeProjectTab === 'mine'" (click)="setProjectTab('mine')">Mis Proyectos</button>
-        <button class="sub-tab" [class.active]="activeProjectTab === 'favorites'" (click)="setProjectTab('favorites')">Favoritos</button>
+        <button class="sub-tab" [class.active]="activeProjectTab === 'mine'" (click)="setProjectTab('mine')">{{ 'profile.myProjects' | translate }}</button>
+        <button class="sub-tab" [class.active]="activeProjectTab === 'favorites'" (click)="setProjectTab('favorites')">{{ 'profile.favorites' | translate }}</button>
       </div>
 
       <div class="projects-list-card">
@@ -215,7 +213,7 @@
               <path d="M9 18l6-6-6-6"/>
             </svg>
           </div>
-          <div *ngIf="myProjects().length === 0" class="no-data center">No tienes proyectos creados</div>
+          <div *ngIf="myProjects().length === 0" class="no-data center">{{ 'profile.noProjects' | translate }}</div>
         </ng-container>
 
         <ng-container *ngIf="activeProjectTab === 'favorites'">
@@ -231,7 +229,7 @@
               </svg>
             </button>
           </div>
-          <div *ngIf="favoriteProjects().length === 0" class="no-data center">No tienes proyectos favoritos</div>
+          <div *ngIf="favoriteProjects().length === 0" class="no-data center">{{ 'profile.noFavorites' | translate }}</div>
         </ng-container>
       </div>
     </div>
@@ -239,7 +237,14 @@
     <!-- Comments Sub-section -->
     <div *ngIf="activeSection === 'comments'">
       <div class="projects-list-card">
-        <p class="no-data center">No hay comentarios aún</p>
+        <div *ngIf="comments.length === 0" class="no-data center">{{ 'profile.noComments' | translate }}</div>
+        <div *ngFor="let comment of comments" class="comment-row">
+          <div class="comment-row-header">
+            <strong class="comment-author">{{ comment.authorName }}</strong>
+            <span class="comment-date">{{ formatDate(comment.createdAt) }}</span>
+          </div>
+          <p class="comment-content">{{ comment.content }}</p>
+        </div>
       </div>
     </div>
   </div>
@@ -249,6 +254,6 @@
 <ng-template #loadingTpl>
   <div class="loading-state">
     <div class="spinner"></div>
-    <p>Cargando perfil...</p>
+    <p>{{ 'profile.loading' | translate }}</p>
   </div>
 </ng-template>

@@ -1,22 +1,22 @@
 <div class="step-container">
-  <h2>Habilidades y Duración</h2>
+  <h2>{{ 'project.step.skills.title' | translate }}</h2>
 
   <!-- Nivel Académico -->
   <div class="form-group">
-    <label for="academicLevel">Nivel Académico (opcional)</label>
+    <label for="academicLevel">{{ 'project.step.skills.academic' | translate }}</label>
     <select
       id="academicLevel"
       [(ngModel)]="formData.academicLevel"
       class="form-control"
     >
-      <option [ngValue]="null">Selecciona un nivel (opcional)</option>
+      <option [ngValue]="null">{{ 'project.step.skills.academicPlaceholder' | translate }}</option>
       <option *ngFor="let level of academicLevels" [value]="level">{{ level }}</option>
     </select>
   </div>
 
   <!-- Beneficios -->
   <div class="form-group">
-    <label>Beneficios</label>
+    <label>{{ 'project.step.skills.benefits' | translate }}</label>
     <div class="tags-input">
       <div class="tags-list">
         <span *ngFor="let benefit of formData.benefits" class="tag">
@@ -29,17 +29,17 @@
           type="text"
           [(ngModel)]="newBenefit"
           (keyup.enter)="addBenefit()"
-          placeholder="Ej: Certificación, Experiencia laboral..."
+          [placeholder]="'project.step.skills.benefitsPlaceholder' | translate"
           class="tag-input"
         />
-        <button type="button" class="btn-add-tag" (click)="addBenefit()">Añadir</button>
+        <button type="button" class="btn-add-tag" (click)="addBenefit()">{{ 'common.add' | translate }}</button>
       </div>
     </div>
   </div>
 
   <!-- Habilidades Requeridas -->
   <div class="form-group">
-    <label>Habilidades Requeridas</label>
+    <label>{{ 'project.step.skills.required' | translate }}</label>
     <div class="tags-input">
       <div class="tags-list">
         <span *ngFor="let skill of formData.requiredSkills" class="tag skill-tag">
@@ -52,17 +52,17 @@
           type="text"
           [(ngModel)]="newSkill"
           (keyup.enter)="addSkill()"
-          placeholder="Ej: JavaScript, UX Design, Project Management..."
+          [placeholder]="'project.step.skills.requiredPlaceholder' | translate"
           class="tag-input"
         />
-        <button type="button" class="btn-add-tag" (click)="addSkill()">Añadir</button>
+        <button type="button" class="btn-add-tag" (click)="addSkill()">{{ 'common.add' | translate }}</button>
       </div>
     </div>
   </div>
 
   <!-- Duración -->
   <div class="form-group">
-    <label>Duración del Proyecto</label>
+    <label>{{ 'project.step.skills.duration' | translate }}</label>
     <div class="duration-group">
       <input
         type="number"

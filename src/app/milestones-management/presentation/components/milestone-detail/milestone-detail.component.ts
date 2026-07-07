@@ -4,11 +4,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MilestoneStore } from '../../../application/milestone-store';
 import { MilestoneTasksComponent } from '../milestone-tasks/milestone-tasks.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-milestone-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule, MilestoneTasksComponent],
+  imports: [CommonModule, FormsModule, MilestoneTasksComponent, TranslatePipe],
   templateUrl: './milestone-detail.component.html',
   styleUrls: ['./milestone-detail.component.css']
 })

@@ -3,7 +3,7 @@ import { environment } from '../../../environments/environment';
 import { Project } from '../domain/entities/project.entity';
 import { ProjectResource, ProjectResponse, ProjectsResponse } from './project-response';
 import { ProjectAssembler } from './project-assembler';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { ProjectStatus } from '../domain/enum/project-status.enum';
 import { HttpClient } from '@angular/common/http';
@@ -27,9 +27,23 @@ export class ProjectApiEndpoint extends BaseApiEndpoint<Project, ProjectResource
   }
 
   /**
-   * Get projects by author ID
+   * Get current user's projects (uses token to get user)
+   */
+  getMyProjects(): Observable<ProjectsResponse> {
+    console.log(`🔍 API Request: ${this.projectsUrl}/me`);
+    return this.http.get<ProjectResource[]>(`${this.projectsUrl}/me`).pipe(
+      map(projects => {
+        console.log(`📦 API Response: ${projects.length} projects from /me`);
+        return ({ projects }) as ProjectsResponse;
+      })
+    );
+  }
+
+  /**
+   * Get projects by author ID (legacy, use getMyProjects instead)
    */
   getByAuthorId(authorId: string): Observable<ProjectsResponse> {
+    console.log(`🔍 API Request (legacy): ${this.projectsUrl}?authorId=${authorId}`);
     return this.http.get<ProjectResource[]>(`${this.projectsUrl}?authorId=${authorId}`).pipe(
       map(projects => ({ projects }) as ProjectsResponse)
     );
@@ -58,8 +72,20 @@ export class ProjectApiEndpoint extends BaseApiEndpoint<Project, ProjectResource
    */
   createProject(project: Project): Observable<ProjectResponse> {
     const resource = this.assembler.toResourceFromEntity(project);
+
+    console.log('📡 ProjectApiEndpoint.createProject - URL:', this.projectsUrl);
+    console.log('📡 ProjectApiEndpoint.createProject - Token existe:', !!localStorage.getItem('authToken'));
+    console.log('📡 ProjectApiEndpoint.createProject - Payload:', resource);
+
     return this.http.post<ProjectResource>(this.projectsUrl, resource).pipe(
-      map(created => ({ project: created }) as ProjectResponse)
+      map(created => {
+        console.log('📡 ProjectApiEndpoint.createProject - Respuesta:', created);
+        return ({ project: created }) as ProjectResponse;
+      }),
+      catchError(error => {
+        console.error('📡 ProjectApiEndpoint.createProject - Error:', error);
+        return throwError(() => error);
+      })
     );
   }
 
@@ -122,7 +148,9 @@ export class ProjectApiEndpoint extends BaseApiEndpoint<Project, ProjectResource
     return this.patchProject(projectId, { status: ProjectStatus.PUBLISHED });
   }
 
-  // infrastructure/project-api-endpoint.ts
+  /**
+   * Search projects
+   */
   searchProjects(searchTerm: string): Observable<ProjectsResponse> {
     return this.http.get<ProjectResource[]>(`${this.projectsUrl}?q=${searchTerm}`).pipe(
       map(projects => ({ projects }) as ProjectsResponse)

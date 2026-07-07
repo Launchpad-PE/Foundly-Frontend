@@ -8,11 +8,12 @@ import { UserStore } from '../../../../iam/application/user.store';
 import { ProfileApi } from '../../../../profile-management/infrastructure/profile-api';
 import { Profile } from '../../../../profile-management/domain/entities/profile.entity';
 import { firstValueFrom } from 'rxjs';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-collaborators',
   standalone: true,
-  imports: [CommonModule, FormsModule, CollaboratorList],
+  imports: [CommonModule, FormsModule, CollaboratorList, TranslatePipe],
   templateUrl: './collaborators.component.html',
   styleUrls: ['./collaborators.component.css'],
 })

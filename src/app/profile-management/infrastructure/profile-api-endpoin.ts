@@ -1,10 +1,11 @@
+// profile-management/infrastructure/profile-api-endpoin.ts
 import { BaseApiEndpoint } from '../../shared/infrastructure/base-api-endpoint';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Profile } from '../domain/entities/profile.entity';
 import { ProfileResource, ProfileResponse, ProfilesResponse } from './profile-response';
 import { ProfileAssembler } from './profile-assembler';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
 export class ProfileApiEndpoint extends BaseApiEndpoint<
@@ -37,9 +38,23 @@ export class ProfileApiEndpoint extends BaseApiEndpoint<
    * Get profile by user ID
    */
   getByUserId(userId: string): Observable<ProfileResponse> {
+    console.log('📡 ProfileApiEndpoint: Solicitando perfil para userId:', userId);
     return this.http
       .get<ProfileResource>(`${this.profilesUrl}/user/${userId}`)
-      .pipe(map((profile) => ({ profile }) as ProfileResponse));
+      .pipe(
+        map((profile) => {
+          console.log('📡 ProfileApiEndpoint: Perfil recibido:', profile);
+          if (!profile) {
+            console.warn('📡 ProfileApiEndpoint: Perfil vacío');
+            throw new Error('Perfil no encontrado');
+          }
+          return { profile } as ProfileResponse;
+        }),
+        catchError((error) => {
+          console.error('📡 ProfileApiEndpoint - Error:', error);
+          return throwError(() => error);
+        })
+      );
   }
 
   /**
@@ -79,7 +94,7 @@ export class ProfileApiEndpoint extends BaseApiEndpoint<
   }
 
   /**
-   * Add skill to profile -  CORREGIDO con switchMap
+   * Add skill to profile
    */
   addSkill(profileId: string, skill: string): Observable<ProfileResponse> {
     return this.http.get<ProfileResource>(`${this.profilesUrl}/${profileId}`).pipe(
@@ -92,7 +107,7 @@ export class ProfileApiEndpoint extends BaseApiEndpoint<
   }
 
   /**
-   * Remove skill from profile -  CORREGIDO con switchMap
+   * Remove skill from profile
    */
   removeSkill(profileId: string, skill: string): Observable<ProfileResponse> {
     return this.http.get<ProfileResource>(`${this.profilesUrl}/${profileId}`).pipe(
@@ -105,7 +120,7 @@ export class ProfileApiEndpoint extends BaseApiEndpoint<
   }
 
   /**
-   * Add experience to profile -  CORREGIDO con switchMap
+   * Add experience to profile
    */
   addExperience(profileId: string, experience: any): Observable<ProfileResponse> {
     return this.http.get<ProfileResource>(`${this.profilesUrl}/${profileId}`).pipe(
@@ -120,7 +135,7 @@ export class ProfileApiEndpoint extends BaseApiEndpoint<
   }
 
   /**
-   * Remove experience from profile -  CORREGIDO con switchMap
+   * Remove experience from profile
    */
   removeExperience(profileId: string, experienceId: string): Observable<ProfileResponse> {
     return this.http.get<ProfileResource>(`${this.profilesUrl}/${profileId}`).pipe(
@@ -144,7 +159,7 @@ export class ProfileApiEndpoint extends BaseApiEndpoint<
   }
 
   /**
-   *  NUEVO: Get all profiles
+   * Get all profiles
    */
   getAllProfiles(): Observable<ProfilesResponse> {
     return this.http
@@ -153,35 +168,59 @@ export class ProfileApiEndpoint extends BaseApiEndpoint<
   }
 
   /**
-   * Add project to favorites (GET → PATCH para evitar pisar otros campos)
+   * Add project to favorites
    */
   addFavorite(profileId: string, projectId: string): Observable<ProfileResponse> {
     const id = projectId.toString();
+    console.log(`📡 [Endpoint] addFavorite - profileId: ${profileId}, projectId: ${id}`);
+
     return this.http.get<ProfileResource>(`${this.profilesUrl}/${profileId}`).pipe(
       switchMap((profile) => {
+        console.log('📡 [Endpoint] Perfil obtenido:', profile);
         const current = profile.favoriteProjectIds || [];
         const favoriteProjectIds = current.includes(id) ? current : [...current, id];
+        console.log('📡 [Endpoint] Nuevos favoritos:', favoriteProjectIds);
+
         return this.http.patch<ProfileResource>(`${this.profilesUrl}/${profileId}`, {
           favoriteProjectIds,
         });
       }),
-      map((response) => ({ profile: response }) as ProfileResponse),
+      map((response) => {
+        console.log('📡 [Endpoint] Response PATCH:', response);
+        return { profile: response } as ProfileResponse;
+      }),
+      catchError((error) => {
+        console.error('❌ [Endpoint] Error en addFavorite:', error);
+        return throwError(() => error);
+      })
     );
   }
 
   /**
-   * Remove project from favorites (GET → PATCH)
+   * Remove project from favorites
    */
   removeFavorite(profileId: string, projectId: string): Observable<ProfileResponse> {
     const id = projectId.toString();
+    console.log(`📡 [Endpoint] removeFavorite - profileId: ${profileId}, projectId: ${id}`);
+
     return this.http.get<ProfileResource>(`${this.profilesUrl}/${profileId}`).pipe(
       switchMap((profile) => {
+        console.log('📡 [Endpoint] Perfil obtenido:', profile);
         const favoriteProjectIds = (profile.favoriteProjectIds || []).filter((f) => f !== id);
+        console.log('📡 [Endpoint] Favoritos después de quitar:', favoriteProjectIds);
+
         return this.http.patch<ProfileResource>(`${this.profilesUrl}/${profileId}`, {
           favoriteProjectIds,
         });
       }),
-      map((response) => ({ profile: response }) as ProfileResponse),
+      map((response) => {
+        console.log('📡 [Endpoint] Response PATCH:', response);
+        return { profile: response } as ProfileResponse;
+      }),
+      catchError((error) => {
+        console.error('❌ [Endpoint] Error en removeFavorite:', error);
+        return throwError(() => error);
+      })
     );
   }
 }

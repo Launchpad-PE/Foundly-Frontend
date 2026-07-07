@@ -5,11 +5,12 @@ import { MilestoneTask } from '../../../domain/entities/milestone-task.entity';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-my-milestone-tasks',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './my-milestone-tasks.component.html',
   styleUrl: './my-milestone-tasks.component.css',
 })
@@ -33,6 +34,8 @@ export class MyMilestoneTasksComponent implements OnInit {
 
     for (const milestone of this.allMilestones()) {
       for (const task of milestone.tasks) {
+        console.log('assigneeId del task:', task.assigneeId.toString());
+        console.log('assigneeId del input:', this.assigneeId());
         if (task.assigneeId.toString() === this.assigneeId()) {
           tasks.push({
             task,
@@ -64,6 +67,7 @@ export class MyMilestoneTasksComponent implements OnInit {
 
   async loadData(): Promise<void> {
     await this.milestoneStore.loadMilestonesByProject(this.projectId());
+    console.log('Milestones cargados:', this.allMilestones());
   }
 
   async toggleTaskStatus(task: MilestoneTask): Promise<void> {

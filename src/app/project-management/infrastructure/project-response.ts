@@ -13,20 +13,27 @@ export interface RoleResource extends BaseResource {
   };
 }
 
+// Interfaz para el objeto duration que devuelve el backend en las respuestas GET
+export interface DurationResource {
+  amount: number;
+  type: DurationType;
+}
+
+// infrastructure/project-response.ts
 export interface ProjectResource extends BaseResource {
   id: string;
   name: string;
   area: string;
   tags: string[];
   summary: string;
-  environmentalImpact: EnvironmentalMetric[] | null;
+  environmentalImpact?: EnvironmentalMetric[] | null;
+  environmentalMetrics?: EnvironmentalMetric[] | null;  // ← Agregar este campo
   academicLevel: string | null;
   benefits: string[];
   requiredSkills: string[];
-  duration: {
-    amount: number;
-    type: DurationType;
-  };
+  durationAmount?: number;
+  durationType?: DurationType;
+  duration?: DurationResource;
   roles: RoleResource[];
   status: ProjectStatus;
   createdAt: string;

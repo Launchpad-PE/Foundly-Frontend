@@ -5,7 +5,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ProjectStore } from '../../../application/project-store';
 import { Project } from '../../../domain/entities/project.entity';
 import { EnvironmentalMetric } from '../../../domain/value-objects/environmental-impact.vo';
-import { IotDashboardComponent } from '../../../../environmental-monitoring/presentation/views/iot-dashboard/iot-dashboard';
+import { IotDashboardComponent } from '../../../../environmental-monitoring/presentation/views/iot-dashboard/iot-dashboard.component';
 import { PostulantListComponent } from '../../../../applications/presentation/components/postulant-list/postulant-list';
 import { TaskListComponent, AssigneeOption } from '../../../../task-management/presentation/components/task-list/task-list';
 import { ApplicationStore } from '../../../../applications/application/application.store';
@@ -20,6 +20,7 @@ import {
 import { UserStore } from '../../../../iam/application/user.store';
 import { Milestone } from '../../../../milestones-management/domain/entities/milestone.entity';
 import { MilestoneStore } from '../../../../milestones-management/application/milestone-store';
+import { TranslatePipe } from '@ngx-translate/core';
 
 type Tab = 'inicio' | 'tareas' | 'iot' | 'hitos' | 'postulantes';
 
@@ -34,7 +35,8 @@ type Tab = 'inicio' | 'tareas' | 'iot' | 'hitos' | 'postulantes';
     PostulantListComponent,
     TaskListComponent,
     MilestoneListComponent,
-    MilestoneDetailComponent
+    MilestoneDetailComponent,
+    TranslatePipe
   ],
   templateUrl: './project-detail.html',
   styleUrls: ['./project-detail.css']
@@ -63,15 +65,21 @@ export class ProjectDetailComponent implements OnInit {
   }
 
   get hasIot(): boolean {
-    return (this.project()?.environmentalImpact?.getMetrics().length ?? 0) > 0;
+    const metrics = this.project()?.environmentalImpact?.getMetrics() ?? [];
+    console.log('🔍 [DETAIL] hasIot check - metrics:', metrics, 'length:', metrics.length);
+    return metrics.length > 0;
   }
 
   get iotMetrics(): EnvironmentalMetric[] {
-    return this.project()?.environmentalImpact?.getMetrics() ?? [];
+    const metrics = this.project()?.environmentalImpact?.getMetrics() ?? [];
+    console.log('🔍 [DETAIL] iotMetrics:', metrics);
+    return metrics;
   }
 
   get projectId(): string {
-    return this.project()?.id ?? '';
+    const id = this.project()?.id ?? '';
+    console.log('🔍 [DETAIL] projectId (UUID):', id);
+    return id;
   }
 
   get projectRoleNames(): string[] {
@@ -161,8 +169,15 @@ export class ProjectDetailComponent implements OnInit {
       this.router.navigate(['/projects']);
       return;
     }
+
     const p = await this.projectStore.loadProject(id);
+    console.log('🔍 [DETAIL] Proyecto cargado:', p);
+    console.log('🔍 [DETAIL] environmentalImpact:', p?.environmentalImpact);
+    console.log('🔍 [DETAIL] hasIot:', this.hasIot);
+    console.log('🔍 [DETAIL] iotMetrics:', this.iotMetrics);
+
     this.project.set(p);
+
     if (p) {
       this.applicationStore.loadApplicationsByProject(p.id);
       this.taskStore.loadTasksByProject(p.id);
@@ -171,12 +186,28 @@ export class ProjectDetailComponent implements OnInit {
     this.loading.set(false);
   }
 
+
   setTab(tab: Tab): void {
+    console.log('🔍 [DETAIL] Cambiando a tab:', tab);
     this.activeTab.set(tab);
 
-    // 👈 Recargar datos cuando se vuelve a la pestaña Inicio
+    // Recargar datos cuando se vuelve a la pestaña Inicio
     if (tab === 'inicio' && this.projectId) {
       this.refreshProjectData();
+    }
+
+    // 👈 FORZAR RECARGA CUANDO SE ACTIVA IOT
+    if (tab === 'iot' && this.projectId) {
+      console.log('🔍 [DETAIL] Tab IoT activada, forzando refresh');
+      setTimeout(() => {
+        const iotElement = document.querySelector('app-iot-dashboard');
+        if (iotElement && (iotElement as any).refresh) {
+          console.log('🔍 [DETAIL] Llamando a refresh del componente IoT');
+          (iotElement as any).refresh();
+        } else {
+          console.warn('🔍 [DETAIL] Componente IoT no encontrado o no tiene método refresh');
+        }
+      }, 100);
     }
 
     if (tab !== 'hitos') {

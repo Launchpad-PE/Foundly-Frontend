@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { EnvironmentalMetric } from '../../../domain/value-objects/environmental-impact.vo';
 import { DurationType } from '../../../domain/value-objects/duration.vo';
-import { ProjectStore } from '../../../application/project-store';
+import { ProjectStore  } from '../../../application/project-store';
 import { UserStore } from '../../../../iam/application/user.store';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -11,33 +11,25 @@ import { StepInfo } from '../../components/steps/step-info/step-info';
 import {StepEvironmental} from '../../components/steps/step-evironmental/step-evironmental';
 import {StepSkillsDuration} from '../../components/steps/step-skills-duration/step-skills-duration';
 import {StepRoles} from '../../components/steps/step-roles/step-roles';
-
+import { TranslatePipe } from '@ngx-translate/core';
 
 export interface ProjectFormData {
-  // Step 1
   name: string;
   area: string;
   tags: string[];
   summary: string;
-
-  // Step 2
   hasEnvironmentalImpact: boolean;
   environmentalImpact?: EnvironmentalMetric[];
-
-  // Step 3
   academicLevel?: string | null;
   benefits: string[];
   requiredSkills: string[];
   durationAmount: number;
   durationType: DurationType;
-
-  // Step 4
   roles: Array<{
     name: string;
     cardInfo: { title: string; items: string[] };
   }>;
 }
-
 
 
 
@@ -51,6 +43,7 @@ export interface ProjectFormData {
     CommonModule,
     FormsModule,
     RouterModule,
+    TranslatePipe,
   ],
   templateUrl: './create-project.html',
   styleUrl: './create-project.css',
@@ -110,7 +103,6 @@ export class CreateProject {
 
   nextStep(): void {
     if (this.currentStep() < 4) {
-      // Validar paso actual antes de avanzar
       if (this.validateCurrentStep()) {
         this.currentStep.update(step => step + 1);
         window.scrollTo(0, 0);
@@ -142,7 +134,6 @@ export class CreateProject {
         }
         return true;
       case 2:
-        // Paso 2 es opcional
         return true;
       case 3:
         if (this.formData.requiredSkills.length === 0) {
@@ -174,33 +165,34 @@ export class CreateProject {
     }
 
     try {
+      console.log('🔍 environmentalImpact seleccionados:', this.formData.environmentalImpact);
+      console.log('🔍 hasEnvironmentalImpact:', this.formData.hasEnvironmentalImpact);
+
       const projectData = {
         name: this.formData.name,
         area: this.formData.area,
         tags: this.formData.tags,
         summary: this.formData.summary,
-        environmentalImpact: this.formData.hasEnvironmentalImpact ? this.formData.environmentalImpact : undefined,
+        environmentalImpact: this.formData.hasEnvironmentalImpact
+          ? this.formData.environmentalImpact
+          : [],
         academicLevel: this.formData.academicLevel,
         benefits: this.formData.benefits,
         requiredSkills: this.formData.requiredSkills,
-        duration: {
-          amount: this.formData.durationAmount,
-          type: this.formData.durationType
-        },
+        durationAmount: this.formData.durationAmount,
+        durationType: this.formData.durationType,
         roles: this.formData.roles
       };
 
-      console.log('Creating project:', projectData);
+      console.log('📤 Payload a enviar:', JSON.stringify(projectData, null, 2));
+      console.log('📤 environmentalImpact en payload:', projectData.environmentalImpact);
 
       const createdProject = await this.projectStore.createProject(projectData, userId);
-
-      console.log('Project created successfully:', createdProject);
-
-      // Navegar a la lista de proyectos
+      console.log('✅ Project created successfully:', createdProject);
       this.router.navigate(['/projects']);
     } catch (error) {
-      console.error('Error creating project:', error);
-      alert('Error al crear el proyecto. Por favor intenta nuevamente.');
+      console.error('❌ Error creating project:', error);
+      alert('Error al crear el proyecto. Revisa la consola.');
     }
   }
 
@@ -210,7 +202,6 @@ export class CreateProject {
     }
   }
 
-  // Métodos para actualizar datos desde los steps
   updateBasicInfo(data: Partial<ProjectFormData>): void {
     Object.assign(this.formData, data);
   }

@@ -66,28 +66,46 @@ export class ApplicationStore {
     this.clearError();
 
     try {
-      // Validar postulación duplicada
-      const existing = await firstValueFrom(
-        this.applicationApi.getApplicationsByProjectAndUser(data.projectId, userId)
+      // ────────────────────────────────────────────────────────────────
+      // ✅ NUEVO: Validar postulación duplicada usando el endpoint /check
+      // ────────────────────────────────────────────────────────────────
+      console.log('🔍 [STORE] Verificando si ya postuló:', { projectId: data.projectId, userId });
+
+      const hasApplied = await firstValueFrom(
+        this.applicationApi.checkIfApplied(data.projectId, userId)
       );
-      if (existing.length > 0) {
-        throw new Error('Ya has postulado a este proyecto');
+
+      if (hasApplied) {
+        const errorMsg = 'Ya has postulado a este proyecto';
+        console.warn('⚠️ [STORE]', errorMsg);
+        this.setError(errorMsg);
+        throw new Error(errorMsg);
       }
 
+      console.log('✅ [STORE] No ha postulado antes, procediendo...');
+
+      // ────────────────────────────────────────────────────────────────
+      // Crear la aplicación
+      // ────────────────────────────────────────────────────────────────
       const application = Application.create({
         ...data,
         userId
       });
 
-      const saved = await firstValueFrom(this.applicationApi.createApplication(application));
+      const saved = await firstValueFrom(
+        this.applicationApi.createApplication(application)
+      );
 
+      // Actualizar estado
       this.currentApplication.set(saved);
       this.userApplications.update(list => [saved, ...list]);
 
       console.log('✅ Application submitted successfully', saved);
       return saved;
+
     } catch (err: any) {
       const msg = err?.message || 'Error al enviar la postulación';
+      console.error('❌ [STORE] Error:', msg);
       this.setError(msg);
       throw err;
     } finally {

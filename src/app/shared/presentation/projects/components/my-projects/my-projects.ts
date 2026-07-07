@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 export interface ProjectCardData {
   id: string;
@@ -13,7 +14,7 @@ export interface ProjectCardData {
 
 @Component({
   selector: 'app-my-projects',
-  imports: [],
+  imports: [TranslatePipe],
   templateUrl: './my-projects.html',
   styleUrl: './my-projects.css',
 })

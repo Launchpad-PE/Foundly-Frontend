@@ -65,4 +65,11 @@ export class TaskApiEndpoint extends BaseApiEndpoint<
   deleteTask(id: string): Observable<void> {
     return this.http.delete<void>(`${this.tasksUrl}/${id}`);
   }
+
+  completeTask(taskId: string, deliveryUrl: string, deliveryNotes?: string | null): Observable<TaskResponse> {
+    const body = { deliveryUrl, deliveryNotes };
+    return this.http.post<TaskResource>(`${this.tasksUrl}/${taskId}/complete`, body).pipe(
+      map(task => ({ task }) as TaskResponse)
+    );
+  }
 }

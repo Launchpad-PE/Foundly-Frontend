@@ -5,11 +5,12 @@ import { MilestoneStore } from '../../../application/milestone-store';
 import { MilestoneTaskStatus } from '../../../domain/enum/milestone-task-status.enum';
 import { MilestoneTask } from '../../../domain/entities/milestone-task.entity';
 import { CreateTaskModalComponent } from '../create-task-modal/create-task-modal.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-milestone-tasks',
   standalone: true,
-  imports: [CommonModule, FormsModule, CreateTaskModalComponent],
+  imports: [CommonModule, FormsModule, CreateTaskModalComponent, TranslatePipe],
   templateUrl: './milestone-tasks.component.html',
   styleUrls: ['./milestone-tasks.component.css']
 })

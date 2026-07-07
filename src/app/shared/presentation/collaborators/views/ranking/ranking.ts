@@ -4,11 +4,12 @@ import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { ProfileApi } from '../../../../../profile-management/infrastructure/profile-api';
 import { Profile } from '../../../../../profile-management/domain/entities/profile.entity';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-ranking',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslatePipe],
   templateUrl: './ranking.html',
   styleUrl: './ranking.css',
 })

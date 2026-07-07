@@ -1,9 +1,9 @@
 <div class="step-container">
-  <h2>Impacto Ambiental</h2>
+  <h2>{{ 'project.step.env.title' | translate }}</h2>
 
   <div class="info-box">
     <span class="info-icon">🌱</span>
-    <p>Activa si tu proyecto tiene impacto ambiental medible</p>
+    <p>{{ 'project.step.env.activate' | translate }}</p>
   </div>
 
   <div class="form-group">
@@ -13,12 +13,12 @@
         [(ngModel)]="formData.hasEnvironmentalImpact"
         class="checkbox-input"
       />
-      <span>Mi proyecto tiene impacto ambiental medible</span>
+      <span>{{ 'project.step.env.check' | translate }}</span>
     </label>
   </div>
 
   <div *ngIf="formData.hasEnvironmentalImpact" class="metrics-section">
-    <h3>Selecciona las métricas ambientales que aplican:</h3>
+    <h3>{{ 'project.step.env.select' | translate }}</h3>
     <div class="metrics-grid">
       <div
         *ngFor="let metric of environmentalMetrics"
@@ -34,6 +34,6 @@
   </div>
 
   <div *ngIf="!formData.hasEnvironmentalImpact" class="info-message">
-    <p>No te preocupes, puedes continuar sin seleccionar métricas ambientales.</p>
+    <p>{{ 'project.step.env.skip' | translate }}</p>
   </div>
 </div>

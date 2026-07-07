@@ -57,4 +57,10 @@ export class TaskApi extends BaseApi {
   deleteTask(id: string): Observable<void> {
     return this.taskEndpoint.deleteTask(id);
   }
+
+  completeTask(taskId: string, deliveryUrl: string, deliveryNotes?: string | null): Observable<Task> {
+    return this.taskEndpoint.completeTask(taskId, deliveryUrl, deliveryNotes).pipe(
+      map(r => this.assembler.toEntityFromResponse(r))
+    );
+  }
 }

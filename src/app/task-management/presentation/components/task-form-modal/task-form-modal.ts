@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { AssigneeOption } from '../task-list/task-list';
 
@@ -18,7 +19,7 @@ export interface TaskFormSubmit {
 @Component({
   selector: 'app-task-form-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './task-form-modal.html',
   styleUrls: ['./task-form-modal.css']
 })
@@ -92,13 +93,20 @@ export class TaskFormModalComponent {
     this.tools.update(list => list.filter((_, idx) => idx !== i));
   }
 
-  onBackdropClick(ev: MouseEvent): void {
-    if ((ev.target as HTMLElement).classList.contains('modal-backdrop')) {
-      this.close.emit();
-    }
-  }
-
   onCancel(): void { this.close.emit(); }
+
+  /**
+   * Evita que la tecla Enter dispare el envio implicito del formulario
+   * (por ejemplo mientras se escribe un paso del checklist, un enlace o
+   * una herramienta). Solo el boton "Enviar" o los textarea (para permitir
+   * saltos de linea) quedan exentos de este bloqueo.
+   */
+  onFormKeydownEnter(event: Event): void {
+    const target = event.target as HTMLElement;
+    const tag = target?.tagName;
+    if (tag === 'TEXTAREA' || tag === 'BUTTON') return;
+    event.preventDefault();
+  }
 
   private validate(): string | null {
     if (!this.assigneeId()) return 'Selecciona un colaborador.';

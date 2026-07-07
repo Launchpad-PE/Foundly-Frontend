@@ -6,10 +6,11 @@ import { CommonModule } from '@angular/common';
 import { CreateMilestoneModalComponent } from '../create-milestone-modal/create-milestone-modal.component';
 import { RescheduleMilestoneModalComponent } from '../reschedule-milestone-modal/reschedule-milestone-modal.component';
 import { DeleteMilestoneModalComponent } from '../delete-milestone-modal/delete-milestone-modal.component';
+import { TranslatePipe } from '@ngx-translate/core';
 @Component({
   selector: 'app-milestone-list',
   standalone: true,
-  imports: [MilestoneCardComponent, CommonModule, CreateMilestoneModalComponent, RescheduleMilestoneModalComponent, DeleteMilestoneModalComponent ],
+  imports: [MilestoneCardComponent, CommonModule, CreateMilestoneModalComponent, RescheduleMilestoneModalComponent, DeleteMilestoneModalComponent, TranslatePipe ],
   templateUrl: './milestone-list.component.html',
   styleUrl: './milestone-list.component.css',
 })

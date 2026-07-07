@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 export interface Project {
   id: string;
@@ -15,7 +16,7 @@ export interface Project {
 @Component({
   selector: 'app-project-card',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslatePipe],
   templateUrl: './projectc-card.html',  // ✅
   styleUrls: ['./projectc-card.css']    // ✅
 })

@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 
 export interface ExperienceData {
   id?: string;
@@ -17,7 +18,7 @@ export interface SkillsFormData {
 @Component({
   selector: 'app-skills-form',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './skills-form.html',
   styleUrls: ['./skills-form.css']
 })

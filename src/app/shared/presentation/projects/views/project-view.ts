@@ -7,11 +7,12 @@ import { UserStore } from '../../../../iam/application/user.store';
 import { Project } from '../../../../project-management/domain/entities/project.entity';
 import { MyProjects } from '../components/my-projects/my-projects';
 import { ProjectStore } from '../../../../project-management/application/project-store';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-projects',
   standalone: true,
-  imports: [MyProjects, CommonModule, RouterModule, FormsModule],
+  imports: [MyProjects, CommonModule, RouterModule, FormsModule, TranslatePipe],
   templateUrl: './project-view.html',
   styleUrls: ['./project-view.css']
 })
@@ -99,15 +100,25 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     this.router.navigate(['/home']);
   }
 
+  // project-view.ts
   getProjectForCard(project: Project): any {
+    // Obtener el tipo de duración para mostrar correctamente
+    const durationType = project.duration.getType();
+    const typeDisplay = durationType === 'WEEKS' ? 'Semanas' :
+      durationType === 'MONTHS' ? 'Meses' :
+        durationType === 'SEMESTERS' ? 'Semestres' : 'Años';
+
+    // Modalidad según el tipo de duración (o según otra lógica)
+    const modality = durationType === 'WEEKS' ? 'Remoto' : 'Presencial';
+
     return {
       id: project.id,
       title: project.name.getValue(),
       areas: [project.area.getValue()],
       roles: project.roles.map(role => role.name.getValue()),
       author: project.authorId.toString(),
-      duration: project.duration.toString(),
-      modality: project.duration.getType() === 'semanas' ? 'Remoto' : 'Presencial'
-    }
+      duration: `${project.duration.getAmount()} ${typeDisplay}`,
+      modality: modality
+    };
   }
 }

@@ -10,12 +10,21 @@
 
   @if (loading()) {
     <div class="state-card">Cargando tarea...</div>
+  } @else if (error()) {
+    <div class="state-card error">
+      <p>{{ error() }}</p>
+      <button class="btn-action" (click)="goBack()" style="margin-top:1rem;padding:0.6rem 1.5rem;background:#6C63FF;color:#fff;border:none;border-radius:8px;cursor:pointer;">Volver al proyecto</button>
+    </div>
   } @else if (!task()) {
     <div class="state-card error">No se encontró la tarea.</div>
+  } @else if (!canView()) {
+    <div class="state-card error">
+      <p>No tienes permisos para ver esta tarea.</p>
+      <button class="btn-action" (click)="goBack()" style="margin-top:1rem;padding:0.6rem 1.5rem;background:#6C63FF;color:#fff;border:none;border-radius:8px;cursor:pointer;">Volver al proyecto</button>
+    </div>
   } @else if (isCompleted()) {
     <!-- ════════════════ VISTA TAREA COMPLETADA ════════════════ -->
 
-    <!-- Header card: título + colaborador + status -->
     <section class="card summary-card">
       <div class="summary-info">
         <h2 class="summary-title">{{ task()!.title.getValue() }}</h2>
@@ -24,7 +33,6 @@
       <span class="status-pill pill-completed">{{ statusLabel() }}</span>
     </section>
 
-    <!-- Archivos entregados -->
     <section class="card delivered-card">
       <h3 class="block-title">Archivos entregados</h3>
       @if (task()!.deliveryUrl) {
@@ -44,7 +52,6 @@
       }
     </section>
 
-    <!-- Nota del colaborador -->
     <section class="card note-card">
       <h3 class="block-title">Nota</h3>
       <div class="note-row">
@@ -60,9 +67,8 @@
     </section>
 
   } @else {
-    <!-- ════════════════ VISTA TAREA NO COMPLETADA (read-only) ════════════════ -->
+    <!-- ════════════════ VISTA TAREA NO COMPLETADA ════════════════ -->
 
-    <!-- Card 1: Título + Fecha + Estado -->
     <section class="card title-card">
       <div class="title-row">
         <h2 class="task-title">{{ task()!.title.getValue() }}</h2>
@@ -136,47 +142,39 @@
       }
     </section>
 
-    <!-- Sección entregar tarea -->
-    <section class="card deliver-section">
-      <h3 class="block-title">Entregar Tarea</h3>
+    <!-- Sección entregar tarea: solo visible para el colaborador -->
+    @if (canDeliver()) {
+      <section class="card deliver-section">
+        <h3 class="block-title">Entregar Tarea</h3>
 
-      <div class="deliver-field">
-        <label class="deliver-label">Enlace de entrega <span class="required">*</span></label>
-        <input
-          class="deliver-input"
-          type="url"
-          [(ngModel)]="deliveryUrl"
-          placeholder="https://github.com/tu-repo o https://drive.google.com/..."
-        />
-      </div>
+        <div class="deliver-field">
+          <label class="deliver-label">Enlace de entrega <span class="required">*</span></label>
+          <input
+            class="deliver-input"
+            type="url"
+            [(ngModel)]="deliveryUrl"
+            placeholder="https://github.com/tu-repo o https://drive.google.com/..."
+          />
+        </div>
 
-      <div class="deliver-field">
-        <label class="deliver-label">Notas (opcional)</label>
-        <textarea
-          class="deliver-input deliver-textarea"
-          [(ngModel)]="deliveryNotes"
-          placeholder="Explica brevemente lo que entregaste..."
-          rows="3">
-        </textarea>
-      </div>
+        <div class="deliver-field">
+          <label class="deliver-label">Notas (opcional)</label>
+          <textarea
+            class="deliver-input deliver-textarea"
+            [(ngModel)]="deliveryNotes"
+            placeholder="Explica brevemente lo que entregaste..."
+            rows="3">
+          </textarea>
+        </div>
 
-      <div class="deliver-field">
-        <label class="deliver-label">Comentario (opcional)</label>
-        <textarea
-          class="deliver-input deliver-textarea"
-          [(ngModel)]="deliveryComment"
-          placeholder="¿Algo que quieras comentarle al emprendedor?"
-          rows="2">
-        </textarea>
-      </div>
+        @if (deliverError()) {
+          <p class="deliver-error">{{ deliverError() }}</p>
+        }
 
-      @if (deliverError()) {
-        <p class="deliver-error">{{ deliverError() }}</p>
-      }
-
-      <button class="btn-deliver" (click)="submitDelivery()" [disabled]="delivering()">
-        {{ delivering() ? 'Enviando...' : 'Entregar Tarea' }}
-      </button>
-    </section>
+        <button class="btn-deliver" (click)="submitDelivery()" [disabled]="delivering()">
+          {{ delivering() ? 'Enviando...' : 'Entregar Tarea' }}
+        </button>
+      </section>
+    }
   }
 </div>

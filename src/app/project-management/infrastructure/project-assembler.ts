@@ -1,8 +1,8 @@
-// project-assembler.ts (versión corregida)
 import { BaseAssembler } from '../../shared/infrastructure/base-assembler';
 import { Project } from '../domain/entities/project.entity';
-import { ProjectResource, ProjectResponse, ProjectsResponse, RoleResource } from './project-response';
+import { ProjectResource, ProjectResponse, ProjectsResponse, RoleResource, DurationResource } from './project-response';
 import { CardItem, CardTitle, Role, RoleCardInfo, RoleName } from '../domain/value-objects/role.vo';
+import { DurationType } from '../domain/value-objects/duration.vo';
 
 
 export class ProjectAssembler implements BaseAssembler<Project, ProjectResource, ProjectResponse | ProjectsResponse> {
@@ -25,7 +25,13 @@ export class ProjectAssembler implements BaseAssembler<Project, ProjectResource,
    * Convert resource to entity usando el método estático create
    */
   toEntityFromResource(resource: ProjectResource): Project {
-    // Convertir roles al formato que espera el método create
+    console.log('🔍 [ASSEMBLER] Resource recibido:', resource);
+
+    // ✅ Soporte para ambos nombres de campo
+    const environmentalMetrics = resource.environmentalImpact || resource.environmentalMetrics || [];
+    console.log('🔍 [ASSEMBLER] environmentalMetrics extraídas:', environmentalMetrics);
+
+    // Convertir roles
     const roles = (resource.roles || []).map(role => ({
       name: role.name,
       cardInfo: {
@@ -34,21 +40,30 @@ export class ProjectAssembler implements BaseAssembler<Project, ProjectResource,
       }
     }));
 
-    // Usar el método estático create en lugar del constructor privado
-    return Project.create({
+    // Soporte para duración
+    let durationAmount = 0;
+    let durationType: DurationType = DurationType.MONTHS;
+
+    if (resource.duration !== undefined) {
+      durationAmount = resource.duration.amount;
+      durationType = resource.duration.type;
+    } else if (resource.durationAmount !== undefined && resource.durationType !== undefined) {
+      durationAmount = resource.durationAmount;
+      durationType = resource.durationType;
+    }
+
+    const project = Project.create({
       id: resource.id,
       name: resource.name,
       area: resource.area,
       tags: resource.tags,
       summary: resource.summary,
-      environmentalImpact: resource.environmentalImpact || undefined,
+      environmentalImpact: environmentalMetrics.length > 0 ? environmentalMetrics : undefined,
       academicLevel: resource.academicLevel || undefined,
       benefits: resource.benefits,
       requiredSkills: resource.requiredSkills,
-      duration: {
-        amount: resource.duration.amount,
-        type: resource.duration.type
-      },
+      durationAmount: durationAmount,
+      durationType: durationType,
       roles: roles,
       authorId: resource.authorId,
       authorName: resource.authorName || null,
@@ -56,6 +71,9 @@ export class ProjectAssembler implements BaseAssembler<Project, ProjectResource,
       createdAt: resource.createdAt,
       updatedAt: resource.updatedAt,
     });
+
+    console.log('🔍 [ASSEMBLER] Project creado, environmentalImpact:', project.environmentalImpact);
+    return project;
   }
 
   /**
@@ -72,10 +90,8 @@ export class ProjectAssembler implements BaseAssembler<Project, ProjectResource,
       academicLevel: entity.academicLevel ? entity.academicLevel.getValue() : null,
       benefits: entity.benefits.map(benefit => benefit.getDescription()),
       requiredSkills: entity.requiredSkills.map(skill => skill.getValue()),
-      duration: {
-        amount: entity.duration.getAmount(),
-        type: entity.duration.getType()
-      },
+      durationAmount: entity.duration.getAmount(),
+      durationType: entity.duration.getType(),
       roles: entity.roles.map(role => this.roleToResource(role)),
       status: entity.status,
       createdAt: entity.createdAt.toISOString(),

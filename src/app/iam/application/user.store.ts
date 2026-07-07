@@ -5,6 +5,7 @@ import { RegisterRequest, UsersApi } from '../infrastructure/user-api-service';
 import { UserAssembler, RegistrationData, OnboardingData as ApiOnboardingData } from '../infrastructure/user.assembler';
 import { ProfileStore, OnboardingData as ProfileOnboardingData } from '../../profile-management/application/profile.store';
 import { Experience } from '../../profile-management/domain/entities/experience.entity';
+import { ProjectStore } from '../../project-management/application/project-store';
 
 export interface CurrentUser {
   id: string;
@@ -26,6 +27,7 @@ export class UserStore {
 
   // Dependencies
   private profileStore = inject(ProfileStore);
+  private projectStore = inject(ProjectStore);
   private router = inject(Router);
 
   constructor(private usersApi: UsersApi) {
@@ -55,7 +57,7 @@ export class UserStore {
       this.clearError();
 
       const registerRequest: RegisterRequest = {
-        username: registrationData.email,
+        username: registrationData.fullName,  // ✅ CORREGIDO
         email: registrationData.email,
         password: registrationData.password,
         roles: ['ROLE_USER'],
@@ -88,31 +90,43 @@ export class UserStore {
       this.setLoading(true);
       this.clearError();
 
-      // Backend uses email as username (set during registration)
       const response = await firstValueFrom(this.usersApi.authenticate(email, password));
+
+      console.log('📡 Respuesta del login:', response);
 
       if (response?.token) {
         const { id, username, token: authToken } = response;
         this.setToken(authToken);
 
-        const storedUser = localStorage.getItem('currentUser');
-        const fullName = storedUser ? (JSON.parse(storedUser).fullName ?? username) : username;
+        const user: CurrentUser = {
+          id: id.toString(),
+          fullName: username,
+          email: email,
+          token: authToken
+        };
 
-        const user: CurrentUser = { id: id.toString(), fullName, email, token: authToken };
         localStorage.setItem('currentUser', JSON.stringify(user));
         localStorage.setItem('userId', user.id);
         this.currentUser.set(user);
 
+        // ✅ Cargar perfil después del login
+        console.log('📋 Cargando perfil para usuario:', user.id);
         await this.loadUserProfile(user.id);
+
+        console.log('✅ Login exitoso para:', email);
+        console.log('📋 Perfil cargado:', this.profileStore.currentProfile());
 
         return user;
       } else {
+        console.error('❌ No hay token en la respuesta:', response);
         throw new Error('Respuesta de autenticación inválida');
       }
     } catch (err: any) {
+      console.error('❌ Error en login:', err);
       let msg = 'Error al iniciar sesión';
       if (err?.status === 401) msg = 'Credenciales incorrectas';
-      else if (err?.error) msg = err.error;
+      else if (err?.error?.message) msg = err.error.message;
+      else if (typeof err?.error === 'string') msg = err.error;
       else if (err?.message) msg = err.message;
 
       this.setError(msg);
@@ -175,22 +189,40 @@ export class UserStore {
     }
   }
 
-  private async loadUserProfile(userId: string): Promise<void> {
+  public  async loadUserProfile(userId: string): Promise<void> {
     try {
+      console.log('📋 Cargando perfil para usuario:', userId);
       const profile = await this.profileStore.loadProfile(userId);
       if (profile) {
-        console.log('📋 Profile loaded:', profile.username);
+        console.log('✅ Perfil cargado exitosamente:', profile.username);
+        console.log('📋 Perfil completo:', profile.isComplete);
       } else {
-        console.log('📋 No profile found for user, needs onboarding');
+        console.log('⚠️ No se encontró perfil para el usuario');
       }
     } catch (err) {
-      console.error('Error loading profile:', err);
+      console.error('❌ Error cargando perfil:', err);
     }
   }
 
+
+
   needsOnboarding(): boolean {
     const profile = this.profileStore.currentProfile();
-    return !profile || !profile.isComplete;
+    console.log('🔍 Verificando onboarding - Perfil:', profile);
+    console.log('🔍 Perfil isComplete:', profile?.isComplete);
+
+    if (!profile) {
+      console.log('📝 No hay perfil, necesita onboarding');
+      return true;
+    }
+
+    if (!profile.isComplete) {
+      console.log('📝 Perfil incompleto, necesita onboarding');
+      return true;
+    }
+
+    console.log('✅ Perfil completo, NO necesita onboarding');
+    return false;
   }
 
   getCurrentProfile() {
@@ -205,6 +237,7 @@ export class UserStore {
     this.currentUser.set(null);
     this.token.set(null);
     this.profileStore.reset();
+    this.projectStore.reset(); // ← Limpiar proyectos al hacer logout
     localStorage.removeItem('currentUser');
     localStorage.removeItem('userId');
     localStorage.removeItem('authToken');

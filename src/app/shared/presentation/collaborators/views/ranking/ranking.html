@@ -7,7 +7,7 @@
       <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" class="rk-back-icon">
         <path d="M12 5l-5 5 5 5"/>
       </svg>
-      Volver
+      {{ 'common.back' | translate }}
     </button>
   </div>
 
@@ -25,8 +25,8 @@
               fill="rgba(255,255,255,0.25)" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"/>
             <path d="M18 34v6M30 34v6M14 40h20" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round"/>
           </svg>
-          <h1 class="rk-hero-title">Ranking de Colaboradores</h1>
-          <p class="rk-hero-sub">Colabora con los mejores y ten buen éxito en tus proyectos</p>
+          <h1 class="rk-hero-title">{{ 'ranking.title' | translate }}</h1>
+          <p class="rk-hero-sub">{{ 'ranking.subtitle' | translate }}</p>
         </div>
       </div>
 
@@ -36,13 +36,13 @@
         <!-- Loading -->
         <div class="rk-loading" *ngIf="loading">
           <div class="rk-spinner"></div>
-          <p>Cargando ranking...</p>
+          <p>{{ 'ranking.loading' | translate }}</p>
         </div>
 
         <!-- Error -->
         <div class="rk-error" *ngIf="error && !loading">
           <p>{{ error }}</p>
-          <button class="rk-btn-profile" (click)="ngOnInit()">Reintentar</button>
+          <button class="rk-btn-profile" (click)="ngOnInit()">{{ 'common.retry' | translate }}</button>
         </div>
 
         <!-- Rows -->
@@ -82,7 +82,7 @@
 
             <!-- CTA -->
             <button class="rk-btn-profile" (click)="$event.stopPropagation(); viewProfile(item.id!)">
-              Ver Perfil
+              {{ 'ranking.viewProfile' | translate }}
             </button>
 
           </div>
@@ -92,7 +92,7 @@
             <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" class="rk-empty-icon">
               <circle cx="24" cy="18" r="10"/><path d="M6 42a18 18 0 0136 0"/>
             </svg>
-            <p>No hay colaboradores registrados aún.</p>
+            <p>{{ 'ranking.noCollaborators' | translate }}</p>
           </div>
         </ng-container>
 
@@ -112,7 +112,7 @@
         </div>
 
         <p class="rk-promo-tagline">
-          Colabora con los mejores<br>y ten buen éxito<br>de tus proyectos
+          {{ 'ranking.subtitle' | translate }}
         </p>
 
         <button class="rk-promo-cta" (click)="goBack()">
@@ -126,11 +126,11 @@
         <div class="rk-promo-stats">
           <div class="rk-promo-stat">
             <span class="rk-ps-value">{{ rankedCollaborators.length }}+</span>
-            <span class="rk-ps-label">Colaboradores</span>
+            <span class="rk-ps-label">{{ 'ranking.collaborators' | translate }}</span>
           </div>
           <div class="rk-promo-stat">
             <span class="rk-ps-value">95%</span>
-            <span class="rk-ps-label">Éxito</span>
+            <span class="rk-ps-label">{{ 'ranking.success' | translate }}</span>
           </div>
         </div>
       </div>

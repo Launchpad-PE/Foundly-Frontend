@@ -11,6 +11,7 @@ import { Task } from '../../../domain/entities/task.entity';
 import { TaskStatus } from '../../../domain/enum/task-status.enum';
 import { TaskFormModalComponent, TaskFormSubmit } from '../task-form-modal/task-form-modal';
 import { UserStore } from '../../../../iam/application/user.store';
+import { TranslatePipe } from '@ngx-translate/core';
 
 export interface AssigneeOption {
   id: string;
@@ -20,7 +21,7 @@ export interface AssigneeOption {
 @Component({
   selector: 'app-task-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, TaskFormModalComponent],
+  imports: [CommonModule, FormsModule, TaskFormModalComponent, TranslatePipe],
   templateUrl: './task-list.html',
   styleUrls: ['./task-list.css']
 })

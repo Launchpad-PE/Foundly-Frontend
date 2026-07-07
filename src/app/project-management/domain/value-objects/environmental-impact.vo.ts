@@ -1,10 +1,16 @@
-// domain/value-objects/environmental-impact.vo.ts
 export enum EnvironmentalMetric {
-  AIR_QUALITY = 'Calidad del aire',
-  HUMIDITY = 'Humedad ambiental',
-  TEMPERATURE = 'Temperatura',
-  CITIZEN_PARTICIPATION = 'Participación ciudadana'
+  AIR_QUALITY = 'AIR_QUALITY',           // ✅ Cambiado a inglés
+  HUMIDITY = 'HUMIDITY',                 // ✅ Cambiado a inglés
+  TEMPERATURE = 'TEMPERATURE',           // ✅ Cambiado a inglés
+  CITIZEN_PARTICIPATION = 'CITIZEN_PARTICIPATION'  // ✅ Cambiado a inglés
 }
+
+export const EnvironmentalMetricDisplay: Record<EnvironmentalMetric, string> = {
+  [EnvironmentalMetric.AIR_QUALITY]: 'Calidad del aire',
+  [EnvironmentalMetric.HUMIDITY]: 'Humedad ambiental',
+  [EnvironmentalMetric.TEMPERATURE]: 'Temperatura',
+  [EnvironmentalMetric.CITIZEN_PARTICIPATION]: 'Participación ciudadana'
+};
 
 export class EnvironmentalImpact {
   constructor(private readonly metrics: EnvironmentalMetric[]) {

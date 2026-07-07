@@ -30,6 +30,8 @@ const profile = () => import('./profile-management/presentation/views/profile/pr
   .then(m => m.ProfileComponent);
 const publicProfile = () => import('./profile-management/presentation/views/public-profile/public-profile')
   .then(m => m.PublicProfileComponent);
+const chat = () => import('./messaging/presentation/views/chat/chat')
+  .then(m => m.ChatComponent);
 const ranking = () => import('./shared/presentation/collaborators/views/ranking/ranking')
   .then(m => m.RankingComponent);
 const deliverTask = () => import('./milestones-management/presentation/views/deliver-task/deliver-task.component')
@@ -146,6 +148,12 @@ export const routes: Routes = [
     loadComponent: publicProfile,
     canActivate: [AuthGuard],
     title: `${baseTitle} - Perfil`
+  },
+  {
+    path: 'messages',
+    loadComponent: chat,
+    canActivate: [AuthGuard],
+    title: `${baseTitle} - Mensajes`
   },
   {
     path: '',

@@ -1,0 +1,72 @@
+<!-- chat.html -->
+<div class="chat-shell">
+
+  <!-- Lista de conversaciones -->
+  <aside class="chat-sidebar">
+    <h2 class="chat-sidebar-title">{{ 'chat.title' | translate }}</h2>
+
+    <div class="chat-convo-list">
+      <button
+        *ngFor="let c of conversations()"
+        class="chat-convo"
+        [class.active]="c.otherUserId === activeUserId()"
+        (click)="open(c.otherUserId)">
+        <div class="chat-avatar">{{ initialOf(c.otherUserId) }}</div>
+        <div class="chat-convo-info">
+          <span class="chat-convo-name">{{ nameOf(c.otherUserId) }}</span>
+          <span class="chat-convo-last">
+            <span *ngIf="c.lastMessageFromMe" class="chat-you">{{ 'chat.you' | translate }}</span>{{ c.lastMessage }}
+          </span>
+        </div>
+        <span class="chat-convo-time">{{ formatTime(c.lastMessageAt) }}</span>
+      </button>
+
+      <p *ngIf="conversations().length === 0" class="chat-empty">{{ 'chat.noConversations' | translate }}</p>
+    </div>
+  </aside>
+
+  <!-- Hilo de mensajes -->
+  <section class="chat-main">
+    <ng-container *ngIf="activeUserId() as other; else noThread">
+      <header class="chat-thread-header">
+        <div class="chat-avatar sm">{{ initialOf(other) }}</div>
+        <strong>{{ nameOf(other) }}</strong>
+      </header>
+
+      <div class="chat-messages">
+        <p *ngIf="loadingThread()" class="chat-empty">{{ 'chat.loading' | translate }}</p>
+
+        <div
+          *ngFor="let m of messages()"
+          class="chat-bubble-row"
+          [class.mine]="m.senderId === myId">
+          <div class="chat-bubble">
+            <p class="chat-bubble-text">{{ m.content }}</p>
+            <span class="chat-bubble-time">{{ formatTime(m.createdAt) }}</span>
+          </div>
+        </div>
+
+        <p *ngIf="!loadingThread() && messages().length === 0" class="chat-empty">
+          {{ 'chat.noMessages' | translate }}
+        </p>
+      </div>
+
+      <form class="chat-input" (ngSubmit)="sendMessage()">
+        <input
+          type="text"
+          name="draft"
+          [(ngModel)]="draft"
+          [placeholder]="'chat.placeholder' | translate"
+          autocomplete="off"/>
+        <button type="submit" class="chat-send" [disabled]="!draft.trim()">{{ 'chat.send' | translate }}</button>
+      </form>
+    </ng-container>
+
+    <ng-template #noThread>
+      <div class="chat-placeholder">
+        <p>{{ 'chat.selectConversation' | translate }}</p>
+      </div>
+    </ng-template>
+  </section>
+
+</div>

@@ -21,8 +21,8 @@
 
       <!-- Headline -->
       <div class="reg-headline">
-        <h2 class="reg-tagline">Conecta con los mejores<br>colaboradores del mundo</h2>
-        <p class="reg-sub">Publica proyectos, encuentra talento y lleva tus ideas al siguiente nivel.</p>
+        <h2 class="reg-tagline">{{ 'register.tagline1' | translate }}<br>{{ 'register.tagline2' | translate }}</h2>
+        <p class="reg-sub">{{ 'register.sub' | translate }}</p>
       </div>
 
       <!-- Features -->
@@ -33,7 +33,7 @@
               <path d="M17 21v-2a4 4 0 00-4-4H7a4 4 0 00-4 4v2"/><circle cx="10" cy="7" r="4"/>
             </svg>
           </div>
-          <span>Red de colaboradores verificados</span>
+          <span>{{ 'register.feature.verified' | translate }}</span>
         </li>
         <li class="reg-feature-item">
           <div class="reg-feat-icon">
@@ -41,7 +41,7 @@
               <rect x="2" y="3" width="16" height="14" rx="2"/><path d="M7 8h6M7 12h4"/>
             </svg>
           </div>
-          <span>Gestión de proyectos integrada</span>
+          <span>{{ 'register.feature.integrated' | translate }}</span>
         </li>
         <li class="reg-feature-item">
           <div class="reg-feat-icon">
@@ -49,7 +49,7 @@
               <polygon points="10 2 12.5 7.5 18.5 8.3 14 12.5 15.3 18.5 10 15.5 4.7 18.5 6 12.5 1.5 8.3 7.5 7.5"/>
             </svg>
           </div>
-          <span>Sistema de ranking por meritocracia</span>
+          <span>{{ 'register.feature.ranking' | translate }}</span>
         </li>
       </ul>
 
@@ -83,12 +83,12 @@
         <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" class="reg-back-icon">
           <path d="M12 5l-5 5 5 5"/>
         </svg>
-        Volver
+        {{ 'common.back' | translate }}
       </button>
 
       <div class="reg-form-header">
-        <h1 class="reg-title">Crear cuenta</h1>
-        <p class="reg-subtitle">Únete a la comunidad de colaboradores</p>
+        <h1 class="reg-title">{{ 'register.title' | translate }}</h1>
+        <p class="reg-subtitle">{{ 'register.subtitle' | translate }}</p>
       </div>
 
       <!-- Error -->
@@ -102,18 +102,18 @@
       <form (ngSubmit)="handleRegister()" class="reg-form">
 
         <div class="reg-field">
-          <label class="reg-label" for="fullName">Nombre completo</label>
+          <label class="reg-label" for="fullName">{{ 'register.fullName' | translate }}</label>
           <div class="reg-input-wrap">
             <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" class="reg-input-icon">
               <path d="M10 2a4 4 0 100 8 4 4 0 000-8zM3 18a7 7 0 0114 0"/>
             </svg>
             <input type="text" id="fullName" [(ngModel)]="fullName" name="fullName"
-                   placeholder="Tu nombre completo" required class="reg-input"/>
+                   [placeholder]="'register.fullNamePlaceholder' | translate" required class="reg-input"/>
           </div>
         </div>
 
         <div class="reg-field">
-          <label class="reg-label" for="email">Correo electrónico</label>
+          <label class="reg-label" for="email">{{ 'register.email' | translate }}</label>
           <div class="reg-input-wrap">
             <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" class="reg-input-icon">
               <path d="M3 8l7 5 7-5M3 8v8a1 1 0 001 1h12a1 1 0 001-1V8M3 8l1-1h12l1 1"/>
@@ -124,46 +124,46 @@
         </div>
 
         <div class="reg-field">
-          <label class="reg-label" for="password">Contraseña</label>
+          <label class="reg-label" for="password">{{ 'register.password' | translate }}</label>
           <div class="reg-input-wrap">
             <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" class="reg-input-icon">
               <rect x="3" y="9" width="14" height="10" rx="2"/><path d="M7 9V6a3 3 0 016 0v3"/>
             </svg>
             <input type="password" id="password" [(ngModel)]="password" name="password"
-                   placeholder="Mínimo 6 caracteres" required class="reg-input"/>
+                   [placeholder]="'register.passwordPlaceholder' | translate" required class="reg-input"/>
           </div>
         </div>
 
         <div class="reg-field">
-          <label class="reg-label" for="confirmPassword">Confirmar contraseña</label>
+          <label class="reg-label" for="confirmPassword">{{ 'register.confirmPassword' | translate }}</label>
           <div class="reg-input-wrap">
             <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" class="reg-input-icon">
               <rect x="3" y="9" width="14" height="10" rx="2"/><path d="M7 9V6a3 3 0 016 0v3"/>
               <path d="M8 14l2 2 3-3" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
             <input type="password" id="confirmPassword" [(ngModel)]="confirmPassword" name="confirmPassword"
-                   placeholder="Repite tu contraseña" required class="reg-input"/>
+                   [placeholder]="'register.confirmPasswordPlaceholder' | translate" required class="reg-input"/>
           </div>
         </div>
 
         <button type="submit" class="reg-submit" [disabled]="userStore.loading()">
-          <span *ngIf="!userStore.loading()">Crear cuenta</span>
+          <span *ngIf="!userStore.loading()">{{ 'register.submit' | translate }}</span>
           <span *ngIf="userStore.loading()" class="reg-loading">
             <svg class="reg-spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0110 10" stroke-linecap="round"/>
             </svg>
-            Creando cuenta...
+            {{ 'register.loading' | translate }}
           </span>
         </button>
 
       </form>
 
       <p class="reg-login-link">
-        ¿Ya tienes cuenta?
-        <a routerLink="/login" class="reg-link">Iniciar sesión</a>
+        {{ 'register.hasAccount' | translate }}
+        <a routerLink="/login" class="reg-link">{{ 'register.loginLink' | translate }}</a>
       </p>
 
-      <p class="reg-copyright">© 2026 Foundly. Todos los derechos reservados.</p>
+      <p class="reg-copyright">{{ 'common.copyright' | translate }}</p>
     </div>
   </div>
 </div>

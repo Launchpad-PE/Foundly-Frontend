@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Profile } from '../../../../../profile-management/domain/entities/profile.entity';
+import { TranslatePipe } from '@ngx-translate/core';
 
 export interface Collaborator {
   id: string;
@@ -24,7 +25,7 @@ const AVATAR_GRADIENTS = [
   standalone: true,
   templateUrl: './collaborator-card.html',
   styleUrls: ['./collaborator-card.css'],
-  imports: [CommonModule]
+  imports: [CommonModule, TranslatePipe]
 })
 export class CollaboratorCardComponent {
   @Input() collaborator!: Profile;

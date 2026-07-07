@@ -1,15 +1,15 @@
 <div class="step-container">
-  <h2>Información Básica del Proyecto</h2>
+  <h2>{{ 'project.step.info.title' | translate }}</h2>
 
   <!-- Nombre del Proyecto -->
   <div class="form-group">
-    <label for="projectName">Nombre del Proyecto *</label>
+    <label for="projectName">{{ 'project.step.info.name' | translate }}</label>
     <input
       type="text"
       id="projectName"
       [(ngModel)]="formData.name"
       (ngModelChange)="onInputChange()"
-      placeholder="Ej: Plataforma de E-Learning"
+      [placeholder]="'project.step.info.namePlaceholder' | translate"
       class="form-control"
       required
     />
@@ -17,7 +17,7 @@
 
   <!-- Área -->
   <div class="form-group">
-    <label for="area">Área *</label>
+    <label for="area">{{ 'project.step.info.area' | translate }}</label>
     <select
       id="area"
       [(ngModel)]="formData.area"
@@ -25,14 +25,14 @@
       class="form-control"
       required
     >
-      <option value="">Selecciona un área</option>
+      <option value="">{{ 'project.step.info.areaPlaceholder' | translate }}</option>
       <option *ngFor="let area of availableAreas" [value]="area">{{ area }}</option>
     </select>
   </div>
 
   <!-- Etiquetas/Tags -->
   <div class="form-group">
-    <label>Etiquetas</label>
+    <label>{{ 'project.step.info.tags' | translate }}</label>
     <div class="tags-input">
       <div class="tags-list">
         <span *ngFor="let tag of formData.tags" class="tag">
@@ -46,11 +46,11 @@
           [(ngModel)]="newTag"
           (keyup.enter)="addTag()"
           (input)="tagError=''"
-          placeholder="Ej: Remoto, Junior, Machine Learning"
+          [placeholder]="'project.step.info.tagsPlaceholder' | translate"
           class="tag-input"
           [class.tag-input-error]="tagError"
         />
-        <button type="button" class="btn-add-tag" (click)="addTag()">Añadir</button>
+        <button type="button" class="btn-add-tag" (click)="addTag()">{{ 'project.step.info.addTag' | translate }}</button>
       </div>
       <p class="tag-error-msg" *ngIf="tagError">⚠ {{ tagError }}</p>
     </div>
@@ -58,13 +58,13 @@
 
   <!-- Resumen -->
   <div class="form-group">
-    <label for="summary">Resumen *</label>
+    <label for="summary">{{ 'project.step.info.summary' | translate }}</label>
     <textarea
       id="summary"
       [(ngModel)]="formData.summary"
       (ngModelChange)="onInputChange()"
       rows="4"
-      placeholder="Describe brevemente de qué trata tu proyecto..."
+      [placeholder]="'project.step.info.summaryPlaceholder' | translate"
       class="form-control"
       required
     ></textarea>

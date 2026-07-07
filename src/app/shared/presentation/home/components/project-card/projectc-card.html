@@ -1,17 +1,17 @@
 <!-- project-card.component.html -->
 <div class="project-card" [class.compact]="isCompact">
 
-  <span class="own-badge" *ngIf="isOwn && !isCompact">Tu proyecto</span>
+  <span class="own-badge" *ngIf="isOwn && !isCompact">{{ 'projects.ownBadge' | translate }}</span>
   <span class="participating-badge" *ngIf="isParticipating && !isOwn && !isCompact">
     <svg viewBox="0 0 16 16" fill="currentColor" class="badge-icon"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"/></svg>
-    Participando
+    {{ 'projects.participatingBadge' | translate }}
   </span>
 
   <h3 class="project-title">{{ project.title }}</h3>
 
   <!-- Roles -->
   <div class="card-section" *ngIf="getRolesToShow().length > 0">
-    <p class="section-label">Puestos disponibles</p>
+    <p class="section-label">{{ 'projects.availableRoles' | translate }}</p>
     <div class="tags-row">
       <span *ngFor="let role of getRolesToShow()" class="role-tag">{{ role }}</span>
       <span *ngIf="isCompact && project.roles.length > 2" class="role-tag more-tag">+{{ project.roles.length - 2 }}</span>
@@ -51,8 +51,8 @@
 
   <!-- Actions -->
   <div class="project-actions">
-    <button class="btn-view" (click)="onViewDetails()">Ver más</button>
-    <button class="btn-apply" *ngIf="!isCompact && !isOwn && !isParticipating" (click)="onApply()">Postular</button>
+    <button class="btn-view" (click)="onViewDetails()">{{ 'projects.viewMore' | translate }}</button>
+    <button class="btn-apply" *ngIf="!isCompact && !isOwn && !isParticipating" (click)="onApply()">{{ 'projectInfo.apply' | translate }}</button>
   </div>
 
 </div>

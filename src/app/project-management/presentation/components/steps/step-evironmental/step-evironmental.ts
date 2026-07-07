@@ -1,12 +1,13 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ProjectFormData } from '../../../views/create-project/create-project';
-import { EnvironmentalMetric } from '../../../../domain/value-objects/environmental-impact.vo';
+import { EnvironmentalMetric, EnvironmentalMetricDisplay } from '../../../../domain/value-objects/environmental-impact.vo';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-step-evironmental',
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, TranslatePipe],
   templateUrl: './step-evironmental.html',
   styleUrl: './step-evironmental.css',
 })
@@ -15,14 +16,10 @@ export class StepEvironmental {
   @Output() update = new EventEmitter<Partial<ProjectFormData>>();
 
   environmentalMetrics = [
-    { value: EnvironmentalMetric.AIR_QUALITY, label: 'Calidad del aire', icon: '🌬️' },
-    { value: EnvironmentalMetric.HUMIDITY, label: 'Humedad ambiental', icon: '💧' },
-    { value: EnvironmentalMetric.TEMPERATURE, label: 'Temperatura', icon: '🌡️' },
-    {
-      value: EnvironmentalMetric.CITIZEN_PARTICIPATION,
-      label: 'Participación ciudadana',
-      icon: '👥',
-    },
+    { value: EnvironmentalMetric.AIR_QUALITY, label: EnvironmentalMetricDisplay[EnvironmentalMetric.AIR_QUALITY], icon: '🌬️' },
+    { value: EnvironmentalMetric.HUMIDITY, label: EnvironmentalMetricDisplay[EnvironmentalMetric.HUMIDITY], icon: '💧' },
+    { value: EnvironmentalMetric.TEMPERATURE, label: EnvironmentalMetricDisplay[EnvironmentalMetric.TEMPERATURE], icon: '🌡️' },
+    { value: EnvironmentalMetric.CITIZEN_PARTICIPATION, label: EnvironmentalMetricDisplay[EnvironmentalMetric.CITIZEN_PARTICIPATION], icon: '👥' },
   ];
 
   toggleEnvironmentalMetric(metric: EnvironmentalMetric): void {

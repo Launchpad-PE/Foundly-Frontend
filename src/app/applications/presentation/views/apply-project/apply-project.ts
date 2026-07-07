@@ -7,6 +7,7 @@ import { ProjectStore } from '../../../../project-management/application/project
 import { ApplicationStore } from '../../../application/application.store';
 import { UserStore } from '../../../../iam/application/user.store';
 import { Project } from '../../../../project-management/domain/entities/project.entity';
+import { TranslatePipe } from '@ngx-translate/core';
 
 interface ApplyFormData {
   fullName: string;
@@ -22,7 +23,7 @@ interface ApplyFormData {
 @Component({
   selector: 'app-apply-project',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './apply-project.html',
   styleUrls: ['./apply-project.css']
 })

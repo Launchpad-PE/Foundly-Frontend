@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 
 export interface DescriptionStepData {
   bio: string;
@@ -9,7 +10,7 @@ export interface DescriptionStepData {
 @Component({
   selector: 'app-description-step',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './description-step.html',
   styleUrls: ['./description-step.css']
 })

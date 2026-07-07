@@ -97,6 +97,23 @@ export class ApplicationApiEndpoint extends BaseApiEndpoint<
    * Update application status (accept / reject)
    */
   updateStatus(id: string, status: ApplicationStatus): Observable<ApplicationResponse> {
-    return this.patchApplication(id, { status, updatedAt: new Date().toISOString() });
+    return this.http.post<ApplicationResource>(
+      `${this.applicationsUrl}/${id}/status`,
+      { status }
+    ).pipe(
+      map(updated => ({ application: updated }) as ApplicationResponse)
+    );
+  }
+
+  /**
+   * Check if a user has already applied to a project
+   * @param projectId - The project ID (numeric string)
+   * @param userId - The user ID (numeric string)
+   * @returns Observable<boolean> - true if already applied
+   */
+  checkIfApplied(projectId: string, userId: string): Observable<boolean> {
+    return this.http.get<boolean>(
+      `${this.applicationsUrl}/check?projectId=${projectId}&userId=${userId}`
+    );
   }
 }

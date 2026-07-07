@@ -12,7 +12,7 @@
           type="text"
           [(ngModel)]="searchTerm"
           (keyup.enter)="onSearch()"
-          placeholder="Nombre o palabra clave"
+          [placeholder]="'home.searchPlaceholder' | translate"
           class="field-input"/>
       </label>
       <div class="search-divider"></div>
@@ -21,13 +21,13 @@
           <path d="M10 2a6 6 0 016 6c0 4-6 10-6 10S4 12 4 8a6 6 0 016-6z"/><circle cx="10" cy="8" r="2"/>
         </svg>
         <select [(ngModel)]="filterRole" class="field-input field-select">
-          <option value="">Tipo de puesto</option>
-          <option value="desarrollador-ux">Desarrollador UX</option>
-          <option value="desarrollador-frontend">Desarrollador Frontend</option>
-          <option value="desarrollador-backend">Desarrollador Backend</option>
-          <option value="analista">Analista de datos</option>
-          <option value="disenador">Diseñador UI/UX</option>
-          <option value="product-manager">Product Manager</option>
+          <option value="">{{ 'home.filterRole' | translate }}</option>
+          <option value="desarrollador-ux">{{ 'home.roleUx' | translate }}</option>
+          <option value="desarrollador-frontend">{{ 'home.roleFrontend' | translate }}</option>
+          <option value="desarrollador-backend">{{ 'home.roleBackend' | translate }}</option>
+          <option value="analista">{{ 'home.roleAnalyst' | translate }}</option>
+          <option value="disenador">{{ 'home.roleDesigner' | translate }}</option>
+          <option value="product-manager">{{ 'home.rolePM' | translate }}</option>
         </select>
       </label>
       <div class="search-divider"></div>
@@ -36,16 +36,16 @@
           <rect x="3" y="3" width="14" height="14" rx="3"/><path d="M7 10h6M7 7h4"/>
         </svg>
         <select [(ngModel)]="filterArea" class="field-input field-select">
-          <option value="">Área</option>
-          <option value="tecnologia">Tecnología</option>
-          <option value="finanzas">Finanzas</option>
-          <option value="salud">Salud</option>
-          <option value="energia">Energía</option>
-          <option value="educacion">Educación</option>
+          <option value="">{{ 'home.filterArea' | translate }}</option>
+          <option value="tecnologia">{{ 'home.areaTech' | translate }}</option>
+          <option value="finanzas">{{ 'home.areaFinance' | translate }}</option>
+          <option value="salud">{{ 'home.areaHealth' | translate }}</option>
+          <option value="energia">{{ 'home.areaEnergy' | translate }}</option>
+          <option value="educacion">{{ 'home.areaEducation' | translate }}</option>
         </select>
       </label>
-      <button class="btn-search" (click)="onSearch()">Buscar</button>
-      <button class="btn-clear" *ngIf="hasSearched" (click)="onClear()" title="Limpiar búsqueda">
+      <button class="btn-search" (click)="onSearch()">{{ 'common.search' | translate }}</button>
+      <button class="btn-clear" *ngIf="hasSearched" (click)="onClear()" [title]="'common.clear' | translate">
         <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;">
           <path d="M6 6l8 8M14 6l-8 8"/>
         </svg>
@@ -75,7 +75,7 @@
     <!-- Left Sidebar -->
     <aside class="sidebar">
       <section class="sidebar-card">
-        <h3 class="sidebar-title">Colaboradores destacados</h3>
+        <h3 class="sidebar-title">{{ 'home.topCollaborators' | translate }}</h3>
         <div class="collaborators-list">
           <app-collaborator-card
             *ngFor="let collaborator of highlightedCollaborators"
@@ -88,26 +88,26 @@
               <circle cx="9" cy="7" r="4"/>
               <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
             </svg>
-            <p>Aún no hay colaboradores registrados</p>
+            <p>{{ 'home.noCollaborators' | translate }}</p>
           </div>
         </div>
-        <a routerLink="/collaborators" class="view-more-btn">Ver todos</a>
+        <a routerLink="/collaborators" class="view-more-btn">{{ 'home.viewAll' | translate }}</a>
       </section>
 
       <section class="sidebar-card plan-card">
-        <h3 class="sidebar-title">Plan Actual</h3>
+        <h3 class="sidebar-title">{{ 'home.currentPlan' | translate }}</h3>
         <div class="plan-badge">
           <span class="plan-icon">✦</span>
           <span class="plan-name">{{ currentPlan }}</span>
         </div>
-        <p class="plan-desc">Accede a proyectos y colaboradores sin límites.</p>
+        <p class="plan-desc">{{ 'home.planDesc' | translate }}</p>
       </section>
     </aside>
 
     <!-- Projects Feed -->
     <main class="projects-feed">
       <div class="feed-header">
-        <h2 class="feed-title">Proyectos disponibles</h2>
+        <h2 class="feed-title">{{ 'home.availableProjects' | translate }}</h2>
         <span class="feed-count">{{ resultLabel }}</span>
       </div>
 
@@ -117,9 +117,9 @@
           <circle cx="22" cy="22" r="14"/><path d="M32 32l8 8"/>
           <path d="M16 22h12M22 16v12"/>
         </svg>
-        <p class="nsr-title">Sin resultados</p>
-        <p class="nsr-sub">Ningún proyecto coincide con tu búsqueda. Intenta con otros términos.</p>
-        <button class="nsr-btn" (click)="onClear()">Ver todos los proyectos</button>
+        <p class="nsr-title">{{ 'home.noResults' | translate }}</p>
+        <p class="nsr-sub">{{ 'home.noResultsHint' | translate }}</p>
+        <button class="nsr-btn" (click)="onClear()">{{ 'home.viewAllProjects' | translate }}</button>
       </div>
 
       <div class="projects-list" *ngIf="displayedProjects.length > 0">
@@ -141,14 +141,14 @@
             <path d="M24 24v6M21 27h6"/>
           </svg>
         </div>
-        <p class="empty-title">No hay proyectos disponibles</p>
-        <p class="empty-sub">Cuando se publiquen proyectos aparecerán aquí. También puedes crear el tuyo.</p>
+        <p class="empty-title">{{ 'home.noProjects' | translate }}</p>
+        <p class="empty-sub">{{ 'home.noProjectsHint' | translate }}</p>
       </div>
     </main>
 
     <!-- Right Sidebar -->
     <aside class="featured-sidebar sidebar-card">
-      <h3 class="sidebar-title">Proyectos Destacados</h3>
+      <h3 class="sidebar-title">{{ 'home.featuredProjects' | translate }}</h3>
       <div class="featured-list" *ngIf="featuredProjects.length > 0; else emptyFeatured">
         <app-project-card
           *ngFor="let project of featuredProjects"
@@ -162,7 +162,7 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="empty-feat-icon">
             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
           </svg>
-          <p>Sin proyectos destacados aún</p>
+          <p>{{ 'home.noFeatured' | translate }}</p>
         </div>
       </ng-template>
     </aside>

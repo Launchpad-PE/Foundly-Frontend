@@ -2,11 +2,12 @@ import { Component, computed, input, output } from '@angular/core';
 import { Milestone } from '../../../domain/entities/milestone.entity';
 import { MilestoneStatus } from '../../../domain/enum/milestone-status.enum';
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-milestone-card',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslatePipe],
   templateUrl: './milestone-card.component.html',
   styleUrl: './milestone-card.component.css',
 })

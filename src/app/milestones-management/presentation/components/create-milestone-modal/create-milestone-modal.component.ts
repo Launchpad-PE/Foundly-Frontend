@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { MilestoneStore } from '../../../application/milestone-store';
 import { ApplicationStatus } from '../../../../applications/domain/enum/application-status.enum';
 import { ApplicationStore } from '../../../../applications/application/application.store';
+import { TranslatePipe } from '@ngx-translate/core';
 
 interface TaskItem {
   title: string;
@@ -16,7 +17,7 @@ interface TaskItem {
 @Component({
   selector: 'app-create-milestone-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './create-milestone-modal.component.html',
   styleUrls: ['./create-milestone-modal.component.css']
 })

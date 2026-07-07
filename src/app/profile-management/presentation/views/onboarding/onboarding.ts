@@ -9,6 +9,7 @@ import { SkillsFormComponent, SkillsFormData, ExperienceData } from '../../compo
 import { RoleFormComponent, RoleFormData } from '../../components/role-form/role-form';
 import { Experience } from '../../../domain/entities/experience.entity';
 import { DescriptionStepComponent, DescriptionStepData } from '../../components/description-step/description-step';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-onboarding',
@@ -18,7 +19,8 @@ import { DescriptionStepComponent, DescriptionStepData } from '../../components/
     ProfileConfigComponent,
     SkillsFormComponent,
     RoleFormComponent,
-    DescriptionStepComponent
+    DescriptionStepComponent,
+    TranslatePipe
   ],
   templateUrl: './onboarding.html',
   styleUrls: ['./onboarding.css']

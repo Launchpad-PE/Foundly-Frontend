@@ -7,11 +7,12 @@ import { firstValueFrom } from 'rxjs';
 import { TaskApi } from '../../../infrastructure/task-api';
 import { TaskStore } from '../../../application/task.store';
 import { Task } from '../../../domain/entities/task.entity';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-my-tasks-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './my-tasks-list.html',
   styleUrls: ['./my-tasks-list.css']
 })
@@ -73,7 +74,11 @@ export class MyTasksListComponent implements OnInit, OnChanges {
     this.router.navigate(['/projects', this.projectId, 'tasks', task.id]);
   }
 
+  // "Hacer Tarea" navega a la misma vista de detalle, pero con el flag
+  // `accion=entregar` para habilitar la sección de entrega (solo colaborador).
   doTask(task: Task): void {
-    this.router.navigate(['/projects', this.projectId, 'tasks', task.id]);
+    this.router.navigate(['/projects', this.projectId, 'tasks', task.id], {
+      queryParams: { accion: 'entregar' }
+    });
   }
 }

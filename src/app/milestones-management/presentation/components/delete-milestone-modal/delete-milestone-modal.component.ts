@@ -1,11 +1,12 @@
 import { Component, input, output } from '@angular/core';
 import { Milestone } from '../../../domain/entities/milestone.entity';
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-delete-milestone-modal',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslatePipe],
   templateUrl: './delete-milestone-modal.component.html',
   styleUrl: './delete-milestone-modal.component.css',
 })
